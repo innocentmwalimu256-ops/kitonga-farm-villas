@@ -182,11 +182,16 @@ const handleLogoClick = (e) => {
         </div>
 
         <!-- 1. CINEMATIC HERO VIDEO SECTION -->
-        <section class="relative min-h-[85vh] lg:min-h-[92vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center">
-            <!-- Hero Video -->
+        <section 
+            @click="togglePlay"
+            class="relative min-h-[85vh] lg:min-h-[92vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
+            title="Click anywhere to Play / Pause"
+        >
+            <!-- Hero Video (Direct SRC for 100% Chromium/Safari Reliability) -->
             <video 
                 ref="videoPlayer"
-                class="absolute inset-0 w-full h-full object-cover opacity-85 transition-opacity duration-700 pointer-events-none"
+                src="/videos/IMG_2249.mp4"
+                class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
                 autoplay 
                 loop 
                 muted
@@ -199,12 +204,11 @@ const handleLogoClick = (e) => {
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
             </video>
 
-            <!-- Cinematic Gradient & Vignette Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/60"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]"></div>
+            <!-- Cinematic Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/50 pointer-events-none"></div>
 
             <!-- Main Centered Content -->
-            <div class="relative z-10 text-center px-6 sm:px-10 max-w-4xl mx-auto space-y-5 sm:space-y-6 pt-12 pb-16">
+            <div class="relative z-10 text-center px-6 sm:px-10 max-w-4xl mx-auto space-y-5 sm:space-y-6 pt-12 pb-16 pointer-events-auto">
                 
                 <!-- Badge -->
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#14231C]/80 border border-[#C98A3E]/50 text-[#E6C387] text-[11px] sm:text-xs font-bold uppercase tracking-[3px] backdrop-blur-md shadow-lg animate-fade-in">
