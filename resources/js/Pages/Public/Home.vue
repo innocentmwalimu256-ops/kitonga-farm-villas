@@ -18,9 +18,29 @@ const videoPlayer = ref(null);
 onMounted(() => {
     if (videoPlayer.value) {
         videoPlayer.value.muted = true;
-        videoPlayer.value.play().catch(err => {
-            console.log("Autoplay blocked by browser policy:", err);
-        });
+        isMuted.value = true;
+        const startPlayback = () => {
+            if (videoPlayer.value) {
+                videoPlayer.value.play().then(() => {
+                    isPaused.value = false;
+                }).catch(err => {
+                    console.log("Autoplay waiting for interaction:", err);
+                });
+            }
+        };
+
+        startPlayback();
+
+        // Fallback: If browser strictly blocks initial autoplay until first interaction
+        const triggerOnTouch = () => {
+            startPlayback();
+            window.removeEventListener('click', triggerOnTouch);
+            window.removeEventListener('touchstart', triggerOnTouch);
+            window.removeEventListener('scroll', triggerOnTouch);
+        };
+        window.addEventListener('click', triggerOnTouch, { passive: true });
+        window.addEventListener('touchstart', triggerOnTouch, { passive: true });
+        window.addEventListener('scroll', triggerOnTouch, { passive: true });
     }
 });
 
@@ -153,11 +173,11 @@ const handleLogoClick = (e) => {
         </div>
 
         <!-- 1. CINEMATIC HERO VIDEO SECTION -->
-        <section class="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center">
+        <section class="relative min-h-[85vh] lg:min-h-[92vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center">
             <!-- Hero Video -->
             <video 
                 ref="videoPlayer"
-                class="absolute inset-0 w-full h-full object-cover opacity-80"
+                class="absolute inset-0 w-full h-full object-cover opacity-85 transition-opacity duration-700"
                 autoplay 
                 loop 
                 muted
@@ -167,21 +187,72 @@ const handleLogoClick = (e) => {
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
             </video>
 
-            <!-- Dark Overlay -->
-            <div class="absolute inset-0 bg-black/45"></div>
+            <!-- Cinematic Gradient & Vignette Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/60"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]"></div>
 
-            <!-- Centered Bottom Subtitle Overlay -->
-            <div class="absolute bottom-12 left-0 right-0 z-10 text-center">
-                <span class="text-xs uppercase tracking-widest text-[#E6C387] font-bold font-sans">Premium Farm Stay & Luxury Villas</span>
+            <!-- Main Centered Content -->
+            <div class="relative z-10 text-center px-6 sm:px-10 max-w-4xl mx-auto space-y-5 sm:space-y-6 pt-12 pb-16">
+                
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#14231C]/80 border border-[#C98A3E]/50 text-[#E6C387] text-[11px] sm:text-xs font-bold uppercase tracking-[3px] backdrop-blur-md shadow-lg animate-fade-in">
+                    <span class="w-2 h-2 rounded-full bg-[#C98A3E] animate-pulse"></span>
+                    <span>Sanctuary & Agro-Tourism</span>
+                </div>
+
+                <!-- Hero Title -->
+                <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-tight leading-[1.15] drop-shadow-md">
+                    Where Luxury Meets <span class="italic font-serif text-[#E6C387] font-normal">Farm Life</span>
+                </h1>
+
+                <!-- Hero Subtitle -->
+                <p class="text-sm sm:text-base md:text-lg text-gray-200/90 font-sans font-light max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
+                    Immerse yourself in private sanctuary villas, pure organic harvest, serene river breezes, and authentic countryside living in Komkonga, Tanga.
+                </p>
+
+                <!-- Action CTAs -->
+                <div class="pt-2 sm:pt-4 flex flex-wrap items-center justify-center gap-3.5 sm:gap-5 font-sans">
+                    <Link 
+                        :href="route('booking.form')" 
+                        prefetch 
+                        class="px-7 py-3.5 bg-[#C98A3E] hover:bg-[#b87a32] text-white text-xs sm:text-sm font-extrabold uppercase tracking-widest rounded-xl transition shadow-xl hover:shadow-[#C98A3E]/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                    >
+                        Book Your Stay
+                    </Link>
+                    <Link 
+                        :href="route('experiences')" 
+                        prefetch 
+                        class="px-7 py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 text-xs sm:text-sm font-bold uppercase tracking-widest rounded-xl backdrop-blur-md transition hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                    >
+                        Explore Experiences
+                    </Link>
+                </div>
             </div>
 
-            <!-- Video Controls -->
-            <div class="absolute bottom-8 right-8 z-10 flex space-x-2">
-                <button @click="togglePlay" class="p-2 rounded-full bg-black/40 text-white hover:bg-black/60 text-xs font-sans">
-                    {{ isPaused ? '▶ Play' : '⏸ Pause' }}
+            <!-- Subtle Bottom Subtitle Overlay -->
+            <div class="hidden sm:block absolute bottom-6 left-8 z-10">
+                <span class="text-[11px] uppercase tracking-[3px] text-gray-300/80 font-semibold font-sans">
+                    📍 Komkonga, Tanga — Tanzania
+                </span>
+            </div>
+
+            <!-- Video Controls (Play/Pause & Mute/Unmute) -->
+            <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 font-sans">
+                <button 
+                    type="button"
+                    @click="togglePlay" 
+                    class="px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/85 border border-white/25 text-white text-[11px] font-medium backdrop-blur-md transition flex items-center gap-1.5 shadow-md cursor-pointer"
+                    :title="isPaused ? 'Play Video' : 'Pause Video'"
+                >
+                    <span>{{ isPaused ? '▶ Play' : '⏸ Pause' }}</span>
                 </button>
-                <button @click="toggleMute" class="p-2 rounded-full bg-black/40 text-white hover:bg-black/60 text-xs font-sans">
-                    {{ isMuted ? '🔊 Unmute' : '🔇 Mute' }}
+                <button 
+                    type="button"
+                    @click="toggleMute" 
+                    class="px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/85 border border-white/25 text-white text-[11px] font-medium backdrop-blur-md transition flex items-center gap-1.5 shadow-md cursor-pointer"
+                    :title="isMuted ? 'Unmute Audio' : 'Mute Audio'"
+                >
+                    <span>{{ isMuted ? '🔇 Sound Off' : '🔊 Sound On' }}</span>
                 </button>
             </div>
         </section>
