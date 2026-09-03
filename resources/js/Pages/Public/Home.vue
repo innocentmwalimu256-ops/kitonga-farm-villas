@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 
@@ -18,29 +18,37 @@ const videoPlayer = ref(null);
 onMounted(() => {
     if (videoPlayer.value) {
         videoPlayer.value.muted = true;
+        videoPlayer.value.defaultMuted = true;
         isMuted.value = true;
+
         const startPlayback = () => {
             if (videoPlayer.value) {
-                videoPlayer.value.play().then(() => {
-                    isPaused.value = false;
-                }).catch(err => {
-                    console.log("Autoplay waiting for interaction:", err);
-                });
+                videoPlayer.value.muted = true;
+                const p = videoPlayer.value.play();
+                if (p !== undefined) {
+                    p.then(() => {
+                        isPaused.value = false;
+                    }).catch(err => {
+                        console.log("Autoplay waiting for touch:", err);
+                    });
+                }
             }
         };
 
         startPlayback();
 
-        // Fallback: If browser strictly blocks initial autoplay until first interaction
-        const triggerOnTouch = () => {
-            startPlayback();
-            window.removeEventListener('click', triggerOnTouch);
-            window.removeEventListener('touchstart', triggerOnTouch);
-            window.removeEventListener('scroll', triggerOnTouch);
+        // Fallback on first user touch/click/scroll
+        const triggerPlay = () => {
+            if (videoPlayer.value && videoPlayer.value.paused) {
+                startPlayback();
+            }
+            window.removeEventListener('click', triggerPlay);
+            window.removeEventListener('touchstart', triggerPlay);
+            window.removeEventListener('scroll', triggerPlay);
         };
-        window.addEventListener('click', triggerOnTouch, { passive: true });
-        window.addEventListener('touchstart', triggerOnTouch, { passive: true });
-        window.addEventListener('scroll', triggerOnTouch, { passive: true });
+        window.addEventListener('click', triggerPlay, { passive: true });
+        window.addEventListener('touchstart', triggerPlay, { passive: true });
+        window.addEventListener('scroll', triggerPlay, { passive: true });
     }
 });
 
@@ -54,8 +62,9 @@ const toggleMute = () => {
 const togglePlay = () => {
     if (videoPlayer.value) {
         if (videoPlayer.value.paused) {
-            videoPlayer.value.play();
-            isPaused.value = false;
+            videoPlayer.value.play().then(() => {
+                isPaused.value = false;
+            });
         } else {
             videoPlayer.value.pause();
             isPaused.value = true;
@@ -177,13 +186,16 @@ const handleLogoClick = (e) => {
             <!-- Hero Video -->
             <video 
                 ref="videoPlayer"
-                class="absolute inset-0 w-full h-full object-cover opacity-85 transition-opacity duration-700"
+                class="absolute inset-0 w-full h-full object-cover opacity-85 transition-opacity duration-700 pointer-events-none"
                 autoplay 
                 loop 
                 muted
+                :muted="true"
                 playsinline
-                poster="/images/hero_poster.webp"
+                webkit-playsinline="true"
+                preload="auto"
             >
+                <source src="/videos/IMG_2249.mp4" type="video/mp4">
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
             </video>
 
