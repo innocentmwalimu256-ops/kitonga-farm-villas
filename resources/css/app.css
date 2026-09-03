@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ULTRA-FAST PERFORMANCE & HARDWARE ACCELERATION ENGINE */
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+/* GPU Hardware Acceleration for ultra-smooth 60/120fps animations & scrolling */
+img, video, .gpu-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+}
+
+/* Intelligent DOM Rendering: skips rendering off-screen sections until scrolled near */
+.content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 650px;
+}
+
+/* Instant-response tap highlight removal for ultra-fast mobile feel */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Luxury Smooth Scrollbar */
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+::-webkit-scrollbar-track {
+    background: #0E1712;
+}
+::-webkit-scrollbar-thumb {
+    background: #C98A3E;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #E6C387;
+}
