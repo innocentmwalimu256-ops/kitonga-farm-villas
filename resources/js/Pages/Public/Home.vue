@@ -190,7 +190,8 @@ const handleLogoClick = (e) => {
             <!-- Hero Video (Direct SRC for 100% Chromium/Safari Reliability) -->
             <video 
                 ref="videoPlayer"
-                src="/videos/IMG_2249.mp4"
+                src="/videos/hero_cinematic.mp4"
+                poster="/images/hero_poster.webp"
                 class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
                 autoplay 
                 loop 
@@ -200,8 +201,8 @@ const handleLogoClick = (e) => {
                 webkit-playsinline="true"
                 preload="auto"
             >
-                <source src="/videos/IMG_2249.mp4" type="video/mp4">
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
+                <source src="/videos/IMG_2249.mp4" type="video/mp4">
             </video>
 
             <!-- Cinematic Gradient Overlay -->
