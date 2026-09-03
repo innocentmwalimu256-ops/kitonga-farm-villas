@@ -187,10 +187,9 @@ const handleLogoClick = (e) => {
             class="relative min-h-[85vh] lg:min-h-[92vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
             title="Click anywhere to Play / Pause"
         >
-            <!-- Hero Video (Direct SRC for 100% Chromium/Safari Reliability) -->
+            <!-- Hero Video (Ultra-Fast 6.7MB Web Video with FastStart Streaming) -->
             <video 
                 ref="videoPlayer"
-                src="/videos/hero_cinematic.mp4"
                 poster="/images/hero_poster.webp"
                 class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
                 autoplay 
@@ -202,7 +201,8 @@ const handleLogoClick = (e) => {
                 preload="auto"
             >
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
-                <source src="/videos/IMG_2249.mp4" type="video/mp4">
+                <source src="/stream/hero-video" type="video/mp4">
+                <source src="/videos/hero_cinematic.webm" type="video/webm">
             </video>
 
             <!-- Cinematic Gradient Overlay -->
