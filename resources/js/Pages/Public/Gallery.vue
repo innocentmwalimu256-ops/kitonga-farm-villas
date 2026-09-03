@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 
@@ -10,26 +10,26 @@ const toggleMobileMenu = () => {
 
 // 20 Authentic Kitonga Estate Photographs
 const galleryImages = [
-    { id: 1, src: '/images/dji_0298.jpg', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 2, src: '/images/luxury_villa_img.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 3, src: '/images/IMG_0064.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 4, src: '/images/IMG_0362.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 5, src: '/images/three_cows.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 6, src: '/images/IMG_0389.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 7, src: '/images/IMG_0119.jpg', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 8, src: '/images/IMG_0419.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 9, src: '/images/IMG_0321.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 10, src: '/images/IMG_0326.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 11, src: '/images/farm_egg_trays.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 12, src: '/images/IMG_0120.jpg', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 13, src: '/images/IMG_0094.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 14, src: '/images/IMG_0328.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 15, src: '/images/IMG_0404.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 16, src: '/images/IMG_0334.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 17, src: '/images/IMG_0061.jpg', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 18, src: '/images/IMG_0394.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 19, src: '/images/IMG_0353.jpg', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 20, src: '/images/IMG_0252.jpg', aspect: 'col-span-1 sm:col-span-3 aspect-[21/9]' },
+    { id: 1, src: '/images/dji_0298.webp', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 2, src: '/images/luxury_villa_img.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 3, src: '/images/IMG_0064.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 4, src: '/images/IMG_0362.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 5, src: '/images/three_cows.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 6, src: '/images/IMG_0389.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 7, src: '/images/IMG_0119.webp', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 8, src: '/images/IMG_0419.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 9, src: '/images/IMG_0321.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 10, src: '/images/IMG_0326.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 11, src: '/images/farm_egg_trays.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 12, src: '/images/IMG_0120.webp', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 13, src: '/images/IMG_0094.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 14, src: '/images/IMG_0328.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 15, src: '/images/IMG_0404.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 16, src: '/images/IMG_0334.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 17, src: '/images/IMG_0061.webp', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 18, src: '/images/IMG_0394.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 19, src: '/images/IMG_0353.webp', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 20, src: '/images/IMG_0252.webp', aspect: 'col-span-1 sm:col-span-3 aspect-[21/9]' },
 ];
 
 // Lightbox State
@@ -75,7 +75,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="Visual Gallery — Kitonga Farm Villas" />
+    <Head title="Visual Gallery â€” Kitonga Farm Villas" />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
@@ -185,13 +185,13 @@ onUnmounted(() => {
 
                 <div class="pt-4 flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-[#E6C387]/90 font-medium">
                     <span>20 Authentic Perspectives</span>
-                    <span>•</span>
+                    <span>â€¢</span>
                     <span>Highland Heritage</span>
                 </div>
             </div>
         </section>
 
-        <!-- 3. PURE LUXURY PHOTO GALLERY (20 IMAGES — RESIDENCE STYLE) -->
+        <!-- 3. PURE LUXURY PHOTO GALLERY (20 IMAGES â€” RESIDENCE STYLE) -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -279,7 +279,7 @@ onUnmounted(() => {
 
             <!-- Lightbox Bottom Navigation Indicator -->
             <div class="text-center text-xs text-white/50 font-sans">
-                Use <span class="text-white/80 font-semibold">←</span> and <span class="text-white/80 font-semibold">→</span> keys to navigate · <span class="text-white/80 font-semibold">ESC</span> to close
+                Use <span class="text-white/80 font-semibold">â†</span> and <span class="text-white/80 font-semibold">â†’</span> keys to navigate Â· <span class="text-white/80 font-semibold">ESC</span> to close
             </div>
         </div>
 
@@ -308,9 +308,10 @@ onUnmounted(() => {
                 </div>
             </div>
             <div class="max-w-6xl mx-auto px-6 mt-10 pt-6 border-t border-white/10 text-center text-gray-500">
-                © 2026 Kitonga Farm Villas. All rights reserved.
+                Â© 2026 Kitonga Farm Villas. All rights reserved.
             </div>
         </footer>
 
     </div>
 </template>
+

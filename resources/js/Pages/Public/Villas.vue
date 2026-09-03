@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
@@ -21,10 +21,10 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path, slug) => {
-    if (slug === 'luxury-villa') return '/images/luxury_villa_img.jpg';
-    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.jpg';
-    if (slug === 'family-villa') return '/images/family_villa_img.jpg';
-    if (!path) return '/images/luxury_villa_img.jpg';
+    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
+    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
+    if (slug === 'family-villa') return '/images/family_villa_img.webp';
+    if (!path) return '/images/luxury_villa_img.webp';
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
     return `/images/${path}`;
 };
@@ -48,7 +48,7 @@ const scrollToResidences = () => {
 </script>
 
 <template>
-    <Head title="Private Residences & Villas — Kitonga Farm Villas" />
+    <Head title="Private Residences & Villas â€” Kitonga Farm Villas" />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
@@ -142,7 +142,7 @@ const scrollToResidences = () => {
             
             <!-- 4K Architectural Visual -->
             <img 
-                src="/images/luxury_villa_img.jpg" 
+                src="/images/luxury_villa_img.webp" 
                 alt="Kitonga Luxury Private Residence" 
                 class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none transform scale-105 transition duration-1000"
             />
@@ -155,7 +155,7 @@ const scrollToResidences = () => {
         <!-- 2. EDITORIAL INTRO STATEMENT -->
         <section class="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 pb-10 text-center space-y-6">
             <span class="text-[10px] md:text-[11px] uppercase tracking-[4px] font-sans font-bold text-[#C98A3E] block">
-                — ARCHITECTURAL PHILOSOPHY —
+                â€” ARCHITECTURAL PHILOSOPHY â€”
             </span>
             
             <h2 class="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#1F2420] tracking-tight leading-tight">
@@ -254,7 +254,7 @@ const scrollToResidences = () => {
                     <!-- Editorial Number & Title -->
                     <div class="space-y-1.5 border-b border-[#E5E0D8] pb-4">
                         <span class="text-xs font-serif italic text-[#C98A3E] block">
-                            0{{ idx + 1 }} — RESIDENCE
+                            0{{ idx + 1 }} â€” RESIDENCE
                         </span>
                         <h2 class="text-3xl sm:text-4xl font-serif font-light text-[#1F2420] tracking-tight">
                             {{ villa.name }}
@@ -266,18 +266,18 @@ const scrollToResidences = () => {
                         {{ villa.description || 'Experience ultimate peace inside our spacious organic countryside farm suites, designed for true privacy.' }}
                     </p>
 
-                    <!-- Inline Specifications with Middle Dots (·) -->
+                    <!-- Inline Specifications with Middle Dots (Â·) -->
                     <div class="text-xs font-medium text-[#2D312E] tracking-wide py-2 border-y border-[#E5E0D8]/60 leading-relaxed">
                         <span>{{ villa.capacity }} Guests</span>
-                        <span class="mx-2 text-[#C98A3E]">·</span>
+                        <span class="mx-2 text-[#C98A3E]">Â·</span>
                         <span>{{ villa.bedrooms }} {{ villa.bedrooms === 1 ? 'Bedroom' : 'Bedrooms' }}</span>
-                        <span class="mx-2 text-[#C98A3E]">·</span>
+                        <span class="mx-2 text-[#C98A3E]">Â·</span>
                         <span>{{ villa.bathrooms }} {{ villa.bathrooms === 1 ? 'Bathroom' : 'Bathrooms' }}</span>
                         <template v-if="villa.has_interior_kitchen">
-                            <span class="mx-2 text-[#C98A3E]">·</span>
+                            <span class="mx-2 text-[#C98A3E]">Â·</span>
                             <span>Interior Kitchen</span>
                         </template>
-                        <span class="mx-2 text-[#C98A3E]">·</span>
+                        <span class="mx-2 text-[#C98A3E]">Â·</span>
                         <span>Private Terrace</span>
                     </div>
 
@@ -302,7 +302,7 @@ const scrollToResidences = () => {
                             class="px-7 py-3.5 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 shadow-md cursor-pointer flex items-center gap-2 group"
                         >
                             <span>Explore Residence</span>
-                            <span class="text-[#C98A3E] group-hover:text-white group-hover:translate-x-1 transition duration-300">→</span>
+                            <span class="text-[#C98A3E] group-hover:text-white group-hover:translate-x-1 transition duration-300">â†’</span>
                         </Link>
                         <Link 
                             :href="route('booking.form', { villa_id: villa.id })" 
@@ -339,16 +339,17 @@ const scrollToResidences = () => {
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Contact Details</h4>
                     <div class="space-y-2 text-[#F7F3EA]/70">
-                        <p>✉️ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
-                        <p>📞 <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
-                        <p>📍 Kitonga Farm, Sanya Juu, Kilimanjaro</p>
+                        <p>âœ‰ï¸ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
+                        <p>ðŸ“ž <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
+                        <p>ðŸ“ Kitonga Farm, Sanya Juu, Kilimanjaro</p>
                     </div>
                 </div>
             </div>
             <div class="max-w-6xl mx-auto mt-12 pt-6 border-t border-white/10 text-center text-[10px] text-[#F7F3EA]/50 font-sans">
-                © 2026 Kitonga Farm Villas. All rights reserved.
+                Â© 2026 Kitonga Farm Villas. All rights reserved.
             </div>
         </footer>
 
     </div>
 </template>
+

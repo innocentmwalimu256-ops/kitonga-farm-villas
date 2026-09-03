@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 
@@ -19,14 +19,14 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Reset Password — Kitonga Farm Villas" />
+    <Head title="Reset Password â€” Kitonga Farm Villas" />
 
     <div class="min-h-screen flex bg-[#FAF8F5] text-[#14231C] font-sans selection:bg-[#C98A3E] selection:text-white">
 
         <!-- 1. LEFT CINEMATIC BRANDING PANE (Desktop lg+) -->
         <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#14231C] text-white flex-col justify-between p-12 select-none">
             <img 
-                src="/images/IMG_0289.jpg" 
+                src="/images/IMG_0289.webp" 
                 alt="Kitonga Farm Sanctuary" 
                 class="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.45] contrast-[1.05] scale-105 transition duration-1000 ease-out"
             />
@@ -64,7 +64,7 @@ const submit = () => {
 
             <!-- Bottom Location Tag -->
             <div class="relative z-10 flex justify-between items-center text-xs text-gray-400 border-t border-white/10 pt-6">
-                <span>Komkonga Highlands · Tanga, Tanzania</span>
+                <span>Komkonga Highlands Â· Tanga, Tanzania</span>
                 <span>&copy; 2026 Kitonga Farm Villas</span>
             </div>
         </div>
@@ -78,7 +78,7 @@ const submit = () => {
                     :href="route('login')" 
                     class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#C98A3E] transition group"
                 >
-                    <span class="transition group-hover:-translate-x-1">←</span>
+                    <span class="transition group-hover:-translate-x-1">â†</span>
                     <span>Back to Sign In</span>
                 </Link>
 
@@ -111,7 +111,7 @@ const submit = () => {
                     v-if="status" 
                     class="p-4 rounded-2xl bg-green-50 border border-green-200 text-xs font-bold text-green-800 flex items-center gap-2"
                 >
-                    <span>✓</span>
+                    <span>âœ“</span>
                     <span>{{ status }}</span>
                 </div>
 
@@ -153,7 +153,7 @@ const submit = () => {
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                             </svg>
                             <span>{{ form.processing ? 'Dispatching Link...' : 'Email Reset Link' }}</span>
-                            <span v-if="!form.processing">→</span>
+                            <span v-if="!form.processing">â†’</span>
                         </button>
                     </div>
 
@@ -183,4 +183,5 @@ const submit = () => {
 
     </div>
 </template>
+
 

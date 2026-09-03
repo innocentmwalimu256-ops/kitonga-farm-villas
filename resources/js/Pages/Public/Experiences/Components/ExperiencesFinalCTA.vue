@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Link } from '@inertiajs/vue3';
 </script>
 
@@ -7,7 +7,7 @@ import { Link } from '@inertiajs/vue3';
         
         <!-- Authentic Background Visual -->
         <img 
-            src="/images/experiences_hero_bg.jpg" 
+            src="/images/experiences_hero_bg.webp" 
             alt="Kitonga Farm Sunset Landscape" 
             class="absolute inset-0 w-full h-full object-cover opacity-50 filter brightness-90 saturate-110"
         />
@@ -52,3 +52,4 @@ import { Link } from '@inertiajs/vue3';
 
     </section>
 </template>
+

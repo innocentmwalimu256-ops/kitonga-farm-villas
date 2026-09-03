@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -26,7 +26,7 @@ const formatCurrency = (val) => {
     return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val);
 };
 
-const getImageUrl = (path, fallback = '/images/general_farm_hero.jpg') => {
+const getImageUrl = (path, fallback = '/images/general_farm_hero.webp') => {
     if (!path) return fallback;
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
     return `/images/${path}`;
@@ -41,7 +41,7 @@ const farmZones = [
         subtitle: 'Healthy Friesian and cross-breed calves nourished in clean wooden stalls.',
         description: 'Our dairy calf barn provides a clean, well-ventilated shelter where young calves feed on specialized nutrient-rich rations and forage. Handled with meticulous hygiene and veterinary care, they form the foundation of Kitonga Farm\'s future high-yielding dairy herd.',
         specs: ['Nutrient-Rich Feed Rations', 'Sheltered Wooden Stalls', 'Daily Health & Growth Checks', 'Pedigree Dairy Bloodline'],
-        image: '/images/IMG_0321.jpg',
+        image: '/images/IMG_0321.webp',
         reverse: false,
     },
     {
@@ -51,7 +51,7 @@ const farmZones = [
         subtitle: 'Automated tiered layer cage system producing fresh, golden-yolk farm eggs daily.',
         description: 'Our modern layer poultry house features hygienic tiered cage infrastructure with automated water nipple lines and clean egg-roll collection trays. Hens receive balanced, mineral-rich grain rations, ensuring clean, fresh organic eggs harvested every morning.',
         specs: ['Tiered Layer Cage Systems', 'Automated Nipple Drinkers', 'Daily Morning Egg Gathering', 'Strict Poultry Biosecurity'],
-        image: '/images/IMG_0341.jpg',
+        image: '/images/IMG_0341.webp',
         reverse: true,
     },
     {
@@ -61,7 +61,7 @@ const farmZones = [
         subtitle: 'High-grade dairy cows feeding on nutrient-dense chopped green pasture.',
         description: 'Our mature dairy cows are individually tagged and managed in clean zero-grazing feedlot pens. Every day, they are served fresh succulent pasture grass, silage, and balanced mineral supplements, producing rich, creamy whole milk that is processed fresh right on the farm.',
         specs: ['Fresh Napier & Pasture Fodder', 'Individual Ear-Tag Monitoring', 'Continuous Fresh Water', 'High-Cream Morning Milk'],
-        image: '/images/IMG_0353.jpg',
+        image: '/images/IMG_0353.webp',
         reverse: false,
     },
     {
@@ -71,21 +71,21 @@ const farmZones = [
         subtitle: 'Dedicated farm team transporting freshly cut green fodder from the fields.',
         description: 'Every morning across the lush green fields of Kitonga Farm, our dedicated team harvests bundles of protein-rich green pasture and Napier grass. Carried directly to the livestock sheds, this freshly cut fodder guarantees optimal nutrition, vitality, and milk production for the entire herd.',
         specs: ['Daily Dawn Fodder Cutting', '100% Organic Field Grasses', 'Dedicated Farm Hands', 'Sustainable Forage Cycles'],
-        image: '/images/IMG_0362.jpg',
+        image: '/images/IMG_0362.webp',
         reverse: true,
     },
 ];
 
 // Complete Estate Visual Archive (Accurate photo titles for Milk, Eggs, Dairy, & Pastures)
 const farmGallery = [
-    { src: '/images/IMG_0341.jpg', title: 'Modern Tiered Layer Poultry House & Fresh Farm Eggs', category: 'Poultry & Eggs' },
-    { src: '/images/IMG_0321.jpg', title: 'Young Dairy Calves at the Barn Feeding Rail', category: 'Calf Nursery' },
-    { src: '/images/IMG_0328.jpg', title: 'Automated Cattle Shower & Spray Race Biosecurity Tunnel', category: 'Herd Biosecurity' },
-    { src: '/images/IMG_0353.jpg', title: 'Pedigree Dairy Cows Feeding on Fresh Fodder', category: 'Dairy Herd' },
-    { src: '/images/IMG_0362.jpg', title: 'Farm Team Harvesting & Transporting Green Pasture Fodder', category: 'Pasture Harvest' },
-    { src: '/images/IMG_0404.jpg', title: 'Fresh Whole Pasture Milk Direct from the Farm (3L & 5L)', category: 'Fresh Milk' },
-    { src: '/images/IMG_0394.jpg', title: 'Kitonga Cultured Sour Milk / Mtindi Safi (3L & 5L)', category: 'Mtindi Safi' },
-    { src: '/images/IMG_0389.jpg', title: 'Kitonga Artisanal Drinking Yogurt (0.5L & 1L)', category: 'Artisanal Yogurt' },
+    { src: '/images/IMG_0341.webp', title: 'Modern Tiered Layer Poultry House & Fresh Farm Eggs', category: 'Poultry & Eggs' },
+    { src: '/images/IMG_0321.webp', title: 'Young Dairy Calves at the Barn Feeding Rail', category: 'Calf Nursery' },
+    { src: '/images/IMG_0328.webp', title: 'Automated Cattle Shower & Spray Race Biosecurity Tunnel', category: 'Herd Biosecurity' },
+    { src: '/images/IMG_0353.webp', title: 'Pedigree Dairy Cows Feeding on Fresh Fodder', category: 'Dairy Herd' },
+    { src: '/images/IMG_0362.webp', title: 'Farm Team Harvesting & Transporting Green Pasture Fodder', category: 'Pasture Harvest' },
+    { src: '/images/IMG_0404.webp', title: 'Fresh Whole Pasture Milk Direct from the Farm (3L & 5L)', category: 'Fresh Milk' },
+    { src: '/images/IMG_0394.webp', title: 'Kitonga Cultured Sour Milk / Mtindi Safi (3L & 5L)', category: 'Mtindi Safi' },
+    { src: '/images/IMG_0389.webp', title: 'Kitonga Artisanal Drinking Yogurt (0.5L & 1L)', category: 'Artisanal Yogurt' },
 ];
 
 const activeLightbox = ref(null);
@@ -111,7 +111,7 @@ const orderProduct = (product) => {
 </script>
 
 <template>
-    <Head title="Our Organic Farm & Countryside Heritage — Kitonga Farm Villas" />
+    <Head title="Our Organic Farm & Countryside Heritage â€” Kitonga Farm Villas" />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
@@ -206,7 +206,7 @@ const orderProduct = (product) => {
             
             <!-- 4K Farm Visual (Crystal Clear) -->
             <img 
-                src="/images/farm_hero_img_0289.jpg" 
+                src="/images/farm_hero_img_0289.webp" 
                 alt="Kitonga Organic Farm & Sanctuary" 
                 fetchpriority="high"
                 decoding="sync"
@@ -221,7 +221,7 @@ const orderProduct = (product) => {
         <section class="content-auto max-w-5xl mx-auto px-6 pt-6 pb-20 text-center space-y-8">
             <div class="inline-flex items-center gap-2">
                 <span class="w-8 h-px bg-[#C98A3E]"></span>
-                <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">01 — The Estate Sanctuary</span>
+                <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">01 â€” The Estate Sanctuary</span>
                 <span class="w-8 h-px bg-[#C98A3E]"></span>
             </div>
 
@@ -300,7 +300,7 @@ const orderProduct = (product) => {
             <div class="text-center space-y-3">
                 <div class="inline-flex items-center gap-2">
                     <span class="w-8 h-px bg-[#C98A3E]"></span>
-                    <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">02 — Estate Zones</span>
+                    <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">02 â€” Estate Zones</span>
                     <span class="w-8 h-px bg-[#C98A3E]"></span>
                 </div>
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#14231C]">
@@ -380,7 +380,7 @@ const orderProduct = (product) => {
                 <div class="space-y-2">
                     <div class="inline-flex items-center gap-2">
                         <span class="w-6 h-px bg-[#C98A3E]"></span>
-                        <span class="text-xs uppercase tracking-[3px] font-bold text-[#C98A3E] font-sans">03 — Visual Archive</span>
+                        <span class="text-xs uppercase tracking-[3px] font-bold text-[#C98A3E] font-sans">03 â€” Visual Archive</span>
                     </div>
                     <h2 class="text-3xl sm:text-4xl font-serif font-light text-[#14231C]">
                         Moments Captured on the Estate
@@ -464,7 +464,7 @@ const orderProduct = (product) => {
                 class="absolute top-6 right-6 text-white/80 hover:text-white p-2 z-50 text-2xl"
                 aria-label="Close image preview"
             >
-                ✕
+                âœ•
             </button>
 
             <!-- Navigation Buttons -->
@@ -473,14 +473,14 @@ const orderProduct = (product) => {
                 class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 z-50 text-xl font-bold"
                 aria-label="Previous image"
             >
-                ‹
+                â€¹
             </button>
             <button 
                 @click.stop="nextLightbox" 
                 class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 z-50 text-xl font-bold"
                 aria-label="Next image"
             >
-                ›
+                â€º
             </button>
 
             <div class="max-w-5xl max-h-[85vh] flex flex-col items-center" @click.stop>
@@ -547,4 +547,5 @@ const orderProduct = (product) => {
 
     </div>
 </template>
+
 

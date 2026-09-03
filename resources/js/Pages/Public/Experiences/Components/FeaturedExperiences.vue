@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -13,9 +13,9 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path, slug) => {
-    if (slug === 'normal-farm-tour') return '/images/normal_farm_tour.jpg';
-    if (slug === 'general-farm-tour') return '/images/general_farm_hero.jpg';
-    if (!path) return '/images/general_farm_hero.jpg';
+    if (slug === 'normal-farm-tour') return '/images/normal_farm_tour.webp';
+    if (slug === 'general-farm-tour') return '/images/general_farm_hero.webp';
+    if (!path) return '/images/general_farm_hero.webp';
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
     return `/images/${path}`;
 };
@@ -88,25 +88,25 @@ const getImageUrl = (path, slug) => {
                         <!-- Confirmed Inclusions Chips -->
                         <div class="flex flex-wrap gap-2 text-[11px] font-medium text-[#2C3E2B]">
                             <span v-if="exp.slug === 'normal-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                🌿 Farm Walk
+                                ðŸŒ¿ Farm Walk
                             </span>
                             <span v-if="exp.slug === 'normal-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                🏊 Swimming Pool
+                                ðŸŠ Swimming Pool
                             </span>
                             <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                🐄 Dairy Zone
+                                ðŸ„ Dairy Zone
                             </span>
                             <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                🐔 Poultry Zone
+                                ðŸ” Poultry Zone
                             </span>
                             <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                🌱 Greenhouses
+                                ðŸŒ± Greenhouses
                             </span>
                             <span v-if="exp.duration" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                ⏱️ {{ exp.duration }}
+                                â±ï¸ {{ exp.duration }}
                             </span>
                             <span class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                👥 All Ages
+                                ðŸ‘¥ All Ages
                             </span>
                         </div>
 
@@ -128,7 +128,7 @@ const getImageUrl = (path, slug) => {
                                 class="w-full py-4 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 flex items-center justify-center gap-2 shadow-md cursor-pointer"
                             >
                                 <span>DISCOVER THIS EXPERIENCE</span>
-                                <span>→</span>
+                                <span>â†’</span>
                             </Link>
                         </div>
 
@@ -142,3 +142,4 @@ const getImageUrl = (path, slug) => {
 
     </section>
 </template>
+

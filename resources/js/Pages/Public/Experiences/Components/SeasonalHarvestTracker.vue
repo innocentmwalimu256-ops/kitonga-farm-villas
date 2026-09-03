@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 
 const activeHarvestTab = ref('crops');
@@ -16,7 +16,7 @@ const harvestData = {
             { name: 'Vanilla & Chillies', desc: 'Carefully tended greenhouse and garden rows.' },
             { name: 'Magimbi & Vegetables', desc: 'Traditional countryside root crops and seasonal greens.' },
         ],
-        image: '/images/gallery_img_0223.jpg',
+        image: '/images/gallery_img_0223.webp',
     },
     livestock: {
         title: 'Pastoral Livestock',
@@ -28,7 +28,7 @@ const harvestData = {
             { name: 'Chickens & Ducks', desc: 'Free-range poultry active throughout the daytime.' },
             { name: 'Turkeys', desc: 'Traditional countryside farm birds in dedicated runs.' },
         ],
-        image: '/images/download_41.jpg',
+        image: '/images/download_41.webp',
     },
     produce: {
         title: 'Farm Fresh Harvest',
@@ -40,7 +40,7 @@ const harvestData = {
             { name: 'Farm Eggs', desc: 'Collected daily from free-roaming poultry.' },
             { name: 'Coffee & Tea', desc: 'Traditional Tanzanian hot beverages served at the rural lounge.' },
         ],
-        image: '/images/farm_gallery_1.jpg',
+        image: '/images/farm_gallery_1.webp',
     },
 };
 </script>
@@ -74,7 +74,7 @@ const harvestData = {
                             : 'text-gray-600 hover:text-black'
                     ]"
                 >
-                    🌱 Crops & Orchards
+                    ðŸŒ± Crops & Orchards
                 </button>
                 <button 
                     type="button"
@@ -86,7 +86,7 @@ const harvestData = {
                             : 'text-gray-600 hover:text-black'
                     ]"
                 >
-                    🐄 Pastoral Livestock
+                    ðŸ„ Pastoral Livestock
                 </button>
                 <button 
                     type="button"
@@ -98,7 +98,7 @@ const harvestData = {
                             : 'text-gray-600 hover:text-black'
                     ]"
                 >
-                    🍯 Farm Fresh Harvest
+                    ðŸ¯ Farm Fresh Harvest
                 </button>
             </div>
         </div>
@@ -152,3 +152,4 @@ const harvestData = {
 
     </section>
 </template>
+

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
@@ -18,26 +18,26 @@ const props = defineProps({
 const getGallery = (slug) => {
     if (slug === 'luxury-villa') {
         return [
-            { category: 'Architecture & Grounds', src: '/images/villas_gallery/IMG_0063.jpg', title: 'Private Residence Setting' },
-            { category: 'Villa Exterior', src: '/images/villas_gallery/IMG_0064.jpg', title: 'Estate Pathway & Architecture' },
-            { category: 'Master Bedroom', src: '/images/villas_gallery/IMG_0092.jpg', title: 'Interior Bedroom Suite' },
-            { category: 'Living Space', src: '/images/villas_gallery/IMG_0094.jpg', title: 'Lounge & Natural Lighting' },
+            { category: 'Architecture & Grounds', src: '/images/villas_gallery/IMG_0063.webp', title: 'Private Residence Setting' },
+            { category: 'Villa Exterior', src: '/images/villas_gallery/IMG_0064.webp', title: 'Estate Pathway & Architecture' },
+            { category: 'Master Bedroom', src: '/images/villas_gallery/IMG_0092.webp', title: 'Interior Bedroom Suite' },
+            { category: 'Living Space', src: '/images/villas_gallery/IMG_0094.webp', title: 'Lounge & Natural Lighting' },
         ];
     }
     if (slug === 'semi-luxury-villa') {
         return [
-            { category: 'Private Veranda', src: '/images/villas_gallery/IMG_0119.jpg', title: 'Outdoor Living Area' },
-            { category: 'Garden Walkway', src: '/images/villas_gallery/IMG_0120.jpg', title: 'Lush Garden Pathway' },
-            { category: 'Veranda & Grounds', src: '/images/villas_gallery/IMG_0132.jpg', title: 'Private Outdoor Retreat' },
-            { category: 'Sunset & Farm View', src: '/images/villas_gallery/IMG_0133.jpg', title: 'Panoramic Countryside View' },
+            { category: 'Private Veranda', src: '/images/villas_gallery/IMG_0119.webp', title: 'Outdoor Living Area' },
+            { category: 'Garden Walkway', src: '/images/villas_gallery/IMG_0120.webp', title: 'Lush Garden Pathway' },
+            { category: 'Veranda & Grounds', src: '/images/villas_gallery/IMG_0132.webp', title: 'Private Outdoor Retreat' },
+            { category: 'Sunset & Farm View', src: '/images/villas_gallery/IMG_0133.webp', title: 'Panoramic Countryside View' },
         ];
     }
     // family-villa default
     return [
-        { category: 'Family Residence', src: '/images/villas_gallery/IMG_0018.jpg', title: 'Spacious Family Setting' },
-        { category: 'Estate Grounds', src: '/images/villas_gallery/IMG_0034.jpg', title: 'Family Villa Environment' },
-        { category: 'Courtyard & Terrace', src: '/images/villas_gallery/IMG_0130.jpg', title: 'Private Outdoor Terrace' },
-        { category: 'Estate Gardens', src: '/images/villas_gallery/IMG_0131.jpg', title: 'Lush Tropical Landscapes' },
+        { category: 'Family Residence', src: '/images/villas_gallery/IMG_0018.webp', title: 'Spacious Family Setting' },
+        { category: 'Estate Grounds', src: '/images/villas_gallery/IMG_0034.webp', title: 'Family Villa Environment' },
+        { category: 'Courtyard & Terrace', src: '/images/villas_gallery/IMG_0130.webp', title: 'Private Outdoor Terrace' },
+        { category: 'Estate Gardens', src: '/images/villas_gallery/IMG_0131.webp', title: 'Lush Tropical Landscapes' },
     ];
 };
 
@@ -92,17 +92,17 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path, slug) => {
-    if (slug === 'luxury-villa') return '/images/luxury_villa_img.jpg';
-    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.jpg';
-    if (slug === 'family-villa') return '/images/family_villa_img.jpg';
-    if (!path) return '/images/luxury_villa_img.jpg';
+    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
+    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
+    if (slug === 'family-villa') return '/images/family_villa_img.webp';
+    if (!path) return '/images/luxury_villa_img.webp';
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
     return `/images/${path}`;
 };
 </script>
 
 <template>
-    <Head :title="`${villa.name} — Private Residence | Kitonga Farm Villas`" />
+    <Head :title="`${villa.name} â€” Private Residence | Kitonga Farm Villas`" />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
@@ -146,16 +146,16 @@ const getImageUrl = (path, slug) => {
                     prefetch 
                     class="text-xs uppercase tracking-[3px] font-bold text-[#E6C387] hover:text-white transition flex items-center gap-1.5"
                 >
-                    <span>←</span> <span>All Residences</span>
+                    <span>â†</span> <span>All Residences</span>
                 </Link>
                 <h1 class="text-3xl sm:text-5xl md:text-6xl font-serif font-light text-[#F7F3EA] tracking-tight">
                     {{ villa.name }}
                 </h1>
                 <div class="text-xs sm:text-sm text-gray-300 font-medium tracking-wide">
                     <span>{{ villa.capacity }} Guests</span>
-                    <span class="mx-2 text-[#C98A3E]">·</span>
+                    <span class="mx-2 text-[#C98A3E]">Â·</span>
                     <span>{{ villa.bedrooms }} {{ villa.bedrooms === 1 ? 'Bedroom' : 'Bedrooms' }}</span>
-                    <span class="mx-2 text-[#C98A3E]">·</span>
+                    <span class="mx-2 text-[#C98A3E]">Â·</span>
                     <span>{{ villa.bathrooms }} {{ villa.bathrooms === 1 ? 'Bathroom' : 'Bathrooms' }}</span>
                 </div>
             </div>
@@ -170,7 +170,7 @@ const getImageUrl = (path, slug) => {
                 <!-- Intro Statement -->
                 <section class="space-y-4 font-sans">
                     <span class="text-[10px] uppercase tracking-[4px] font-bold text-[#C98A3E] block">
-                        — RESIDENCE ESSENCE —
+                        â€” RESIDENCE ESSENCE â€”
                     </span>
                     <h2 class="text-2xl sm:text-3xl font-serif font-light text-[#1F2420]">
                         Quiet mornings. Private space. The beauty of Kitonga.
@@ -208,7 +208,7 @@ const getImageUrl = (path, slug) => {
                 <!-- "THE EXPERIENCE" SECTION -->
                 <section class="space-y-4 bg-white p-8 rounded-2xl border border-[#E5E0D8] shadow-xs font-sans">
                     <span class="text-[10px] uppercase tracking-[4px] font-bold text-[#C98A3E] block">
-                        — THE EXPERIENCE —
+                        â€” THE EXPERIENCE â€”
                     </span>
                     <h3 class="text-2xl font-serif font-light text-[#1B2E22]">
                         Slow Living & Countryside Serenity
@@ -261,7 +261,7 @@ const getImageUrl = (path, slug) => {
                             :key="amenity.id" 
                             class="p-3 bg-white border border-[#E5E0D8] rounded-xl flex items-center gap-2"
                         >
-                            <span class="text-emerald-700 font-bold">✓</span>
+                            <span class="text-emerald-700 font-bold">âœ“</span>
                             <span>{{ amenity.name }}</span>
                         </div>
                     </div>
@@ -338,7 +338,7 @@ const getImageUrl = (path, slug) => {
                     <!-- Dynamic Subtotal Calculation -->
                     <div class="border-t border-[#E5E0D8] pt-4 space-y-1.5 text-xs text-gray-600">
                         <div class="flex justify-between">
-                            <span>{{ formatCurrency(villa.base_price) }} × {{ numberOfNights }} {{ numberOfNights === 1 ? 'night' : 'nights' }}</span>
+                            <span>{{ formatCurrency(villa.base_price) }} Ã— {{ numberOfNights }} {{ numberOfNights === 1 ? 'night' : 'nights' }}</span>
                             <span class="font-bold text-gray-900">{{ formatCurrency(estimatedTotal) }}</span>
                         </div>
                         <div class="flex justify-between items-baseline pt-2 border-t border-gray-150">
@@ -354,7 +354,7 @@ const getImageUrl = (path, slug) => {
                         class="w-full py-4 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] font-bold uppercase tracking-wider text-xs rounded-xl transition font-sans flex items-center justify-center gap-2 cursor-pointer shadow-lg group"
                     >
                         <span>Reserve this Residence</span>
-                        <span class="text-[#C98A3E] group-hover:text-white group-hover:translate-x-1 transition">→</span>
+                        <span class="text-[#C98A3E] group-hover:text-white group-hover:translate-x-1 transition">â†’</span>
                     </Link>
 
                     <p class="text-[10px] text-gray-400 text-center leading-tight">
@@ -371,7 +371,7 @@ const getImageUrl = (path, slug) => {
         <section v-if="other_villas && other_villas.length > 0" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 border-t border-[#E5E0D8]">
             <div class="text-center space-y-2 mb-10">
                 <span class="text-[10px] uppercase tracking-[4px] font-sans font-bold text-[#C98A3E] block">
-                    — ALTERNATIVE RETREATS —
+                    â€” ALTERNATIVE RETREATS â€”
                 </span>
                 <h3 class="text-2xl sm:text-3xl font-serif font-light text-[#1F2420]">
                     Explore Another Residence
@@ -404,7 +404,7 @@ const getImageUrl = (path, slug) => {
                                 class="text-xs font-bold uppercase tracking-wider text-[#C98A3E] hover:text-[#1B2E22] transition inline-flex items-center gap-1"
                             >
                                 <span>View Residence</span>
-                                <span>→</span>
+                                <span>â†’</span>
                             </Link>
                         </div>
                     </div>
@@ -426,7 +426,7 @@ const getImageUrl = (path, slug) => {
                     class="absolute top-6 right-6 text-white text-3xl font-light hover:text-[#C98A3E] transition cursor-pointer z-110 w-10 h-10 flex items-center justify-center"
                     aria-label="Close Lightbox"
                 >
-                    ✕
+                    âœ•
                 </button>
 
                 <!-- Prev Button -->
@@ -435,7 +435,7 @@ const getImageUrl = (path, slug) => {
                     class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl p-3 hover:text-[#C98A3E] transition cursor-pointer z-110 bg-black/40 rounded-full"
                     aria-label="Previous Photo"
                 >
-                    ‹
+                    â€¹
                 </button>
 
                 <!-- Next Button -->
@@ -444,7 +444,7 @@ const getImageUrl = (path, slug) => {
                     class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl p-3 hover:text-[#C98A3E] transition cursor-pointer z-110 bg-black/40 rounded-full"
                     aria-label="Next Photo"
                 >
-                    ›
+                    â€º
                 </button>
 
                 <!-- Current Image & Caption -->
@@ -468,8 +468,9 @@ const getImageUrl = (path, slug) => {
         <footer class="bg-[#14231C] text-[#F7F3EA]/80 py-12 px-6 md:px-12 border-t border-white/10 text-center font-sans text-xs">
             <p class="font-serif font-semibold text-white text-sm mb-2 uppercase tracking-widest">KITONGA FARM VILLAS</p>
             <p class="text-[#F7F3EA]/60 mb-4">Sanya Juu, Kilimanjaro, Tanzania</p>
-            <p class="text-[10px] text-[#F7F3EA]/40">© 2026 Kitonga Farm Villas. All rights reserved.</p>
+            <p class="text-[10px] text-[#F7F3EA]/40">Â© 2026 Kitonga Farm Villas. All rights reserved.</p>
         </footer>
 
     </div>
 </template>
+

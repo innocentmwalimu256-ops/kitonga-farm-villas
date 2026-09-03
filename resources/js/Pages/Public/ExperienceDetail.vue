@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import ExperienceBookingPanel from './Experiences/Components/ExperienceBookingPanel.vue';
 import VillaCrossSell from './Experiences/Components/VillaCrossSell.vue';
@@ -10,9 +10,9 @@ const props = defineProps({
 });
 
 const getImageUrl = (path, slug) => {
-    if (slug === 'normal-farm-tour') return '/images/normal_farm_tour.jpg';
-    if (slug === 'general-farm-tour') return '/images/general_farm_hero.jpg';
-    if (!path) return '/images/general_farm_hero.jpg';
+    if (slug === 'normal-farm-tour') return '/images/normal_farm_tour.webp';
+    if (slug === 'general-farm-tour') return '/images/general_farm_hero.webp';
+    if (!path) return '/images/general_farm_hero.webp';
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
     return `/images/${path}`;
 };
@@ -63,7 +63,7 @@ const getImageUrl = (path, slug) => {
                         {{ experience.category }}
                     </span>
                     <span v-if="experience.duration" class="px-3 py-1 bg-black/40 backdrop-blur-xs text-white text-xs font-sans font-semibold rounded border border-white/20">
-                        ⏱️ {{ experience.duration }}
+                        â±ï¸ {{ experience.duration }}
                     </span>
                 </div>
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-wide text-[#F7F3EA] font-serif leading-tight drop-shadow-md">
@@ -84,7 +84,7 @@ const getImageUrl = (path, slug) => {
                     prefetch
                     class="text-xs font-bold font-sans text-gray-500 hover:text-[#2C3E2B] transition inline-flex items-center gap-1.5"
                 >
-                    ← Back to Experiences
+                    â† Back to Experiences
                 </Link>
             </div>
 
@@ -106,7 +106,7 @@ const getImageUrl = (path, slug) => {
                         <h3 class="font-serif text-xl text-gray-950 font-light">Experience Highlights</h3>
                         <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans text-gray-600">
                             <li v-for="(hl, idx) in experience.highlights" :key="idx" class="flex gap-2">
-                                <span class="text-[#C98A3E] font-bold">★</span>
+                                <span class="text-[#C98A3E] font-bold">â˜…</span>
                                 <span class="leading-relaxed">{{ hl }}</span>
                             </li>
                         </ul>
@@ -121,7 +121,7 @@ const getImageUrl = (path, slug) => {
                                 :key="idx" 
                                 class="p-4 bg-white border border-gray-200 rounded-xl flex items-center gap-2 text-gray-700 shadow-xs"
                             >
-                                <span class="text-emerald-700 font-extrabold text-sm">✓</span>
+                                <span class="text-emerald-700 font-extrabold text-sm">âœ“</span>
                                 <span>{{ inc }}</span>
                             </div>
                         </div>
@@ -165,16 +165,17 @@ const getImageUrl = (path, slug) => {
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Contact Details</h4>
                     <div class="space-y-2 text-[#F7F3EA]/70">
-                        <p>✉️ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
-                        <p>📞 <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
-                        <p>📍 Kitonga Farm, Sanya Juu, Kilimanjaro</p>
+                        <p>âœ‰ï¸ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
+                        <p>ðŸ“ž <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
+                        <p>ðŸ“ Kitonga Farm, Sanya Juu, Kilimanjaro</p>
                     </div>
                 </div>
             </div>
             <div class="max-w-6xl mx-auto mt-12 pt-6 border-t border-white/10 text-center text-[10px] text-[#F7F3EA]/50 font-sans">
-                © 2026 Kitonga Farm Villas. All rights reserved.
+                Â© 2026 Kitonga Farm Villas. All rights reserved.
             </div>
         </footer>
 
     </div>
 </template>
+

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 
 const activeZoneIndex = ref(0);
@@ -12,7 +12,7 @@ const farmZones = [
         summary: 'Avenue of mature palm trees creating natural shade across the central walking trails.',
         description: 'Take a relaxed, gentle walk along our iconic palm avenues. The paths connect the main farm zones and provide a cool, scenic route through the center of the estate.',
         highlights: ['Shaded walking trails', 'Gentle natural terrain', 'Direct access to fruit orchards'],
-        image: '/images/normal_farm_tour.jpg',
+        image: '/images/normal_farm_tour.webp',
     },
     {
         id: 'zone-02',
@@ -22,7 +22,7 @@ const farmZones = [
         summary: 'Active dairy cattle pastures and clean shelter stables.',
         description: 'Observe our dairy cows grazing quietly in open paddocks. Visitors on the General Farm Tour get an up-close look at modern dairy cattle management.',
         highlights: ['Healthy dairy herd', 'Open paddock grazing', 'Clean feeding & shelter bays'],
-        image: '/images/three_cows.jpg',
+        image: '/images/three_cows.webp',
     },
     {
         id: 'zone-03',
@@ -32,7 +32,7 @@ const farmZones = [
         summary: 'Natural enclosures for chickens, ducks, turkeys, and goats.',
         description: 'Explore the lively animal enclosures where local poultry and goats roam freely, showing the harmonious multi-species balance of our rural farm.',
         highlights: ['Free-range chickens & ducks', 'Turkeys and goats', 'Natural rural setting'],
-        image: '/images/download_41.jpg',
+        image: '/images/download_41.webp',
     },
     {
         id: 'zone-04',
@@ -42,7 +42,7 @@ const farmZones = [
         summary: 'Fields of papayas, pineapples, avocados, chillies, vanilla, and vegetables.',
         description: 'Walk through rows of tropical fruit trees and greenhouse zones where rich volcanic soils yield seasonal harvest crops in the mountain air.',
         highlights: ['Papayas, pineapples & avocados', 'Greenhouse vanilla & chillies', 'Fresh organic greens'],
-        image: '/images/gallery_img_0223.jpg',
+        image: '/images/gallery_img_0223.webp',
     },
     {
         id: 'zone-05',
@@ -52,7 +52,7 @@ const farmZones = [
         summary: 'Outdoor swimming pool and open-air bar lounge.',
         description: 'The perfect spot to cool off after a farm walk. Swim in the clean outdoor pool surrounded by palm paths, and unwind with cold drinks.',
         highlights: ['Clean swimming pool', 'Open-air shaded lounge', 'Cold refreshments'],
-        image: '/images/gallery_img_0220.jpg',
+        image: '/images/gallery_img_0220.webp',
     },
 ];
 </script>
@@ -146,7 +146,7 @@ const farmZones = [
                                 :key="hIdx"
                                 class="text-xs text-gray-600 flex items-center gap-2"
                             >
-                                <span class="text-[#C98A3E] font-bold">✓</span>
+                                <span class="text-[#C98A3E] font-bold">âœ“</span>
                                 <span>{{ hl }}</span>
                             </li>
                         </ul>
@@ -161,7 +161,7 @@ const farmZones = [
                         class="text-xs font-bold uppercase tracking-wider text-[#1B2E22] hover:text-[#C98A3E] flex items-center gap-1.5 transition"
                     >
                         <span>View Tour Options</span>
-                        <span>→</span>
+                        <span>â†’</span>
                     </a>
                 </div>
 
@@ -171,3 +171,4 @@ const farmZones = [
 
     </section>
 </template>
+

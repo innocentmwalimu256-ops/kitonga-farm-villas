@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 
@@ -33,7 +33,7 @@ const defaultProducts = [
         selling_price: 17000,
         unit: '5 Liters',
         description: 'Traditional thick and creamy cultured sour milk made from 100% pure Kitonga pasture milk. Rich in natural probiotics and authentic heritage taste, bottled in a 5L container.',
-        image: '/images/download_44.jpg',
+        image: '/images/download_44.webp',
     },
     {
         id: 2,
@@ -43,7 +43,7 @@ const defaultProducts = [
         selling_price: 13000,
         unit: '3 Liters',
         description: 'Traditional thick and creamy cultured sour milk made from pure farm pasture milk, bottled fresh in a convenient 3L container.',
-        image: '/images/download_46.jpg',
+        image: '/images/download_46.webp',
     },
     {
         id: 3,
@@ -53,7 +53,7 @@ const defaultProducts = [
         selling_price: 13000,
         unit: '5 Liters',
         description: '100% pure fresh unpasteurized whole farm milk rich in natural golden cream, harvested daily from our pasture-fed dairy cattle in a 5L container.',
-        image: '/images/IMG_0404.jpg',
+        image: '/images/IMG_0404.webp',
     },
     {
         id: 4,
@@ -63,7 +63,7 @@ const defaultProducts = [
         selling_price: 9000,
         unit: '3 Liters',
         description: 'Pure wholesome unhomogenized fresh farm milk rich in nutrients and natural cream, bottled daily in a 3L container.',
-        image: '/images/download_45.jpg',
+        image: '/images/download_45.webp',
     },
     {
         id: 5,
@@ -73,7 +73,7 @@ const defaultProducts = [
         selling_price: 6000,
         unit: '1 Liter',
         description: 'Smooth, velvety artisanal drinking yogurt cultured from fresh morning milk, available in luscious Vanilla and ripe Strawberry infusions in a 1L bottle.',
-        image: '/images/yogurt_1l.jpg',
+        image: '/images/yogurt_1l.webp',
     },
     {
         id: 6,
@@ -83,7 +83,7 @@ const defaultProducts = [
         selling_price: 3000,
         unit: '0.5 L',
         description: 'Delicious probiotic artisanal drinking yogurt crafted from pure whole milk, bottled in a convenient 500ml on-the-go size.',
-        image: '/images/IMG_0389.jpg',
+        image: '/images/IMG_0389.webp',
     },
     {
         id: 7,
@@ -93,7 +93,7 @@ const defaultProducts = [
         selling_price: 8000,
         unit: 'Tray (30 Eggs)',
         description: 'Farm-fresh organic eggs with vibrant golden yolks, gathered every morning from free-range pasture hens.',
-        image: '/images/farm_egg_trays.jpg',
+        image: '/images/farm_egg_trays.webp',
     },
     {
         id: 8,
@@ -103,7 +103,7 @@ const defaultProducts = [
         selling_price: 10000,
         unit: '1 kg',
         description: '100% pure, unfiltered and unheated golden raw honey harvested from traditional highland top-bar apiaries deep in the Komkonga forest (1kg net weight).',
-        image: '/images/raw_forest_honey.jpg',
+        image: '/images/raw_forest_honey.webp',
     },
     {
         id: 9,
@@ -113,7 +113,7 @@ const defaultProducts = [
         selling_price: 3000,
         unit: '1 kg',
         description: 'Sun-ripened, fragrant organic mangoes picked directly from mature estate orchard trees (1kg).',
-        image: '/images/mango_wallpaper.jpg',
+        image: '/images/mango_wallpaper.webp',
     },
     {
         id: 10,
@@ -123,7 +123,7 @@ const defaultProducts = [
         selling_price: 4000,
         unit: 'Piece / kg',
         description: 'Luscious, vibrant orange sweet papaws cultivated in fertile highland soil and harvested at peak natural sweetness.',
-        image: '/images/pawpaw_fresh.jpg',
+        image: '/images/pawpaw_fresh.webp',
     },
     {
         id: 11,
@@ -133,7 +133,7 @@ const defaultProducts = [
         selling_price: 4500,
         unit: 'Piece',
         description: 'Naturally sweet and juicy tropical pineapples grown with pure highland mountain rainfall and sunshine.',
-        image: '/images/pineapple_fresh.jpg',
+        image: '/images/pineapple_fresh.webp',
     },
     {
         id: 12,
@@ -143,7 +143,7 @@ const defaultProducts = [
         selling_price: 6000,
         unit: 'Bundle',
         description: 'Crisp pesticide-free garden greens, tender spinach, lettuce, sweet basil, and fresh mint gathered at dawn.',
-        image: '/images/fresh_vegetables_garden.jpg',
+        image: '/images/fresh_vegetables_garden.webp',
     },
 ];
 
@@ -163,30 +163,30 @@ const getCategoryName = (prod) => {
 const resolveProductImage = (prod) => {
     const raw = prod?.image || prod?.featured_image;
     if (raw && (raw.includes('yogurt_1l') || raw.includes('Date Milk') || raw.includes('date_milk'))) {
-        return '/images/yogurt_1l.jpg';
+        return '/images/yogurt_1l.webp';
     }
     if (raw && (raw.includes('download_46') || raw.includes('download (46)'))) {
-        return '/images/download_46.jpg';
+        return '/images/download_46.webp';
     }
     if (raw && (raw.includes('download_45') || raw.includes('download (45)'))) {
-        return '/images/download_45.jpg';
+        return '/images/download_45.webp';
     }
     if (raw && (raw.includes('download_44') || raw.includes('download (44)'))) {
-        return '/images/download_44.jpg';
+        return '/images/download_44.webp';
     }
     const name = (prod?.name || '').toLowerCase();
     const sku = (prod?.sku || '').toUpperCase();
     if (sku.includes('YOGURT-1L') || ((name.includes('yogurt') || name.includes('yoghurt')) && (name.includes('1l') || name.includes('1 liter') || name.includes('1-liter') || name.includes('(1')))) {
-        return '/images/yogurt_1l.jpg';
+        return '/images/yogurt_1l.webp';
     }
     if (sku.includes('MTINDI-3L') || ((name.includes('mtindi') || name.includes('sour milk')) && name.includes('3'))) {
-        return '/images/download_46.jpg';
+        return '/images/download_46.webp';
     }
     if (sku.includes('FRESH-3L') || ((name.includes('fresh') || name.includes('milk') || name.includes('maziwa')) && name.includes('3'))) {
-        return '/images/download_45.jpg';
+        return '/images/download_45.webp';
     }
     if (sku.includes('MTINDI-5L') || (name.includes('mtindi') && name.includes('5'))) {
-        return '/images/download_44.jpg';
+        return '/images/download_44.webp';
     }
 
     if (raw && (raw.includes('IMG_0404') || raw.includes('IMG_0401') || raw.includes('IMG_0394') || raw.includes('IMG_0389') || raw.includes('IMG_0341') || raw.includes('farm_egg_trays') || raw.includes('raw_forest_honey') || raw.includes('mango_wallpaper') || raw.includes('pawpaw_fresh') || raw.includes('pineapple_fresh') || raw.includes('fresh_vegetables_garden'))) {
@@ -194,17 +194,17 @@ const resolveProductImage = (prod) => {
     }
     if (raw && (raw.startsWith('http') || raw.startsWith('/'))) return raw;
 
-    if (name.includes('egg') || name.includes('mayai') || name.includes('poultry')) return '/images/farm_egg_trays.jpg';
-    if (name.includes('yoghurt') || name.includes('yogurt')) return '/images/IMG_0389.jpg';
-    if (name.includes('mtindi') || name.includes('sour milk')) return '/images/IMG_0394.jpg';
-    if (name.includes('fresh whole milk') || name.includes('maziwa halisi') || name.includes('milk') || name.includes('maziwa')) return '/images/IMG_0404.jpg';
-    if (name.includes('honey') || name.includes('asali')) return '/images/raw_forest_honey.jpg';
-    if (name.includes('mango') || name.includes('embe')) return '/images/mango_wallpaper.jpg';
-    if (name.includes('papaw') || name.includes('papai') || name.includes('papaya')) return '/images/pawpaw_fresh.jpg';
-    if (name.includes('pine') || name.includes('nanasi')) return '/images/pineapple_fresh.jpg';
-    if (name.includes('veg') || name.includes('mboga') || name.includes('green')) return '/images/fresh_vegetables_garden.jpg';
+    if (name.includes('egg') || name.includes('mayai') || name.includes('poultry')) return '/images/farm_egg_trays.webp';
+    if (name.includes('yoghurt') || name.includes('yogurt')) return '/images/IMG_0389.webp';
+    if (name.includes('mtindi') || name.includes('sour milk')) return '/images/IMG_0394.webp';
+    if (name.includes('fresh whole milk') || name.includes('maziwa halisi') || name.includes('milk') || name.includes('maziwa')) return '/images/IMG_0404.webp';
+    if (name.includes('honey') || name.includes('asali')) return '/images/raw_forest_honey.webp';
+    if (name.includes('mango') || name.includes('embe')) return '/images/mango_wallpaper.webp';
+    if (name.includes('papaw') || name.includes('papai') || name.includes('papaya')) return '/images/pawpaw_fresh.webp';
+    if (name.includes('pine') || name.includes('nanasi')) return '/images/pineapple_fresh.webp';
+    if (name.includes('veg') || name.includes('mboga') || name.includes('green')) return '/images/fresh_vegetables_garden.webp';
 
-    return '/images/fresh_vegetables_garden.jpg';
+    return '/images/fresh_vegetables_garden.webp';
 };
 
 const allProducts = computed(() => {
@@ -313,14 +313,14 @@ const whatsappUrl = computed(() => {
         return `https://wa.me/${phone}?text=${encodeURIComponent('Hello Kitonga Farm Villas, I would like to inquire about fresh harvest produce.')}`;
     }
 
-    let msg = "🌿 *KITONGA FARM VILLAS — HARVEST ORDER*\n\n";
+    let msg = "ðŸŒ¿ *KITONGA FARM VILLAS â€” HARVEST ORDER*\n\n";
     msg += "Greetings, I would like to order the following fresh produce from the farm:\n\n";
     cartList.value.forEach((item, i) => {
         msg += `${i + 1}. *${item.name}*\n   - Quantity: ${item.qty} ${item.unit}\n   - Subtotal: ${formatCurrency(item.price * item.qty)}\n\n`;
     });
-    msg += `💰 *TOTAL ESTIMATE: ${formatCurrency(totalCartPrice.value)}*\n\n`;
+    msg += `ðŸ’° *TOTAL ESTIMATE: ${formatCurrency(totalCartPrice.value)}*\n\n`;
     if (deliveryNotes.value.trim()) {
-        msg += `📍 *Delivery / Special Notes:* ${deliveryNotes.value.trim()}\n\n`;
+        msg += `ðŸ“ *Delivery / Special Notes:* ${deliveryNotes.value.trim()}\n\n`;
     }
     msg += "Please confirm availability and dispatch details. Thank you!";
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
@@ -368,7 +368,7 @@ const whatsappUrl = computed(() => {
                         @click="cartDrawerOpen = true"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold tracking-wider transition-all cursor-pointer font-sans"
                     >
-                        <span>🛒 Basket</span>
+                        <span>ðŸ›’ Basket</span>
                         <span v-if="totalCartItems > 0" class="px-2 py-0.5 rounded-full bg-[#C98A3E] text-white text-[10px] font-bold">
                             {{ totalCartItems }}
                         </span>
@@ -418,7 +418,7 @@ const whatsappUrl = computed(() => {
         <section class="max-w-5xl mx-auto px-4 sm:px-8 pt-14 sm:pt-20 pb-12 text-center">
 
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#14231C]/5 border border-[#14231C]/10 text-[#C98A3E] text-[11px] font-bold uppercase tracking-[0.2em] mb-4">
-                <span>🌿</span> Estate Harvest & Fresh Produce
+                <span>ðŸŒ¿</span> Estate Harvest & Fresh Produce
             </div>
 
             <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[#14231C] tracking-tight leading-tight mb-6">
@@ -482,7 +482,7 @@ const whatsappUrl = computed(() => {
                         placeholder="Search any harvest..."
                         class="w-full pl-9 pr-4 py-2 bg-[#FDFBF7] border border-[#14231C]/15 rounded-xl text-xs text-[#14231C] focus:outline-none focus:border-[#C98A3E]"
                     />
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#14231C]/40">🔍</span>
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#14231C]/40">ðŸ”</span>
                 </div>
 
             </div>
@@ -492,7 +492,7 @@ const whatsappUrl = computed(() => {
         <section class="max-w-7xl mx-auto px-4 sm:px-8 pb-24">
             
             <div v-if="filteredProducts.length === 0" class="py-20 text-center space-y-3">
-                <span class="text-4xl">🌾</span>
+                <span class="text-4xl">ðŸŒ¾</span>
                 <h3 class="font-serif text-xl font-bold text-[#14231C]">No harvest items found</h3>
                 <p class="text-xs text-[#14231C]/60">Try selecting another category or resetting your search term.</p>
                 <button 
@@ -551,7 +551,7 @@ const whatsappUrl = computed(() => {
                             <!-- Stepper or Buy Button -->
                             <div>
                                 <div v-if="cart[prod.id]" class="flex items-center bg-[#F4EFE6] rounded-full p-1 border border-[#14231C]/10">
-                                    <button @click="decrementCart(prod.id)" class="w-6 h-6 rounded-full bg-white text-[#14231C] font-bold text-xs flex items-center justify-center shadow-sm cursor-pointer">−</button>
+                                    <button @click="decrementCart(prod.id)" class="w-6 h-6 rounded-full bg-white text-[#14231C] font-bold text-xs flex items-center justify-center shadow-sm cursor-pointer">âˆ’</button>
                                     <span class="w-6 text-center font-bold text-xs">{{ cart[prod.id].qty }}</span>
                                     <button @click="addToCart(prod)" class="w-6 h-6 rounded-full bg-white text-[#14231C] font-bold text-xs flex items-center justify-center shadow-sm cursor-pointer">+</button>
                                 </div>
@@ -591,20 +591,20 @@ const whatsappUrl = computed(() => {
                     <!-- Header -->
                     <div class="p-6 bg-[#14231C] text-white flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <span class="text-2xl">🧺</span>
+                            <span class="text-2xl">ðŸ§º</span>
                             <div>
                                 <h3 class="font-serif text-lg font-bold text-white">Your Harvest Basket</h3>
                                 <span class="text-[11px] text-[#C98A3E] font-medium">Kitonga Farm Direct Order</span>
                             </div>
                         </div>
-                        <button @click="cartDrawerOpen = false" class="text-white/70 hover:text-white p-2 text-lg cursor-pointer">✕</button>
+                        <button @click="cartDrawerOpen = false" class="text-white/70 hover:text-white p-2 text-lg cursor-pointer">âœ•</button>
                     </div>
 
                     <!-- Items -->
                     <div class="p-6 overflow-y-auto flex-1 space-y-4">
                         
                         <div v-if="cartList.length === 0" class="py-16 text-center space-y-3">
-                            <span class="text-4xl block">🧺</span>
+                            <span class="text-4xl block">ðŸ§º</span>
                             <h4 class="font-serif text-base font-bold text-[#14231C]">Your basket is empty</h4>
                             <p class="text-xs text-[#14231C]/60">Select eggs, dairy, honey, or fresh fruits above to add to your basket.</p>
                         </div>
@@ -628,12 +628,12 @@ const whatsappUrl = computed(() => {
                                 </div>
 
                                 <div class="flex items-center bg-white border border-[#14231C]/15 rounded-lg p-0.5 shadow-2xs">
-                                    <button @click="decrementCart(item.id)" class="w-7 h-7 rounded text-xs font-bold hover:bg-gray-100 flex items-center justify-center cursor-pointer transition">">−</button>
+                                    <button @click="decrementCart(item.id)" class="w-7 h-7 rounded text-xs font-bold hover:bg-gray-100 flex items-center justify-center cursor-pointer transition">">âˆ’</button>
                                     <span class="w-6 text-center text-xs font-bold font-mono">{{ item.qty }}</span>
                                     <button @click="addToCart(item)" class="w-7 h-7 rounded text-xs font-bold hover:bg-gray-100 flex items-center justify-center cursor-pointer transition">+</button>
                                 </div>
 
-                                <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-700 p-1.5 text-xs cursor-pointer" aria-label="Remove item">✕</button>
+                                <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-700 p-1.5 text-xs cursor-pointer" aria-label="Remove item">âœ•</button>
                             </div>
 
                             <!-- Delivery notes -->
@@ -662,7 +662,7 @@ const whatsappUrl = computed(() => {
                             target="_blank"
                             class="w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                         >
-                            <span>💬 Send Order via WhatsApp</span>
+                            <span>ðŸ’¬ Send Order via WhatsApp</span>
                         </a>
                     </div>
 
@@ -676,9 +676,9 @@ const whatsappUrl = computed(() => {
             @click="cartDrawerOpen = true"
             class="fixed bottom-6 right-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-[#14231C] hover:bg-[#C98A3E] text-white shadow-2xl border border-white/20 transition-all cursor-pointer"
         >
-            <span class="text-base">🛒</span>
+            <span class="text-base">ðŸ›’</span>
             <span class="text-xs font-bold tracking-wider">
-                {{ totalCartItems }} {{ totalCartItems === 1 ? 'Item' : 'Items' }} · {{ formatCurrency(totalCartPrice) }}
+                {{ totalCartItems }} {{ totalCartItems === 1 ? 'Item' : 'Items' }} Â· {{ formatCurrency(totalCartPrice) }}
             </span>
         </button>
 
@@ -690,10 +690,11 @@ const whatsappUrl = computed(() => {
                     Organic farm and luxury private villas in the Komkonga highlands, Tanga, Tanzania.
                 </p>
                 <div class="text-xs text-white/40 pt-4 border-t border-white/10">
-                    © 2026 Kitonga Farm Villas Sanctuary. All rights reserved.
+                    Â© 2026 Kitonga Farm Villas Sanctuary. All rights reserved.
                 </div>
             </div>
         </footer>
 
     </div>
 </template>
+

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 
 const videoRef = ref(null);
@@ -15,7 +15,7 @@ const videoRef = ref(null);
             loop 
             muted 
             playsinline
-            poster="/images/experiences_hero_bg.jpg"
+            poster="/images/experiences_hero_bg.webp"
         >
             <source src="/videos/hero_cinematic.mp4" type="video/mp4">
         </video>
@@ -35,10 +35,11 @@ const videoRef = ref(null);
             </h3>
 
             <p class="text-xs sm:text-sm text-gray-200 font-sans tracking-widest uppercase font-light drop-shadow-sm">
-                Nature • Living Farm • Countryside Peace
+                Nature â€¢ Living Farm â€¢ Countryside Peace
             </p>
 
         </div>
 
     </section>
 </template>
+

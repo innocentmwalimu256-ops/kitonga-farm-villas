@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -13,7 +13,7 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path) => {
-    if (!path) return '/images/gallery_img_0220.jpg';
+    if (!path) return '/images/gallery_img_0220.webp';
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
     return `/images/${path}`;
 };
@@ -91,3 +91,4 @@ const getImageUrl = (path) => {
 
     </section>
 </template>
+

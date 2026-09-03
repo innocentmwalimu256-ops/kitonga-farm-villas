@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 
@@ -182,7 +182,7 @@ const handleLogoClick = (e) => {
                 loop 
                 muted
                 playsinline
-                poster="/images/hero_poster.jpg"
+                poster="/images/hero_poster.webp"
             >
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
             </video>
@@ -232,7 +232,7 @@ const handleLogoClick = (e) => {
             <!-- Subtle Bottom Subtitle Overlay -->
             <div class="hidden sm:block absolute bottom-6 left-8 z-10">
                 <span class="text-[11px] uppercase tracking-[3px] text-gray-300/80 font-semibold font-sans">
-                    📍 Komkonga, Tanga — Tanzania
+                    ðŸ“ Komkonga, Tanga â€” Tanzania
                 </span>
             </div>
 
@@ -244,7 +244,7 @@ const handleLogoClick = (e) => {
                     class="px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/85 border border-white/25 text-white text-[11px] font-medium backdrop-blur-md transition flex items-center gap-1.5 shadow-md cursor-pointer"
                     :title="isPaused ? 'Play Video' : 'Pause Video'"
                 >
-                    <span>{{ isPaused ? '▶ Play' : '⏸ Pause' }}</span>
+                    <span>{{ isPaused ? 'â–¶ Play' : 'â¸ Pause' }}</span>
                 </button>
                 <button 
                     type="button"
@@ -252,7 +252,7 @@ const handleLogoClick = (e) => {
                     class="px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/85 border border-white/25 text-white text-[11px] font-medium backdrop-blur-md transition flex items-center gap-1.5 shadow-md cursor-pointer"
                     :title="isMuted ? 'Unmute Audio' : 'Mute Audio'"
                 >
-                    <span>{{ isMuted ? '🔇 Sound Off' : '🔊 Sound On' }}</span>
+                    <span>{{ isMuted ? 'ðŸ”‡ Sound Off' : 'ðŸ”Š Sound On' }}</span>
                 </button>
             </div>
         </section>
@@ -262,7 +262,7 @@ const handleLogoClick = (e) => {
             <span class="text-xs text-emerald-800 uppercase tracking-widest font-sans font-bold">The Philosophy</span>
             <h2 class="text-3xl md:text-4xl font-extrabold leading-tight">Serenity, Privacy, and Local Heritage</h2>
             <p class="text-base text-[#4A5D49] leading-relaxed font-sans max-w-3xl mx-auto">
-                Kitonga Farm Villas is not just an accommodation; it is a premium countryside destination in Komkonga, Tanga. We connect luxury villa hospitality with organic farming—offering fresh fruits, swimming pool, forest trails, and cattle farm experiences. Relish farm-to-table cuisine prepared with care by our kitchen.
+                Kitonga Farm Villas is not just an accommodation; it is a premium countryside destination in Komkonga, Tanga. We connect luxury villa hospitality with organic farmingâ€”offering fresh fruits, swimming pool, forest trails, and cattle farm experiences. Relish farm-to-table cuisine prepared with care by our kitchen.
             </p>
         </section>
 
@@ -321,7 +321,7 @@ const handleLogoClick = (e) => {
             </div>
         </section>
 
-        <!-- 2.2. THE DAILY RHYTHM AT KITONGA (PURE TEXT NARRATIVE — NO NEW IMAGES) -->
+        <!-- 2.2. THE DAILY RHYTHM AT KITONGA (PURE TEXT NARRATIVE â€” NO NEW IMAGES) -->
         <section class="content-auto py-20 px-6 md:px-12 max-w-5xl mx-auto space-y-12">
             <div class="text-center space-y-3">
                 <span class="text-xs text-emerald-800 uppercase tracking-widest font-sans font-bold">The Experience</span>
@@ -404,7 +404,7 @@ const handleLogoClick = (e) => {
                             </div>
                         </div>
                         <p class="text-xs text-gray-600 line-clamp-3 font-sans leading-relaxed">{{ villa.description }}</p>
-                        <Link :href="route('villas.show', villa.slug)" prefetch class="inline-block text-xs font-bold text-emerald-700 hover:text-emerald-950 font-sans tracking-wider uppercase border-b-2 border-emerald-700 pb-0.5 mt-2">Explore Villa Details ➔</Link>
+                        <Link :href="route('villas.show', villa.slug)" prefetch class="inline-block text-xs font-bold text-emerald-700 hover:text-emerald-950 font-sans tracking-wider uppercase border-b-2 border-emerald-700 pb-0.5 mt-2">Explore Villa Details âž”</Link>
                     </div>
                 </div>
             </div>
@@ -434,9 +434,10 @@ const handleLogoClick = (e) => {
                 </div>
             </div>
             <div class="max-w-6xl mx-auto border-t border-[#293627] mt-12 pt-6 text-center text-[10px] text-gray-500 font-sans">
-                © {{ new Date().getFullYear() }} Kitonga Farm Villas. All rights reserved. Price lists and check-in times remain configurable by management.
+                Â© {{ new Date().getFullYear() }} Kitonga Farm Villas. All rights reserved. Price lists and check-in times remain configurable by management.
             </div>
         </footer>
 
     </div>
 </template>
+

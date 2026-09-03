@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
@@ -99,7 +99,7 @@ const toggleMobileMenu = () => {
         <!-- 2. MAJESTIC 4K HERO VISUAL -->
         <div class="relative w-full h-[76vh] sm:h-[80vh] md:h-[84vh] min-h-[500px] max-h-[860px] bg-[#14231C] overflow-hidden flex flex-col justify-between select-none">
             <img 
-                src="/images/experiences_hero_bg.jpg" 
+                src="/images/experiences_hero_bg.webp" 
                 alt="Kitonga Farm Aerial Drone Landscape" 
                 class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none scale-100 transition duration-1000"
             />
@@ -108,3 +108,4 @@ const toggleMobileMenu = () => {
         </div>
     </div>
 </template>
+

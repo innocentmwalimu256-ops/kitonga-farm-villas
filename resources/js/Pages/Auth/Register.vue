@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
@@ -20,7 +20,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Create Account — Kitonga Farm Villas" />
+    <Head title="Create Account â€” Kitonga Farm Villas" />
 
     <div class="min-h-screen flex bg-[#FAF8F5] text-[#14231C] font-sans selection:bg-[#C98A3E] selection:text-white">
 
@@ -28,7 +28,7 @@ const submit = () => {
         <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#14231C] text-white flex-col justify-between p-12 select-none">
             <!-- Background HD Photo with Dark Green Luxury Vignette -->
             <img 
-                src="/images/IMG_0265.jpg" 
+                src="/images/IMG_0265.webp" 
                 alt="Kitonga Farm Sanctuary Canopy" 
                 class="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.45] contrast-[1.05] scale-105 transition duration-1000 ease-out"
             />
@@ -66,15 +66,15 @@ const submit = () => {
                 <!-- 3 Feature Points -->
                 <div class="space-y-3 pt-4 border-t border-white/10 text-xs text-gray-300">
                     <div class="flex items-center gap-3">
-                        <span class="text-[#E6C387] text-base">✦</span>
+                        <span class="text-[#E6C387] text-base">âœ¦</span>
                         <span>Personalized guest profiles & stay preferences</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-[#E6C387] text-base">✦</span>
+                        <span class="text-[#E6C387] text-base">âœ¦</span>
                         <span>Instant digital booking confirmations</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-[#E6C387] text-base">✦</span>
+                        <span class="text-[#E6C387] text-base">âœ¦</span>
                         <span>Exclusive member invites to seasonal harvests</span>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ const submit = () => {
 
             <!-- Bottom Location Tag -->
             <div class="relative z-10 flex justify-between items-center text-xs text-gray-400 border-t border-white/10 pt-6">
-                <span>Komkonga Highlands · Tanga, Tanzania</span>
+                <span>Komkonga Highlands Â· Tanga, Tanzania</span>
                 <span>&copy; 2026 Kitonga Farm Villas</span>
             </div>
         </div>
@@ -96,7 +96,7 @@ const submit = () => {
                     :href="route('home')" 
                     class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#C98A3E] transition group"
                 >
-                    <span class="transition group-hover:-translate-x-1">←</span>
+                    <span class="transition group-hover:-translate-x-1">â†</span>
                     <span>Return to Home</span>
                 </Link>
 
@@ -187,7 +187,7 @@ const submit = () => {
                                 v-model="form.password"
                                 required
                                 autocomplete="new-password"
-                                placeholder="••••••••••••"
+                                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                                 class="w-full pl-12 pr-12 py-3.5 bg-white border border-gray-200 rounded-2xl text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[#C98A3E]/40 focus:border-[#C98A3E] transition shadow-xs"
                             />
                             <button 
@@ -216,7 +216,7 @@ const submit = () => {
                                 v-model="form.password_confirmation"
                                 required
                                 autocomplete="new-password"
-                                placeholder="••••••••••••"
+                                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                                 class="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[#C98A3E]/40 focus:border-[#C98A3E] transition shadow-xs"
                             />
                         </div>
@@ -235,7 +235,7 @@ const submit = () => {
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                             </svg>
                             <span>{{ form.processing ? 'Creating Account...' : 'Register Account' }}</span>
-                            <span v-if="!form.processing">→</span>
+                            <span v-if="!form.processing">â†’</span>
                         </button>
                     </div>
 
@@ -265,4 +265,5 @@ const submit = () => {
 
     </div>
 </template>
+
 

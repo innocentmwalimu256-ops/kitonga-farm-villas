@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 const props = defineProps({
     activeCategory: {
         type: String,
@@ -12,38 +12,38 @@ const categories = [
     {
         name: 'All Experiences',
         filterKey: 'All',
-        icon: '✨',
-        image: '/images/normal_farm_tour.jpg',
+        icon: 'âœ¨',
+        image: '/images/normal_farm_tour.webp',
     },
     {
         name: 'Farm Life',
         filterKey: 'Nature & Trails',
-        icon: '🌱',
-        image: '/images/gallery_img_0216.jpg',
+        icon: 'ðŸŒ±',
+        image: '/images/gallery_img_0216.webp',
     },
     {
         name: 'Animals',
         filterKey: 'Complete Ecosystem',
-        icon: '🐄',
-        image: '/images/three_cows.jpg',
+        icon: 'ðŸ„',
+        image: '/images/three_cows.webp',
     },
     {
         name: 'Farm & Food',
         filterKey: 'Farm & Food',
-        icon: '🍯',
-        image: '/images/farm_gallery_1.jpg',
+        icon: 'ðŸ¯',
+        image: '/images/farm_gallery_1.webp',
     },
     {
         name: 'Nature',
         filterKey: 'Nature',
-        icon: '🌿',
-        image: '/images/gallery_img_0223.jpg',
+        icon: 'ðŸŒ¿',
+        image: '/images/gallery_img_0223.webp',
     },
     {
         name: 'Relaxation',
         filterKey: 'Relaxation',
-        icon: '🏊',
-        image: '/images/gallery_img_0220.jpg',
+        icon: 'ðŸŠ',
+        image: '/images/gallery_img_0220.webp',
     },
 ];
 
@@ -105,3 +105,4 @@ const handleSelect = (key) => {
 
     </section>
 </template>
+

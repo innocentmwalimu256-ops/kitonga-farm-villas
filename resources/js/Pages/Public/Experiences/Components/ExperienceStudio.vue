@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
@@ -28,8 +28,8 @@ const currentTour = computed(() => {
 });
 
 const getTourImage = (slug) => {
-    if (slug === 'general-farm-tour') return '/images/three_cows.jpg';
-    return '/images/normal_farm_tour.jpg';
+    if (slug === 'general-farm-tour') return '/images/three_cows.webp';
+    return '/images/normal_farm_tour.webp';
 };
 
 const inclusionMatrix = [
@@ -50,12 +50,12 @@ const inclusionMatrix = [
     },
     {
         feature: 'Dairy Cattle Stables & Pastures',
-        normal: '—',
+        normal: 'â€”',
         general: 'Full Access',
     },
     {
         feature: 'Poultry & Small Animal Enclosures',
-        normal: '—',
+        normal: 'â€”',
         general: 'Full Access',
     },
     {
@@ -122,7 +122,7 @@ const inclusionMatrix = [
                             GUIDED EXPERIENCE
                         </span>
                         <span v-if="currentTour.duration" class="px-3 py-1 bg-black/40 backdrop-blur-xs text-white text-xs font-semibold rounded border border-white/20">
-                            ⏱️ {{ currentTour.duration }}
+                            â±ï¸ {{ currentTour.duration }}
                         </span>
                     </div>
                     <h3 class="text-3xl font-serif font-light text-[#F7F3EA]">
@@ -151,7 +151,7 @@ const inclusionMatrix = [
                             </div>
                         </div>
                         <span class="text-xs font-semibold px-3 py-1 bg-[#FAF8F5] rounded-lg border border-gray-200 text-gray-700">
-                            👥 All Ages Welcome
+                            ðŸ‘¥ All Ages Welcome
                         </span>
                     </div>
 
@@ -170,7 +170,7 @@ const inclusionMatrix = [
                                 <span 
                                     :class="[
                                         'font-bold text-xs',
-                                        (currentTour.slug === 'normal-farm-tour' ? item.normal : item.general) === '—' 
+                                        (currentTour.slug === 'normal-farm-tour' ? item.normal : item.general) === 'â€”' 
                                             ? 'text-gray-300' 
                                             : 'text-emerald-700'
                                     ]"
@@ -189,7 +189,7 @@ const inclusionMatrix = [
                         prefetch
                         class="flex-1 py-3.5 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 text-center shadow-md cursor-pointer"
                     >
-                        Explore Full Itinerary & Details →
+                        Explore Full Itinerary & Details â†’
                     </Link>
                     <Link 
                         :href="route('booking.form')" 
@@ -206,3 +206,4 @@ const inclusionMatrix = [
 
     </section>
 </template>
+
