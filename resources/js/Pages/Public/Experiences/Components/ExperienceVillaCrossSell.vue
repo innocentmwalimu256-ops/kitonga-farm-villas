@@ -43,7 +43,7 @@ const getImageUrl = (path) => {
             >
                 <!-- Villa Image -->
                 <div class="aspect-[16/10] overflow-hidden bg-[#14231C] relative">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="getImageUrl(villa.featured_image || villa.image_url)" 
                         :alt="villa.name" 
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" 
@@ -91,4 +91,5 @@ const getImageUrl = (path) => {
 
     </section>
 </template>
+
 

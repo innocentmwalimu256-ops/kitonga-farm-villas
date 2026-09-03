@@ -79,7 +79,7 @@ const handleSelect = (key) => {
                 ]"
             >
                 <!-- Background Image with Overlay -->
-                <img 
+                <img loading="lazy" decoding="async" 
                     :src="cat.image" 
                     :alt="cat.name" 
                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-500" 
@@ -105,4 +105,5 @@ const handleSelect = (key) => {
 
     </section>
 </template>
+
 

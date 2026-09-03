@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -20,7 +20,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
     <div class="bg-white border border-gray-150 rounded-lg overflow-hidden flex flex-col md:flex-row justify-between shadow-xs hover:shadow-md transition duration-500 group">
         <!-- Image Area -->
         <div class="h-64 md:h-auto md:w-1/2 relative overflow-hidden bg-gray-50">
-            <img 
+            <img loading="lazy" decoding="async" 
                 :src="getImageUrl(experience.featured_image)" 
                 class="absolute inset-0 w-full h-full object-cover transition duration-700 ease-out transform group-hover:scale-105" 
                 alt=""
@@ -47,7 +47,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                     <span class="text-[9px] uppercase tracking-wider text-amber-600 font-bold block">Tour Highlights</span>
                     <ul class="text-[11px] text-gray-600 space-y-1 font-sans">
                         <li v-for="(hl, idx) in experience.highlights.slice(0, 2)" :key="idx" class="flex items-center gap-1.5">
-                            <span class="text-amber-500">★</span> {{ hl }}
+                            <span class="text-amber-500">â˜…</span> {{ hl }}
                         </li>
                     </ul>
                 </div>
@@ -55,8 +55,8 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
 
             <div class="border-t border-gray-100 pt-6 space-y-4">
                 <div class="flex justify-between items-center text-xs font-sans text-gray-400">
-                    <span v-if="experience.duration">⏱️ {{ experience.duration }}</span>
-                    <span v-if="experience.capacity_per_slot">👥 Up to {{ experience.capacity_per_slot }} Guests</span>
+                    <span v-if="experience.duration">â±ï¸ {{ experience.duration }}</span>
+                    <span v-if="experience.capacity_per_slot">ðŸ‘¥ Up to {{ experience.capacity_per_slot }} Guests</span>
                 </div>
 
                 <div class="flex justify-between items-center">
@@ -71,10 +71,11 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                         prefetch
                         class="px-5 py-2.5 bg-[#2C3E2B] text-white hover:bg-emerald-950 text-xs font-bold uppercase tracking-wider rounded transition font-sans"
                     >
-                        Explore Experience ➔
+                        Explore Experience âž”
                     </Link>
                 </div>
             </div>
         </div>
     </div>
 </template>
+

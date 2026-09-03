@@ -97,7 +97,7 @@ const farmZones = [
             
             <!-- Left High-Res Visual Display (7 Cols) -->
             <div class="lg:col-span-7 relative h-72 sm:h-96 lg:h-auto min-h-[340px] bg-[#14231C] overflow-hidden">
-                <img 
+                <img loading="lazy" decoding="async" 
                     :src="farmZones[activeZoneIndex].image" 
                     :alt="farmZones[activeZoneIndex].title" 
                     class="w-full h-full object-cover object-center transform transition duration-700 scale-100 hover:scale-105"
@@ -171,4 +171,5 @@ const farmZones = [
 
     </section>
 </template>
+
 

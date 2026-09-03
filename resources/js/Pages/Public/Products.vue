@@ -513,7 +513,7 @@ const whatsappUrl = computed(() => {
                 >
                     <!-- Product Image Container with Crisp Aesthetic Fit -->
                     <div class="relative h-60 sm:h-64 md:h-72 w-full overflow-hidden bg-[#F4EFE6] flex items-center justify-center">
-                        <img 
+                        <img loading="lazy" decoding="async" 
                             :src="resolveProductImage(prod)" 
                             :alt="prod.name" 
                             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
@@ -615,7 +615,7 @@ const whatsappUrl = computed(() => {
                                 :key="item.id"
                                 class="flex items-center gap-3 p-3 bg-[#FDFBF7] rounded-xl border border-[#14231C]/10"
                             >
-                                <img :src="item.image" :alt="item.name" class="w-14 h-14 rounded-lg object-cover" />
+                                <img loading="lazy" decoding="async" :src="item.image" :alt="item.name" class="w-14 h-14 rounded-lg object-cover" />
                                 
                                 <div class="flex-1 min-w-0">
                                     <h4 class="font-bold text-xs text-[#14231C] truncate">{{ item.name }}</h4>
@@ -697,4 +697,5 @@ const whatsappUrl = computed(() => {
 
     </div>
 </template>
+
 

@@ -132,7 +132,7 @@ const getImageUrl = (path, slug) => {
 
         <!-- 1. FULL-WIDTH CINEMATIC HERO -->
         <section class="w-full h-[65vh] md:h-[75vh] min-h-[500px] bg-[#14231C] overflow-hidden relative select-none">
-            <img 
+            <img loading="lazy" decoding="async" 
                 :src="getImageUrl(villa.featured_image, villa.slug)" 
                 class="w-full h-full object-cover object-center transform scale-102" 
                 :alt="villa.name" 
@@ -236,7 +236,7 @@ const getImageUrl = (path, slug) => {
                             @click="openLightbox(idx)"
                             class="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm border border-[#E5E0D8] cursor-pointer group bg-gray-100"
                         >
-                            <img 
+                            <img loading="lazy" decoding="async" 
                                 :src="img.src" 
                                 :alt="img.title" 
                                 class="w-full h-full object-cover object-center transform group-hover:scale-105 transition duration-500" 
@@ -385,7 +385,7 @@ const getImageUrl = (path, slug) => {
                     class="bg-white border border-[#E5E0D8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition p-5 space-y-4 group"
                 >
                     <div class="aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 relative">
-                        <img 
+                        <img loading="lazy" decoding="async" 
                             :src="getImageUrl(alt.featured_image, alt.slug)" 
                             :alt="alt.name" 
                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
@@ -449,7 +449,7 @@ const getImageUrl = (path, slug) => {
 
                 <!-- Current Image & Caption -->
                 <div class="max-w-5xl max-h-[85vh] flex flex-col items-center justify-center space-y-3">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="galleryImages[activeLightboxIndex].src" 
                         :alt="galleryImages[activeLightboxIndex].title" 
                         class="max-h-[75vh] max-w-full object-contain rounded-xl shadow-2xl" 
@@ -473,4 +473,5 @@ const getImageUrl = (path, slug) => {
 
     </div>
 </template>
+
 

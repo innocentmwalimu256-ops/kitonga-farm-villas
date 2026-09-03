@@ -141,7 +141,7 @@ const scrollToResidences = () => {
         <div class="relative w-full h-[76vh] sm:h-[80vh] min-h-[500px] max-h-[820px] bg-[#14231C] overflow-hidden flex flex-col justify-between select-none">
             
             <!-- 4K Architectural Visual -->
-            <img 
+            <img loading="lazy" decoding="async" 
                 src="/images/luxury_villa_img.webp" 
                 alt="Kitonga Luxury Private Residence" 
                 class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none transform scale-105 transition duration-1000"
@@ -236,7 +236,7 @@ const scrollToResidences = () => {
                         idx % 2 === 1 ? 'lg:order-2' : 'lg:order-1'
                     ]"
                 >
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="getImageUrl(villa.featured_image, villa.slug)" 
                         :alt="villa.name" 
                         class="w-full h-full object-cover object-center transform group-hover:scale-103 transition duration-700 ease-out" 
@@ -352,4 +352,5 @@ const scrollToResidences = () => {
 
     </div>
 </template>
+
 

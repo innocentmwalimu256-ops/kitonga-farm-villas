@@ -108,7 +108,7 @@ const inclusionMatrix = [
             
             <!-- Left Editorial Visual & Highlights (6 Cols) -->
             <div class="lg:col-span-6 relative h-80 lg:h-auto min-h-[380px] bg-[#14231C] overflow-hidden">
-                <img 
+                <img loading="lazy" decoding="async" 
                     :src="getTourImage(currentTour.slug)" 
                     :alt="currentTour.name" 
                     class="w-full h-full object-cover object-center transform transition duration-700 hover:scale-105"
@@ -206,4 +206,5 @@ const inclusionMatrix = [
 
     </section>
 </template>
+
 

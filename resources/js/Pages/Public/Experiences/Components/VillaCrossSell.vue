@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -32,7 +32,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1580587
             <div v-for="villa in villas.slice(0, 3)" :key="villa.id" class="bg-white border border-gray-150 rounded-lg overflow-hidden flex flex-col justify-between shadow-xs group">
                 <div>
                     <div class="h-56 bg-gray-50 relative overflow-hidden">
-                        <img 
+                        <img loading="lazy" decoding="async" 
                             :src="getImageUrl(villa.featured_image)" 
                             class="absolute inset-0 w-full h-full object-cover transition duration-700 transform group-hover:scale-105" 
                             alt=""
@@ -49,7 +49,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1580587
                         prefetch
                         class="text-xs font-bold font-sans text-[#2C3E2B] hover:underline"
                     >
-                        View Villa details →
+                        View Villa details â†’
                     </Link>
                     <Link 
                         :href="route('booking.form', { villa_id: villa.id })" 
@@ -63,3 +63,4 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1580587
         </div>
     </section>
 </template>
+

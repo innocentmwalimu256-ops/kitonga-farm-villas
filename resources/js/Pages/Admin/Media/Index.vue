@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -97,7 +97,7 @@ const formatSize = (bytes) => {
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         <div v-for="item in media.data" :key="item.id" class="border rounded-lg overflow-hidden group relative bg-gray-50 flex flex-col justify-between">
                             <div class="aspect-square w-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                                <img :src="item.path" :alt="item.alt_text" class="w-full h-full object-cover group-hover:scale-105 transition duration-200" />
+                                <img loading="lazy" decoding="async" :src="item.path" :alt="item.alt_text" class="w-full h-full object-cover group-hover:scale-105 transition duration-200" />
                             </div>
                             <div class="p-2 space-y-1">
                                 <div class="text-[10px] font-bold text-gray-900 truncate" :title="item.filename">{{ item.filename }}</div>
@@ -134,3 +134,4 @@ const formatSize = (bytes) => {
         </div>
     </AuthenticatedLayout>
 </template>
+

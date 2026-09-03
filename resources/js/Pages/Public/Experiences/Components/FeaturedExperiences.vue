@@ -47,7 +47,7 @@ const getImageUrl = (path, slug) => {
             >
                 <!-- Large Image Container -->
                 <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-[#14231C]">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="getImageUrl(exp.featured_image, exp.slug)" 
                         :alt="exp.name" 
                         class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-700 ease-out" 
@@ -142,4 +142,5 @@ const getImageUrl = (path, slug) => {
 
     </section>
 </template>
+
 

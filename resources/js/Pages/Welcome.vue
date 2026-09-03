@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -29,7 +29,7 @@ function handleImageError() {
 <template>
     <Head title="Welcome" />
     <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-        <img
+        <img loading="lazy" decoding="async"
             id="background"
             class="absolute -left-20 top-0 max-w-[877px]"
             src="https://laravel.com/assets/img/welcome/background.svg"
@@ -93,13 +93,13 @@ function handleImageError() {
                                 id="screenshot-container"
                                 class="relative flex w-full flex-1 items-stretch"
                             >
-                                <img
+                                <img loading="lazy" decoding="async"
                                     src="https://laravel.com/assets/img/welcome/docs-light.svg"
                                     alt="Laravel documentation screenshot"
                                     class="aspect-video h-full w-full flex-1 rounded-[10px] object-cover object-top drop-shadow-[0px_4px_34px_rgba(0,0,0,0.06)] dark:hidden"
                                     @error="handleImageError"
                                 />
-                                <img
+                                <img loading="lazy" decoding="async"
                                     src="https://laravel.com/assets/img/welcome/docs-dark.svg"
                                     alt="Laravel documentation screenshot"
                                     class="hidden aspect-video h-full w-full flex-1 rounded-[10px] object-cover object-top drop-shadow-[0px_4px_34px_rgba(0,0,0,0.25)] dark:block"
@@ -384,3 +384,4 @@ function handleImageError() {
         </div>
     </div>
 </template>
+

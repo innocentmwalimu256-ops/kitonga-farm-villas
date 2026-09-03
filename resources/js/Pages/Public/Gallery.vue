@@ -201,7 +201,7 @@ onUnmounted(() => {
                     @click="openLightbox(index)"
                     :class="[img.aspect, 'group relative overflow-hidden rounded-2xl bg-[#EBE5DB] shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer']"
                 >
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="img.src" 
                         alt="Kitonga Farm Villas Perspective"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
@@ -258,7 +258,7 @@ onUnmounted(() => {
                 </button>
 
                 <!-- Current Photograph -->
-                <img 
+                <img loading="lazy" decoding="async" 
                     :src="galleryImages[activeIndex].src" 
                     alt="Kitonga High Resolution Preview"
                     class="max-h-[82vh] max-w-[94vw] object-contain rounded-lg shadow-2xl transition-all duration-300"
@@ -314,4 +314,5 @@ onUnmounted(() => {
 
     </div>
 </template>
+
 

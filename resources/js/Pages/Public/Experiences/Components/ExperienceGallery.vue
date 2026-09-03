@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -49,7 +49,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                 @click="openLightbox(index)"
                 class="h-36 sm:h-44 md:h-48 bg-gray-100 rounded-xl overflow-hidden border border-gray-200/80 relative cursor-pointer group shadow-2xs hover:shadow-md transition duration-300"
             >
-                <img 
+                <img loading="lazy" decoding="async" 
                     :src="getImageUrl(img)" 
                     class="absolute inset-0 w-full h-full object-cover transition duration-500 transform group-hover:scale-105" 
                     alt="Gallery photo" 
@@ -79,7 +79,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                     @click="closeLightbox" 
                     class="absolute top-5 right-6 text-white/80 hover:text-white text-3xl font-light font-sans z-20 cursor-pointer transition"
                 >
-                    ✕
+                    âœ•
                 </button>
 
                 <!-- Navigation Buttons -->
@@ -87,18 +87,18 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                     @click="prevImage" 
                     class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-4xl sm:text-5xl font-light font-sans z-20 p-3 cursor-pointer transition"
                 >
-                    ‹
+                    â€¹
                 </button>
                 <button 
                     @click="nextImage" 
                     class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-4xl sm:text-5xl font-light font-sans z-20 p-3 cursor-pointer transition"
                 >
-                    ›
+                    â€º
                 </button>
 
                 <!-- Main Image Container -->
                 <div class="max-w-5xl max-h-[82vh] flex items-center justify-center relative p-2">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="getImageUrl(gallery[activeImageIndex])" 
                         class="max-w-full max-h-[82vh] object-contain rounded-lg shadow-2xl" 
                         alt="Lightbox Image" 
@@ -113,3 +113,4 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
         </teleport>
     </div>
 </template>
+

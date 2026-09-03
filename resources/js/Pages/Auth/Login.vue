@@ -37,7 +37,7 @@ const submit = () => {
         <!-- 1. LEFT CINEMATIC BRANDING PANE (Desktop lg+) -->
         <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#14231C] text-white flex-col justify-between p-12 select-none">
             <!-- Background HD Photo with Dark Green Luxury Vignette -->
-            <img 
+            <img loading="lazy" decoding="async" 
                 src="/images/IMG_0289.webp" 
                 alt="Kitonga Farm Sanctuary" 
                 class="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.45] contrast-[1.05] scale-105 transition duration-1000 ease-out"
@@ -276,5 +276,6 @@ const submit = () => {
 
     </div>
 </template>
+
 
 

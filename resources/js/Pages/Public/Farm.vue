@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -209,7 +209,7 @@ const orderProduct = (product) => {
                 src="/images/farm_hero_img_0289.webp" 
                 alt="Kitonga Organic Farm & Sanctuary" 
                 fetchpriority="high"
-                decoding="sync"
+                decoding="async"
                 class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none transform scale-100 transition duration-1000"
             />
 
@@ -398,7 +398,7 @@ const orderProduct = (product) => {
                     @click="openLightbox(0)"
                     class="sm:col-span-2 lg:col-span-7 aspect-16/10 rounded-2xl overflow-hidden shadow-lg relative group cursor-pointer bg-[#14231C]"
                 >
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="farmGallery[0].src" 
                         :alt="farmGallery[0].title" 
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
@@ -416,7 +416,7 @@ const orderProduct = (product) => {
                     @click="openLightbox(1)"
                     class="sm:col-span-2 lg:col-span-5 aspect-16/10 rounded-2xl overflow-hidden shadow-lg relative group cursor-pointer bg-[#14231C]"
                 >
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="farmGallery[1].src" 
                         :alt="farmGallery[1].title" 
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
@@ -436,7 +436,7 @@ const orderProduct = (product) => {
                     @click="openLightbox(idx + 2)"
                     class="lg:col-span-4 aspect-4/3 rounded-2xl overflow-hidden shadow-md relative group cursor-pointer bg-[#14231C]"
                 >
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="item.src" 
                         :alt="item.title" 
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
@@ -484,7 +484,7 @@ const orderProduct = (product) => {
             </button>
 
             <div class="max-w-5xl max-h-[85vh] flex flex-col items-center" @click.stop>
-                <img 
+                <img loading="lazy" decoding="async" 
                     :src="farmGallery[activeLightbox].src" 
                     :alt="farmGallery[activeLightbox].title" 
                     class="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl"
@@ -547,5 +547,6 @@ const orderProduct = (product) => {
 
     </div>
 </template>
+
 
 

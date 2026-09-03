@@ -6,7 +6,7 @@ import { Link } from '@inertiajs/vue3';
     <section class="relative w-full h-[60vh] min-h-[460px] max-h-[620px] overflow-hidden bg-black flex items-center justify-center">
         
         <!-- Authentic Background Visual -->
-        <img 
+        <img loading="lazy" decoding="async" 
             src="/images/experiences_hero_bg.webp" 
             alt="Kitonga Farm Sunset Landscape" 
             class="absolute inset-0 w-full h-full object-cover opacity-50 filter brightness-90 saturate-110"
@@ -52,4 +52,5 @@ import { Link } from '@inertiajs/vue3';
 
     </section>
 </template>
+
 

@@ -140,7 +140,7 @@ const harvestData = {
             <!-- Right Visual (5 Cols) -->
             <div class="lg:col-span-5 relative">
                 <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-[#E5E0D8] bg-[#14231C]">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="harvestData[activeHarvestTab].image" 
                         :alt="harvestData[activeHarvestTab].title" 
                         class="w-full h-full object-cover object-center transform hover:scale-105 transition duration-700" 
@@ -152,4 +152,5 @@ const harvestData = {
 
     </section>
 </template>
+
 

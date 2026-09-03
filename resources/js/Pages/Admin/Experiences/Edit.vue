@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -75,7 +75,7 @@ const submitUpdateExperience = () => {
                     Edit Experience: {{ experience.name }}
                 </h2>
                 <Link :href="route('admin.experiences.index')" class="px-4 py-2 border border-gray-200 text-gray-700 text-xs font-bold rounded hover:bg-gray-50 transition">
-                    ← Back to Listing
+                    â† Back to Listing
                 </Link>
             </div>
         </template>
@@ -142,7 +142,7 @@ const submitUpdateExperience = () => {
                                 </div>
                                 <ul class="space-y-1.5 mt-2">
                                     <li v-for="(inc, index) in form.inclusions" :key="index" class="flex justify-between items-center text-xs p-2 bg-gray-50 rounded border border-gray-100">
-                                        <span class="text-gray-700">✓ {{ inc }}</span>
+                                        <span class="text-gray-700">âœ“ {{ inc }}</span>
                                         <button @click.prevent="removeInclusion(index)" class="text-rose-600 hover:underline">Remove</button>
                                     </li>
                                 </ul>
@@ -157,7 +157,7 @@ const submitUpdateExperience = () => {
                                 </div>
                                 <ul class="space-y-1.5 mt-2">
                                     <li v-for="(hl, index) in form.highlights" :key="index" class="flex justify-between items-center text-xs p-2 bg-gray-50 rounded border border-gray-100">
-                                        <span class="text-gray-700">★ {{ hl }}</span>
+                                        <span class="text-gray-700">â˜… {{ hl }}</span>
                                         <button @click.prevent="removeHighlight(index)" class="text-rose-600 hover:underline">Remove</button>
                                     </li>
                                 </ul>
@@ -189,8 +189,8 @@ const submitUpdateExperience = () => {
                                 <label class="font-bold text-gray-400 uppercase text-[9px] block">Current Gallery Images</label>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div v-for="(img, idx) in form.gallery" :key="idx" class="relative group h-24 bg-gray-50 rounded overflow-hidden border">
-                                        <img :src="img.startsWith('http') ? img : '/images/' + img" class="w-full h-full object-cover" />
-                                        <button @click.prevent="removeGalleryImage(idx)" class="absolute top-1 right-1 p-1 bg-black/60 hover:bg-black text-white rounded text-[10px]">✕</button>
+                                        <img loading="lazy" decoding="async" :src="img.startsWith('http') ? img : '/images/' + img" class="w-full h-full object-cover" />
+                                        <button @click.prevent="removeGalleryImage(idx)" class="absolute top-1 right-1 p-1 bg-black/60 hover:bg-black text-white rounded text-[10px]">âœ•</button>
                                     </div>
                                 </div>
                             </div>
@@ -256,3 +256,4 @@ const submitUpdateExperience = () => {
         </div>
     </AuthenticatedLayout>
 </template>
+

@@ -48,7 +48,7 @@ const ecosystemStories = [
             >
                 <!-- Left Image (5 Cols) -->
                 <div class="md:col-span-5 aspect-[4/3] rounded-2xl overflow-hidden bg-[#14231C] border border-[#E5E0D8]">
-                    <img 
+                    <img loading="lazy" decoding="async" 
                         :src="story.image" 
                         :alt="story.title" 
                         class="w-full h-full object-cover object-center transform hover:scale-105 transition duration-700" 
@@ -75,4 +75,5 @@ const ecosystemStories = [
 
     </section>
 </template>
+
 

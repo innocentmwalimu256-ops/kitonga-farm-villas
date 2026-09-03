@@ -49,7 +49,7 @@ const getImageUrl = (path, slug) => {
 
         <!-- TOP DETAILED BANNER IMAGE -->
         <section class="relative h-[55vh] md:h-[65vh] bg-[#14231C] overflow-hidden">
-            <img 
+            <img loading="lazy" decoding="async" 
                 :src="getImageUrl(experience.featured_image, experience.slug)" 
                 class="w-full h-full object-cover" 
                 :alt="experience.name"
@@ -178,4 +178,5 @@ const getImageUrl = (path, slug) => {
 
     </div>
 </template>
+
 
