@@ -39,17 +39,34 @@ class PublicController extends Controller
 
     public function home()
     {
-        return Inertia::render('Public/Home', [
-            'villas' => AccommodationType::where('active', true)->orderBy('sort_order')->get(),
-            'experiences' => FarmTour::where('active', true)->get(),
-            'products' => Product::where('active', true)->take(6)->get(),
-            'cms' => $this->getCmsContent('home'),
-            'settings' => [
+        try {
+            $villas = AccommodationType::where('active', true)->orderBy('sort_order')->get();
+            $experiences = FarmTour::where('active', true)->get();
+            $products = Product::where('active', true)->take(6)->get();
+            $cms = $this->getCmsContent('home');
+            $settings = [
                 'contact_email' => Setting::get('contact_email'),
                 'contact_phone' => Setting::get('contact_phone'),
                 'location_coordinates' => Setting::get('location_coordinates'),
                 'breakfast_policy' => Setting::get('breakfast_policy'),
-            ]
+            ];
+        } catch (\Exception $e) {
+            $villas = [];
+            $experiences = [];
+            $products = [];
+            $cms = [];
+            $settings = [
+                'contact_email' => 'kitongafarmvillas@gmail.com',
+                'contact_phone' => '+255 758 774 695',
+            ];
+        }
+
+        return Inertia::render('Public/Home', [
+            'villas' => $villas,
+            'experiences' => $experiences,
+            'products' => $products,
+            'cms' => $cms,
+            'settings' => $settings,
         ]);
     }
 
