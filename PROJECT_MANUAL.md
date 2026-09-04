@@ -7,7 +7,7 @@
 * **Project Name:** Kitonga Farm Villas Resort & Agro-Tourism Management Platform
 * **Version:** 2.0.0 (Production Edition)
 * **Date:** September 2026
-* **Location:** Komkonga, Handeni / Sanya Juu, Kilimanjaro, Tanzania
+* **Location:** Komkonga Village, Handeni, Tanga Region, Tanzania
 * **Primary Stack:** Laravel 12.x (PHP 8.2+), MySQL 8.x, Vue.js 3 (Composition API), Inertia.js, Vite 7.x, Tailwind CSS v4
 
 ---

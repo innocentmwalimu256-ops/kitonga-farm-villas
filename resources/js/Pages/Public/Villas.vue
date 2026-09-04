@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
@@ -324,7 +324,7 @@ const scrollToResidences = () => {
             <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-xs font-sans">
                 <div class="space-y-4">
                     <h4 class="font-serif font-semibold text-white text-sm tracking-widest uppercase">Kitonga Farm Villas</h4>
-                    <p class="leading-relaxed text-[#F7F3EA]/70">A luxury countryside accommodation and authentic farm-stay destination in Sanya Juu, Kilimanjaro. Where luxury meets farm life.</p>
+                    <p class="leading-relaxed text-[#F7F3EA]/70">A luxury countryside accommodation and authentic farm-stay destination in Komkonga, Tanga. Where luxury meets farm life.</p>
                 </div>
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Navigation</h4>
@@ -339,14 +339,14 @@ const scrollToResidences = () => {
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Contact Details</h4>
                     <div class="space-y-2 text-[#F7F3EA]/70">
-                        <p>âœ‰ï¸ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
-                        <p>ðŸ“ž <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
-                        <p>ðŸ“ Kitonga Farm, Sanya Juu, Kilimanjaro</p>
+                        <p>✉️ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
+                        <p>📞 <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
+                        <p>📍 Kitonga Farm, Komkonga, Tanga, Tanzania</p>
                     </div>
                 </div>
             </div>
             <div class="max-w-6xl mx-auto mt-12 pt-6 border-t border-white/10 text-center text-[10px] text-[#F7F3EA]/50 font-sans">
-                Â© 2026 Kitonga Farm Villas. All rights reserved.
+                © 2026 Kitonga Farm Villas. All rights reserved.
             </div>
         </footer>
 

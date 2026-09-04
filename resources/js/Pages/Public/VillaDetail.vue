@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 
@@ -214,7 +214,7 @@ const getImageUrl = (path, slug) => {
                         Slow Living & Countryside Serenity
                     </h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Wake up to the soft morning chorus of Kilimanjaro birds, sip freshly harvested Kitonga coffee on your private terrace, and enjoy total seclusion away from urban noise. From sunrise farm walks to evening relaxation under starlit skies, your stay is centered entirely around peaceful rejuvenation.
+                        Wake up to the soft morning chorus of countryside birds, sip freshly harvested Kitonga coffee on your private terrace, and enjoy total seclusion away from urban noise. From sunrise farm walks to evening relaxation under starlit skies, your stay is centered entirely around peaceful rejuvenation.
                     </p>
                 </section>
 
@@ -467,8 +467,8 @@ const getImageUrl = (path, slug) => {
         <!-- FOOTER -->
         <footer class="bg-[#14231C] text-[#F7F3EA]/80 py-12 px-6 md:px-12 border-t border-white/10 text-center font-sans text-xs">
             <p class="font-serif font-semibold text-white text-sm mb-2 uppercase tracking-widest">KITONGA FARM VILLAS</p>
-            <p class="text-[#F7F3EA]/60 mb-4">Sanya Juu, Kilimanjaro, Tanzania</p>
-            <p class="text-[10px] text-[#F7F3EA]/40">Â© 2026 Kitonga Farm Villas. All rights reserved.</p>
+            <p class="text-[#F7F3EA]/60 mb-4">Komkonga Village, Tanga Region, Tanzania</p>
+            <p class="text-[10px] text-[#F7F3EA]/40">© 2026 Kitonga Farm Villas. All rights reserved.</p>
         </footer>
 
     </div>

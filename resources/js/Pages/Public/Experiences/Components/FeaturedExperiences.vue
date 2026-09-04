@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -33,7 +33,7 @@ const getImageUrl = (path, slug) => {
                 Featured Farm Experiences
             </h2>
             <p class="text-xs sm:text-sm text-[#6B6D66] font-sans">
-                Handcrafted agritourism journeys connecting you directly with the vibrant soil, livestock, and produce of Kilimanjaro.
+                Handcrafted agritourism journeys connecting you directly with the vibrant soil, livestock, and produce of Komkonga, Tanga.
             </p>
         </div>
 

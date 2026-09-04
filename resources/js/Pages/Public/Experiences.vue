@@ -35,7 +35,7 @@ const props = defineProps({
             <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-xs font-sans">
                 <div class="space-y-4">
                     <h4 class="font-serif font-semibold text-white text-sm tracking-widest uppercase">Kitonga Farm Villas</h4>
-                    <p class="leading-relaxed text-[#F7F3EA]/70">A luxury countryside accommodation and authentic farm-stay destination in Sanya Juu, Kilimanjaro. Where luxury meets farm life.</p>
+                    <p class="leading-relaxed text-[#F7F3EA]/70">A luxury countryside accommodation and authentic farm-stay destination in Komkonga, Tanga. Where luxury meets farm life.</p>
                 </div>
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Quick Links</h4>
@@ -51,7 +51,7 @@ const props = defineProps({
                     <div class="space-y-2 text-[#F7F3EA]/70">
                         <p>✉️ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
                         <p>📞 <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
-                        <p>📍 Kitonga Farm, Sanya Juu, Kilimanjaro</p>
+                        <p>📍 Kitonga Farm, Komkonga, Tanga, Tanzania</p>
                     </div>
                 </div>
             </div>
