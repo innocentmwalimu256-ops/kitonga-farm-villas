@@ -181,17 +181,17 @@ const handleLogoClick = (e) => {
             </div>
         </div>
 
-        <!-- 1. CINEMATIC HERO VIDEO SECTION -->
+        <!-- 1. CINEMATIC HERO VIDEO SECTION (CLEAN FULL-VIEW VIDEO) -->
         <section 
             @click="togglePlay"
-            class="relative min-h-[85vh] lg:min-h-[92vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
-            title="Click anywhere to Play / Pause"
+            class="relative min-h-[75vh] md:min-h-[85vh] lg:min-h-[90vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
+            title="Click anywhere to Play / Pause video"
         >
-            <!-- Hero Video (Ultra-Fast 6.7MB Web Video with FastStart Streaming) -->
+            <!-- Hero Video -->
             <video 
                 ref="videoPlayer"
                 poster="/images/hero_poster.webp"
-                class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                class="absolute inset-0 w-full h-full object-cover"
                 autoplay 
                 loop 
                 muted
@@ -205,71 +205,46 @@ const handleLogoClick = (e) => {
                 <source src="/videos/hero_cinematic.webm" type="video/webm">
             </video>
 
-            <!-- Cinematic Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/50 pointer-events-none"></div>
+            <!-- Subtle Gradient for Top Navbar Contrast -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30 pointer-events-none"></div>
 
-            <!-- Main Centered Content -->
-            <div class="relative z-10 text-center px-6 sm:px-10 max-w-4xl mx-auto space-y-5 sm:space-y-6 pt-12 pb-16 pointer-events-auto">
-                
-                <!-- Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#14231C]/80 border border-[#C98A3E]/50 text-[#E6C387] text-[11px] sm:text-xs font-bold uppercase tracking-[3px] backdrop-blur-md shadow-lg animate-fade-in">
-                    <span class="w-2 h-2 rounded-full bg-[#C98A3E] animate-pulse"></span>
-                    <span>Sanctuary & Agro-Tourism</span>
-                </div>
-
-                <!-- Hero Title -->
-                <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white tracking-tight leading-[1.15] drop-shadow-md">
-                    Where Luxury Meets <span class="italic font-serif text-[#E6C387] font-normal">Farm Life</span>
-                </h1>
-
-                <!-- Hero Subtitle -->
-                <p class="text-sm sm:text-base md:text-lg text-gray-200/90 font-sans font-light max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
-                    Immerse yourself in private sanctuary villas, pure organic harvest, serene river breezes, and authentic countryside living in Komkonga, Tanga.
-                </p>
-
-                <!-- Action CTAs -->
-                <div class="pt-2 sm:pt-4 flex flex-wrap items-center justify-center gap-3.5 sm:gap-5 font-sans">
-                    <Link 
-                        :href="route('booking.form')" 
-                        prefetch 
-                        class="px-7 py-3.5 bg-[#C98A3E] hover:bg-[#b87a32] text-white text-xs sm:text-sm font-extrabold uppercase tracking-widest rounded-xl transition shadow-xl hover:shadow-[#C98A3E]/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-                    >
-                        Book Your Stay
-                    </Link>
-                    <Link 
-                        :href="route('experiences')" 
-                        prefetch 
-                        class="px-7 py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/30 text-xs sm:text-sm font-bold uppercase tracking-widest rounded-xl backdrop-blur-md transition hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-                    >
-                        Explore Experiences
-                    </Link>
-                </div>
-            </div>
-
-            <!-- Subtle Bottom Subtitle Overlay -->
-            <div class="hidden sm:block absolute bottom-6 left-8 z-10">
-                <span class="text-[11px] uppercase tracking-[3px] text-gray-300/80 font-semibold font-sans">
-                    ðŸ“ Komkonga, Tanga â€” Tanzania
-                </span>
-            </div>
-
-            <!-- Video Controls (Play/Pause & Mute/Unmute) -->
-            <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 font-sans">
+            <!-- Floating Minimal Glass Video Controls (Icons Only) -->
+            <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2.5 font-sans" @click.stop>
+                <!-- Play / Pause Button -->
                 <button 
                     type="button"
                     @click="togglePlay" 
-                    class="px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/85 border border-white/25 text-white text-[11px] font-medium backdrop-blur-md transition flex items-center gap-1.5 shadow-md cursor-pointer"
+                    class="w-11 h-11 rounded-full bg-black/50 hover:bg-[#14231C] active:scale-95 border border-white/20 text-white backdrop-blur-md transition-all flex items-center justify-center shadow-lg hover:shadow-xl hover:border-[#C98A3E] cursor-pointer group/btn"
                     :title="isPaused ? 'Play Video' : 'Pause Video'"
+                    aria-label="Play or Pause Video"
                 >
-                    <span>{{ isPaused ? 'â–¶ Play' : 'â¸ Pause' }}</span>
+                    <!-- Play Icon (when paused) -->
+                    <svg v-if="isPaused" class="w-5 h-5 text-white group-hover/btn:text-[#E6C387] transition-colors translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <!-- Pause Icon (when playing) -->
+                    <svg v-else class="w-5 h-5 text-white group-hover/btn:text-[#E6C387] transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
                 </button>
+
+                <!-- Sound Mute / Unmute Button -->
                 <button 
                     type="button"
                     @click="toggleMute" 
-                    class="px-3 py-1.5 rounded-full bg-black/60 hover:bg-black/85 border border-white/25 text-white text-[11px] font-medium backdrop-blur-md transition flex items-center gap-1.5 shadow-md cursor-pointer"
+                    class="w-11 h-11 rounded-full bg-black/50 hover:bg-[#14231C] active:scale-95 border border-white/20 text-white backdrop-blur-md transition-all flex items-center justify-center shadow-lg hover:shadow-xl hover:border-[#C98A3E] cursor-pointer group/btn"
                     :title="isMuted ? 'Unmute Audio' : 'Mute Audio'"
+                    aria-label="Mute or Unmute Audio"
                 >
-                    <span>{{ isMuted ? 'ðŸ”‡ Sound Off' : 'ðŸ”Š Sound On' }}</span>
+                    <!-- Muted Icon -->
+                    <svg v-if="isMuted" class="w-5 h-5 text-white group-hover/btn:text-[#E6C387] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                    <!-- Sound High / Unmuted Icon -->
+                    <svg v-else class="w-5 h-5 text-white group-hover/btn:text-[#E6C387] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
                 </button>
             </div>
         </section>
@@ -279,7 +254,7 @@ const handleLogoClick = (e) => {
             <span class="text-xs text-emerald-800 uppercase tracking-widest font-sans font-bold">The Philosophy</span>
             <h2 class="text-3xl md:text-4xl font-extrabold leading-tight">Serenity, Privacy, and Local Heritage</h2>
             <p class="text-base text-[#4A5D49] leading-relaxed font-sans max-w-3xl mx-auto">
-                Kitonga Farm Villas is not just an accommodation; it is a premium countryside destination in Komkonga, Tanga. We connect luxury villa hospitality with organic farmingâ€”offering fresh fruits, swimming pool, forest trails, and cattle farm experiences. Relish farm-to-table cuisine prepared with care by our kitchen.
+                Kitonga Farm Villas is not just an accommodation; it is a premium countryside destination in Komkonga, Tanga. We connect luxury villa hospitality with organic farming — offering fresh fruits, swimming pool, forest trails, and cattle farm experiences. Relish farm-to-table cuisine prepared with care by our kitchen.
             </p>
         </section>
 
