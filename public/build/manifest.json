@@ -121,7 +121,7 @@
     ]
   },
   "resources/js/Pages/Admin/Expenses/Index.vue": {
-    "file": "assets/Index-CnSII5rQ.js",
+    "file": "assets/Index-NCOWrPP2.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Expenses/Index.vue",
     "isDynamicEntry": true,
@@ -768,7 +768,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CcyY0PtP.js",
+    "file": "assets/app-g3eK-BFf.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -846,7 +846,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-CNsJlvK8.css"
+      "assets/app-CptddfXT.css"
     ]
   }
 }
