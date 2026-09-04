@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 const props = defineProps({
     activeCategory: {
         type: String,
@@ -12,37 +12,31 @@ const categories = [
     {
         name: 'All Experiences',
         filterKey: 'All',
-        icon: 'âœ¨',
         image: '/images/normal_farm_tour.webp',
     },
     {
         name: 'Farm Life',
         filterKey: 'Nature & Trails',
-        icon: 'ðŸŒ±',
         image: '/images/gallery_img_0216.webp',
     },
     {
         name: 'Animals',
         filterKey: 'Complete Ecosystem',
-        icon: 'ðŸ„',
         image: '/images/three_cows.webp',
     },
     {
         name: 'Farm & Food',
         filterKey: 'Farm & Food',
-        icon: 'ðŸ¯',
         image: '/images/farm_gallery_1.webp',
     },
     {
         name: 'Nature',
         filterKey: 'Nature',
-        icon: 'ðŸŒ¿',
         image: '/images/gallery_img_0223.webp',
     },
     {
         name: 'Relaxation',
         filterKey: 'Relaxation',
-        icon: 'ðŸŠ',
         image: '/images/gallery_img_0220.webp',
     },
 ];
@@ -95,8 +89,7 @@ const handleSelect = (key) => {
 
                 <!-- Category Content -->
                 <div class="relative z-10 space-y-1">
-                    <span class="text-xl sm:text-2xl block drop-shadow-sm">{{ cat.icon }}</span>
-                    <span class="text-xs font-bold tracking-wider uppercase block drop-shadow-sm">
+                    <span class="text-xs font-bold tracking-wider uppercase block drop-shadow-md">
                         {{ cat.name }}
                     </span>
                 </div>
@@ -105,5 +98,3 @@ const handleSelect = (key) => {
 
     </section>
 </template>
-
-

@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref } from 'vue';
 
 const activeHarvestTab = ref('crops');
@@ -74,7 +74,7 @@ const harvestData = {
                             : 'text-gray-600 hover:text-black'
                     ]"
                 >
-                    ðŸŒ± Crops & Orchards
+                    Crops & Orchards
                 </button>
                 <button 
                     type="button"
@@ -86,7 +86,7 @@ const harvestData = {
                             : 'text-gray-600 hover:text-black'
                     ]"
                 >
-                    ðŸ„ Pastoral Livestock
+                    Pastoral Livestock
                 </button>
                 <button 
                     type="button"
@@ -98,7 +98,7 @@ const harvestData = {
                             : 'text-gray-600 hover:text-black'
                     ]"
                 >
-                    ðŸ¯ Farm Fresh Harvest
+                    Farm Fresh Harvest
                 </button>
             </div>
         </div>

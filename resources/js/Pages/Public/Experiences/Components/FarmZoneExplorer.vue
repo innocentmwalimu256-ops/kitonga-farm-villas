@@ -146,7 +146,7 @@ const farmZones = [
                                 :key="hIdx"
                                 class="text-xs text-gray-600 flex items-center gap-2"
                             >
-                                <span class="text-[#C98A3E] font-bold">âœ“</span>
+                                <span class="text-[#C98A3E] font-bold">✓</span>
                                 <span>{{ hl }}</span>
                             </li>
                         </ul>
@@ -161,7 +161,7 @@ const farmZones = [
                         class="text-xs font-bold uppercase tracking-wider text-[#1B2E22] hover:text-[#C98A3E] flex items-center gap-1.5 transition"
                     >
                         <span>View Tour Options</span>
-                        <span>â†’</span>
+                        <span>→</span>
                     </a>
                 </div>
 

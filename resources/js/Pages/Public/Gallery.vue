@@ -75,7 +75,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="Visual Gallery â€” Kitonga Farm Villas" />
+    <Head title="Visual Gallery — Kitonga Farm Villas" />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
@@ -185,13 +185,13 @@ onUnmounted(() => {
 
                 <div class="pt-4 flex items-center justify-center gap-3 text-xs uppercase tracking-widest text-[#E6C387]/90 font-medium">
                     <span>20 Authentic Perspectives</span>
-                    <span>â€¢</span>
+                    <span>•</span>
                     <span>Highland Heritage</span>
                 </div>
             </div>
         </section>
 
-        <!-- 3. PURE LUXURY PHOTO GALLERY (20 IMAGES â€” RESIDENCE STYLE) -->
+        <!-- 3. PURE LUXURY PHOTO GALLERY (20 IMAGES — RESIDENCE STYLE) -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -279,7 +279,7 @@ onUnmounted(() => {
 
             <!-- Lightbox Bottom Navigation Indicator -->
             <div class="text-center text-xs text-white/50 font-sans">
-                Use <span class="text-white/80 font-semibold">â†</span> and <span class="text-white/80 font-semibold">â†’</span> keys to navigate Â· <span class="text-white/80 font-semibold">ESC</span> to close
+                Use <span class="text-white/80 font-semibold">â†</span> and <span class="text-white/80 font-semibold">→</span> keys to navigate · <span class="text-white/80 font-semibold">ESC</span> to close
             </div>
         </div>
 

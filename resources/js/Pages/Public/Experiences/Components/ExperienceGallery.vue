@@ -79,7 +79,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                     @click="closeLightbox" 
                     class="absolute top-5 right-6 text-white/80 hover:text-white text-3xl font-light font-sans z-20 cursor-pointer transition"
                 >
-                    âœ•
+                    ✕
                 </button>
 
                 <!-- Navigation Buttons -->
@@ -87,13 +87,13 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                     @click="prevImage" 
                     class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-4xl sm:text-5xl font-light font-sans z-20 p-3 cursor-pointer transition"
                 >
-                    â€¹
+                    ‹
                 </button>
                 <button 
                     @click="nextImage" 
                     class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-4xl sm:text-5xl font-light font-sans z-20 p-3 cursor-pointer transition"
                 >
-                    â€º
+                    ›
                 </button>
 
                 <!-- Main Image Container -->

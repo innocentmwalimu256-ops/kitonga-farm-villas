@@ -49,7 +49,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1580587
                         prefetch
                         class="text-xs font-bold font-sans text-[#2C3E2B] hover:underline"
                     >
-                        View Villa details â†’
+                        View Villa details →
                     </Link>
                     <Link 
                         :href="route('booking.form', { villa_id: villa.id })" 

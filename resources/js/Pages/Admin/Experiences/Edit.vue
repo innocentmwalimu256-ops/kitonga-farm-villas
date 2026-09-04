@@ -142,7 +142,7 @@ const submitUpdateExperience = () => {
                                 </div>
                                 <ul class="space-y-1.5 mt-2">
                                     <li v-for="(inc, index) in form.inclusions" :key="index" class="flex justify-between items-center text-xs p-2 bg-gray-50 rounded border border-gray-100">
-                                        <span class="text-gray-700">âœ“ {{ inc }}</span>
+                                        <span class="text-gray-700">✓ {{ inc }}</span>
                                         <button @click.prevent="removeInclusion(index)" class="text-rose-600 hover:underline">Remove</button>
                                     </li>
                                 </ul>
@@ -157,7 +157,7 @@ const submitUpdateExperience = () => {
                                 </div>
                                 <ul class="space-y-1.5 mt-2">
                                     <li v-for="(hl, index) in form.highlights" :key="index" class="flex justify-between items-center text-xs p-2 bg-gray-50 rounded border border-gray-100">
-                                        <span class="text-gray-700">â˜… {{ hl }}</span>
+                                        <span class="text-gray-700">• {{ hl }}</span>
                                         <button @click.prevent="removeHighlight(index)" class="text-rose-600 hover:underline">Remove</button>
                                     </li>
                                 </ul>
@@ -190,7 +190,7 @@ const submitUpdateExperience = () => {
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div v-for="(img, idx) in form.gallery" :key="idx" class="relative group h-24 bg-gray-50 rounded overflow-hidden border">
                                         <img loading="lazy" decoding="async" :src="img.startsWith('http') ? img : '/images/' + img" class="w-full h-full object-cover" />
-                                        <button @click.prevent="removeGalleryImage(idx)" class="absolute top-1 right-1 p-1 bg-black/60 hover:bg-black text-white rounded text-[10px]">âœ•</button>
+                                        <button @click.prevent="removeGalleryImage(idx)" class="absolute top-1 right-1 p-1 bg-black/60 hover:bg-black text-white rounded text-[10px]">✕</button>
                                     </div>
                                 </div>
                             </div>

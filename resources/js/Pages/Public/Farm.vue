@@ -111,7 +111,7 @@ const orderProduct = (product) => {
 </script>
 
 <template>
-    <Head title="Our Organic Farm & Countryside Heritage â€” Kitonga Farm Villas" />
+    <Head title="Our Organic Farm & Countryside Heritage — Kitonga Farm Villas" />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
@@ -221,7 +221,7 @@ const orderProduct = (product) => {
         <section class="content-auto max-w-5xl mx-auto px-6 pt-6 pb-20 text-center space-y-8">
             <div class="inline-flex items-center gap-2">
                 <span class="w-8 h-px bg-[#C98A3E]"></span>
-                <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">01 â€” The Estate Sanctuary</span>
+                <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">01 — The Estate Sanctuary</span>
                 <span class="w-8 h-px bg-[#C98A3E]"></span>
             </div>
 
@@ -300,7 +300,7 @@ const orderProduct = (product) => {
             <div class="text-center space-y-3">
                 <div class="inline-flex items-center gap-2">
                     <span class="w-8 h-px bg-[#C98A3E]"></span>
-                    <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">02 â€” Estate Zones</span>
+                    <span class="text-xs uppercase tracking-[4px] font-bold text-[#C98A3E] font-sans">02 — Estate Zones</span>
                     <span class="w-8 h-px bg-[#C98A3E]"></span>
                 </div>
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#14231C]">
@@ -380,7 +380,7 @@ const orderProduct = (product) => {
                 <div class="space-y-2">
                     <div class="inline-flex items-center gap-2">
                         <span class="w-6 h-px bg-[#C98A3E]"></span>
-                        <span class="text-xs uppercase tracking-[3px] font-bold text-[#C98A3E] font-sans">03 â€” Visual Archive</span>
+                        <span class="text-xs uppercase tracking-[3px] font-bold text-[#C98A3E] font-sans">03 — Visual Archive</span>
                     </div>
                     <h2 class="text-3xl sm:text-4xl font-serif font-light text-[#14231C]">
                         Moments Captured on the Estate
@@ -464,7 +464,7 @@ const orderProduct = (product) => {
                 class="absolute top-6 right-6 text-white/80 hover:text-white p-2 z-50 text-2xl"
                 aria-label="Close image preview"
             >
-                âœ•
+                ✕
             </button>
 
             <!-- Navigation Buttons -->
@@ -473,14 +473,14 @@ const orderProduct = (product) => {
                 class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 z-50 text-xl font-bold"
                 aria-label="Previous image"
             >
-                â€¹
+                ‹
             </button>
             <button 
                 @click.stop="nextLightbox" 
                 class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 z-50 text-xl font-bold"
                 aria-label="Next image"
             >
-                â€º
+                ›
             </button>
 
             <div class="max-w-5xl max-h-[85vh] flex flex-col items-center" @click.stop>

@@ -313,14 +313,14 @@ const whatsappUrl = computed(() => {
         return `https://wa.me/${phone}?text=${encodeURIComponent('Hello Kitonga Farm Villas, I would like to inquire about fresh harvest produce.')}`;
     }
 
-    let msg = "ðŸŒ¿ *KITONGA FARM VILLAS â€” HARVEST ORDER*\n\n";
+    let msg = "*KITONGA FARM VILLAS — HARVEST ORDER*\n\n";
     msg += "Greetings, I would like to order the following fresh produce from the farm:\n\n";
     cartList.value.forEach((item, i) => {
         msg += `${i + 1}. *${item.name}*\n   - Quantity: ${item.qty} ${item.unit}\n   - Subtotal: ${formatCurrency(item.price * item.qty)}\n\n`;
     });
-    msg += `ðŸ’° *TOTAL ESTIMATE: ${formatCurrency(totalCartPrice.value)}*\n\n`;
+    msg += `*TOTAL ESTIMATE: ${formatCurrency(totalCartPrice.value)}*\n\n`;
     if (deliveryNotes.value.trim()) {
-        msg += `ðŸ“ *Delivery / Special Notes:* ${deliveryNotes.value.trim()}\n\n`;
+        msg += `*Delivery / Special Notes:* ${deliveryNotes.value.trim()}\n\n`;
     }
     msg += "Please confirm availability and dispatch details. Thank you!";
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
@@ -360,15 +360,14 @@ const whatsappUrl = computed(() => {
                     <Link :href="route('gallery')" prefetch class="hover:text-[#C98A3E] transition-colors py-2">Gallery</Link>
                     <Link :href="route('contact')" prefetch class="hover:text-[#C98A3E] transition-colors py-2">Contact</Link>
                     <Link :href="route('login')" prefetch class="hover:text-[#C98A3E] transition-colors py-2 text-white/70">Sign In</Link>
-                </nav>
-
-                <!-- Basket & CTA -->
+                </nav>                <!-- Basket & CTA -->
                 <div class="flex items-center gap-4">
                     <button 
                         @click="cartDrawerOpen = true"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold tracking-wider transition-all cursor-pointer font-sans"
                     >
-                        <span>ðŸ›’ Basket</span>
+                        <svg class="w-4 h-4 text-[#E6C387]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        <span>Basket</span>
                         <span v-if="totalCartItems > 0" class="px-2 py-0.5 rounded-full bg-[#C98A3E] text-white text-[10px] font-bold">
                             {{ totalCartItems }}
                         </span>
@@ -382,18 +381,15 @@ const whatsappUrl = computed(() => {
                         BOOK STAY
                     </Link>
 
-                    <!-- Mobile Toggle -->
                     <button 
-                        @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="lg:hidden p-2 text-white focus:outline-none cursor-pointer"
+                        type="button" 
+                        @click="mobileMenuOpen = !mobileMenuOpen" 
+                        class="p-1.5 text-white hover:text-[#C98A3E] focus:outline-none lg:hidden cursor-pointer"
                     >
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <svg v-if="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                        <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
-
             </div>
 
             <!-- Mobile Dropdown -->
@@ -418,7 +414,7 @@ const whatsappUrl = computed(() => {
         <section class="max-w-5xl mx-auto px-4 sm:px-8 pt-14 sm:pt-20 pb-12 text-center">
 
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#14231C]/5 border border-[#14231C]/10 text-[#C98A3E] text-[11px] font-bold uppercase tracking-[0.2em] mb-4">
-                <span>ðŸŒ¿</span> Estate Harvest & Fresh Produce
+                <span>•</span> Estate Harvest & Fresh Produce
             </div>
 
             <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[#14231C] tracking-tight leading-tight mb-6">
@@ -482,7 +478,7 @@ const whatsappUrl = computed(() => {
                         placeholder="Search any harvest..."
                         class="w-full pl-9 pr-4 py-2 bg-[#FDFBF7] border border-[#14231C]/15 rounded-xl text-xs text-[#14231C] focus:outline-none focus:border-[#C98A3E]"
                     />
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[#14231C]/40">ðŸ”</span>
+                    <svg class="w-4 h-4 text-[#14231C]/40 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
 
             </div>
@@ -492,7 +488,6 @@ const whatsappUrl = computed(() => {
         <section class="max-w-7xl mx-auto px-4 sm:px-8 pb-24">
             
             <div v-if="filteredProducts.length === 0" class="py-20 text-center space-y-3">
-                <span class="text-4xl">ðŸŒ¾</span>
                 <h3 class="font-serif text-xl font-bold text-[#14231C]">No harvest items found</h3>
                 <p class="text-xs text-[#14231C]/60">Try selecting another category or resetting your search term.</p>
                 <button 
@@ -551,7 +546,7 @@ const whatsappUrl = computed(() => {
                             <!-- Stepper or Buy Button -->
                             <div>
                                 <div v-if="cart[prod.id]" class="flex items-center bg-[#F4EFE6] rounded-full p-1 border border-[#14231C]/10">
-                                    <button @click="decrementCart(prod.id)" class="w-6 h-6 rounded-full bg-white text-[#14231C] font-bold text-xs flex items-center justify-center shadow-sm cursor-pointer">âˆ’</button>
+                                    <button @click="decrementCart(prod.id)" class="w-6 h-6 rounded-full bg-white text-[#14231C] font-bold text-xs flex items-center justify-center shadow-sm cursor-pointer">-</button>
                                     <span class="w-6 text-center font-bold text-xs">{{ cart[prod.id].qty }}</span>
                                     <button @click="addToCart(prod)" class="w-6 h-6 rounded-full bg-white text-[#14231C] font-bold text-xs flex items-center justify-center shadow-sm cursor-pointer">+</button>
                                 </div>
@@ -591,20 +586,20 @@ const whatsappUrl = computed(() => {
                     <!-- Header -->
                     <div class="p-6 bg-[#14231C] text-white flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <span class="text-2xl">ðŸ§º</span>
+                            <svg class="w-6 h-6 text-[#E6C387]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                             <div>
                                 <h3 class="font-serif text-lg font-bold text-white">Your Harvest Basket</h3>
                                 <span class="text-[11px] text-[#C98A3E] font-medium">Kitonga Farm Direct Order</span>
                             </div>
                         </div>
-                        <button @click="cartDrawerOpen = false" class="text-white/70 hover:text-white p-2 text-lg cursor-pointer">âœ•</button>
+                        <button @click="cartDrawerOpen = false" class="text-white/70 hover:text-white p-2 text-lg cursor-pointer">✕</button>
                     </div>
 
                     <!-- Items -->
                     <div class="p-6 overflow-y-auto flex-1 space-y-4">
                         
                         <div v-if="cartList.length === 0" class="py-16 text-center space-y-3">
-                            <span class="text-4xl block">ðŸ§º</span>
+                            <svg class="w-12 h-12 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                             <h4 class="font-serif text-base font-bold text-[#14231C]">Your basket is empty</h4>
                             <p class="text-xs text-[#14231C]/60">Select eggs, dairy, honey, or fresh fruits above to add to your basket.</p>
                         </div>
@@ -628,12 +623,12 @@ const whatsappUrl = computed(() => {
                                 </div>
 
                                 <div class="flex items-center bg-white border border-[#14231C]/15 rounded-lg p-0.5 shadow-2xs">
-                                    <button @click="decrementCart(item.id)" class="w-7 h-7 rounded text-xs font-bold hover:bg-gray-100 flex items-center justify-center cursor-pointer transition">">âˆ’</button>
+                                    <button @click="decrementCart(item.id)" class="w-7 h-7 rounded text-xs font-bold hover:bg-gray-100 flex items-center justify-center cursor-pointer transition">-</button>
                                     <span class="w-6 text-center text-xs font-bold font-mono">{{ item.qty }}</span>
                                     <button @click="addToCart(item)" class="w-7 h-7 rounded text-xs font-bold hover:bg-gray-100 flex items-center justify-center cursor-pointer transition">+</button>
                                 </div>
 
-                                <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-700 p-1.5 text-xs cursor-pointer" aria-label="Remove item">âœ•</button>
+                                <button @click="removeFromCart(item.id)" class="text-red-500 hover:text-red-700 p-1.5 text-xs cursor-pointer" aria-label="Remove item">✕</button>
                             </div>
 
                             <!-- Delivery notes -->
@@ -662,7 +657,7 @@ const whatsappUrl = computed(() => {
                             target="_blank"
                             class="w-full py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                         >
-                            <span>ðŸ’¬ Send Order via WhatsApp</span>
+                            <span>Send Order via WhatsApp</span>
                         </a>
                     </div>
 
@@ -676,9 +671,9 @@ const whatsappUrl = computed(() => {
             @click="cartDrawerOpen = true"
             class="fixed bottom-6 right-6 z-40 flex items-center gap-3 px-5 py-3 rounded-full bg-[#14231C] hover:bg-[#C98A3E] text-white shadow-2xl border border-white/20 transition-all cursor-pointer"
         >
-            <span class="text-base">ðŸ›’</span>
+            <svg class="w-5 h-5 text-[#E6C387]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
             <span class="text-xs font-bold tracking-wider">
-                {{ totalCartItems }} {{ totalCartItems === 1 ? 'Item' : 'Items' }} Â· {{ formatCurrency(totalCartPrice) }}
+                {{ totalCartItems }} {{ totalCartItems === 1 ? 'Item' : 'Items' }} • {{ formatCurrency(totalCartPrice) }}
             </span>
         </button>
 

@@ -86,27 +86,27 @@ const getImageUrl = (path, slug) => {
                     <div class="space-y-5 pt-4 border-t border-gray-100 font-sans">
                         
                         <!-- Confirmed Inclusions Chips -->
-                        <div class="flex flex-wrap gap-2 text-[11px] font-medium text-[#2C3E2B]">
-                            <span v-if="exp.slug === 'normal-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                ðŸŒ¿ Farm Walk
+                        <div class="flex flex-wrap gap-2 text-[11px] font-semibold text-[#2C3E2B]">
+                            <span v-if="exp.slug === 'normal-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
+                                Farm Walk
                             </span>
-                            <span v-if="exp.slug === 'normal-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                ðŸŠ Swimming Pool
+                            <span v-if="exp.slug === 'normal-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
+                                Swimming Pool
                             </span>
-                            <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                ðŸ„ Dairy Zone
+                            <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
+                                Dairy Zone
                             </span>
-                            <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                ðŸ” Poultry Zone
+                            <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
+                                Poultry Zone
                             </span>
-                            <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                ðŸŒ± Greenhouses
+                            <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
+                                Greenhouses
                             </span>
-                            <span v-if="exp.duration" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                â±ï¸ {{ exp.duration }}
+                            <span v-if="exp.duration" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
+                                {{ exp.duration }}
                             </span>
-                            <span class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200 flex items-center gap-1.5">
-                                ðŸ‘¥ All Ages
+                            <span class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
+                                All Ages
                             </span>
                         </div>
 
@@ -128,7 +128,7 @@ const getImageUrl = (path, slug) => {
                                 class="w-full py-4 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 flex items-center justify-center gap-2 shadow-md cursor-pointer"
                             >
                                 <span>DISCOVER THIS EXPERIENCE</span>
-                                <span>â†’</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                             </Link>
                         </div>
 

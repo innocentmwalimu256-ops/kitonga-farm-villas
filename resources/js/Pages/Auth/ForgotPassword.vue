@@ -19,7 +19,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Reset Password â€” Kitonga Farm Villas" />
+    <Head title="Reset Password — Kitonga Farm Villas" />
 
     <div class="min-h-screen flex bg-[#FAF8F5] text-[#14231C] font-sans selection:bg-[#C98A3E] selection:text-white">
 
@@ -64,7 +64,7 @@ const submit = () => {
 
             <!-- Bottom Location Tag -->
             <div class="relative z-10 flex justify-between items-center text-xs text-gray-400 border-t border-white/10 pt-6">
-                <span>Komkonga Highlands Â· Tanga, Tanzania</span>
+                <span>Komkonga Highlands · Tanga, Tanzania</span>
                 <span>&copy; 2026 Kitonga Farm Villas</span>
             </div>
         </div>
@@ -111,7 +111,7 @@ const submit = () => {
                     v-if="status" 
                     class="p-4 rounded-2xl bg-green-50 border border-green-200 text-xs font-bold text-green-800 flex items-center gap-2"
                 >
-                    <span>âœ“</span>
+                    <span>✓</span>
                     <span>{{ status }}</span>
                 </div>
 
@@ -153,7 +153,7 @@ const submit = () => {
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                             </svg>
                             <span>{{ form.processing ? 'Dispatching Link...' : 'Email Reset Link' }}</span>
-                            <span v-if="!form.processing">â†’</span>
+                            <span v-if="!form.processing">→</span>
                         </button>
                     </div>
 

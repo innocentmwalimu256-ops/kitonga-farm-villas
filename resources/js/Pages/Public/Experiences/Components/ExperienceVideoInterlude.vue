@@ -35,7 +35,7 @@ const videoRef = ref(null);
             </h3>
 
             <p class="text-xs sm:text-sm text-gray-200 font-sans tracking-widest uppercase font-light drop-shadow-sm">
-                Nature â€¢ Living Farm â€¢ Countryside Peace
+                Nature • Living Farm • Countryside Peace
             </p>
 
         </div>

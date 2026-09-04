@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -47,7 +47,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                     <span class="text-[9px] uppercase tracking-wider text-amber-600 font-bold block">Tour Highlights</span>
                     <ul class="text-[11px] text-gray-600 space-y-1 font-sans">
                         <li v-for="(hl, idx) in experience.highlights.slice(0, 2)" :key="idx" class="flex items-center gap-1.5">
-                            <span class="text-amber-500">â˜…</span> {{ hl }}
+                            <span class="text-amber-500 font-bold">•</span> {{ hl }}
                         </li>
                     </ul>
                 </div>
@@ -55,8 +55,8 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
 
             <div class="border-t border-gray-100 pt-6 space-y-4">
                 <div class="flex justify-between items-center text-xs font-sans text-gray-400">
-                    <span v-if="experience.duration">â±ï¸ {{ experience.duration }}</span>
-                    <span v-if="experience.capacity_per_slot">ðŸ‘¥ Up to {{ experience.capacity_per_slot }} Guests</span>
+                    <span v-if="experience.duration">{{ experience.duration }}</span>
+                    <span v-if="experience.capacity_per_slot">Up to {{ experience.capacity_per_slot }} Guests</span>
                 </div>
 
                 <div class="flex justify-between items-center">
@@ -69,9 +69,10 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1500937
                     <Link 
                         :href="route('experiences.show', experience.slug)" 
                         prefetch
-                        class="px-5 py-2.5 bg-[#2C3E2B] text-white hover:bg-emerald-950 text-xs font-bold uppercase tracking-wider rounded transition font-sans"
+                        class="px-5 py-2.5 bg-[#2C3E2B] text-white hover:bg-emerald-950 text-xs font-bold uppercase tracking-wider rounded transition font-sans inline-flex items-center gap-1.5"
                     >
-                        Explore Experience âž”
+                        <span>Explore Experience</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </Link>
                 </div>
             </div>

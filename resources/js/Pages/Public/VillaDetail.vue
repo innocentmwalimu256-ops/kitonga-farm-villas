@@ -102,7 +102,7 @@ const getImageUrl = (path, slug) => {
 </script>
 
 <template>
-    <Head :title="`${villa.name} â€” Private Residence | Kitonga Farm Villas`" />
+    <Head :title="`${villa.name} — Private Residence | Kitonga Farm Villas`" />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
@@ -153,9 +153,9 @@ const getImageUrl = (path, slug) => {
                 </h1>
                 <div class="text-xs sm:text-sm text-gray-300 font-medium tracking-wide">
                     <span>{{ villa.capacity }} Guests</span>
-                    <span class="mx-2 text-[#C98A3E]">Â·</span>
+                    <span class="mx-2 text-[#C98A3E]">·</span>
                     <span>{{ villa.bedrooms }} {{ villa.bedrooms === 1 ? 'Bedroom' : 'Bedrooms' }}</span>
-                    <span class="mx-2 text-[#C98A3E]">Â·</span>
+                    <span class="mx-2 text-[#C98A3E]">·</span>
                     <span>{{ villa.bathrooms }} {{ villa.bathrooms === 1 ? 'Bathroom' : 'Bathrooms' }}</span>
                 </div>
             </div>
@@ -170,7 +170,7 @@ const getImageUrl = (path, slug) => {
                 <!-- Intro Statement -->
                 <section class="space-y-4 font-sans">
                     <span class="text-[10px] uppercase tracking-[4px] font-bold text-[#C98A3E] block">
-                        â€” RESIDENCE ESSENCE â€”
+                        — RESIDENCE ESSENCE —
                     </span>
                     <h2 class="text-2xl sm:text-3xl font-serif font-light text-[#1F2420]">
                         Quiet mornings. Private space. The beauty of Kitonga.
@@ -208,7 +208,7 @@ const getImageUrl = (path, slug) => {
                 <!-- "THE EXPERIENCE" SECTION -->
                 <section class="space-y-4 bg-white p-8 rounded-2xl border border-[#E5E0D8] shadow-xs font-sans">
                     <span class="text-[10px] uppercase tracking-[4px] font-bold text-[#C98A3E] block">
-                        â€” THE EXPERIENCE â€”
+                        — THE EXPERIENCE —
                     </span>
                     <h3 class="text-2xl font-serif font-light text-[#1B2E22]">
                         Slow Living & Countryside Serenity
@@ -261,7 +261,7 @@ const getImageUrl = (path, slug) => {
                             :key="amenity.id" 
                             class="p-3 bg-white border border-[#E5E0D8] rounded-xl flex items-center gap-2"
                         >
-                            <span class="text-emerald-700 font-bold">âœ“</span>
+                            <span class="text-emerald-700 font-bold">✓</span>
                             <span>{{ amenity.name }}</span>
                         </div>
                     </div>
@@ -354,7 +354,7 @@ const getImageUrl = (path, slug) => {
                         class="w-full py-4 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] font-bold uppercase tracking-wider text-xs rounded-xl transition font-sans flex items-center justify-center gap-2 cursor-pointer shadow-lg group"
                     >
                         <span>Reserve this Residence</span>
-                        <span class="text-[#C98A3E] group-hover:text-white group-hover:translate-x-1 transition">â†’</span>
+                        <span class="text-[#C98A3E] group-hover:text-white group-hover:translate-x-1 transition">→</span>
                     </Link>
 
                     <p class="text-[10px] text-gray-400 text-center leading-tight">
@@ -371,7 +371,7 @@ const getImageUrl = (path, slug) => {
         <section v-if="other_villas && other_villas.length > 0" class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 border-t border-[#E5E0D8]">
             <div class="text-center space-y-2 mb-10">
                 <span class="text-[10px] uppercase tracking-[4px] font-sans font-bold text-[#C98A3E] block">
-                    â€” ALTERNATIVE RETREATS â€”
+                    — ALTERNATIVE RETREATS —
                 </span>
                 <h3 class="text-2xl sm:text-3xl font-serif font-light text-[#1F2420]">
                     Explore Another Residence
@@ -404,7 +404,7 @@ const getImageUrl = (path, slug) => {
                                 class="text-xs font-bold uppercase tracking-wider text-[#C98A3E] hover:text-[#1B2E22] transition inline-flex items-center gap-1"
                             >
                                 <span>View Residence</span>
-                                <span>â†’</span>
+                                <span>→</span>
                             </Link>
                         </div>
                     </div>
@@ -426,7 +426,7 @@ const getImageUrl = (path, slug) => {
                     class="absolute top-6 right-6 text-white text-3xl font-light hover:text-[#C98A3E] transition cursor-pointer z-110 w-10 h-10 flex items-center justify-center"
                     aria-label="Close Lightbox"
                 >
-                    âœ•
+                    ✕
                 </button>
 
                 <!-- Prev Button -->
@@ -435,7 +435,7 @@ const getImageUrl = (path, slug) => {
                     class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl p-3 hover:text-[#C98A3E] transition cursor-pointer z-110 bg-black/40 rounded-full"
                     aria-label="Previous Photo"
                 >
-                    â€¹
+                    ‹
                 </button>
 
                 <!-- Next Button -->
@@ -444,7 +444,7 @@ const getImageUrl = (path, slug) => {
                     class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl p-3 hover:text-[#C98A3E] transition cursor-pointer z-110 bg-black/40 rounded-full"
                     aria-label="Next Photo"
                 >
-                    â€º
+                    ›
                 </button>
 
                 <!-- Current Image & Caption -->

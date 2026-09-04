@@ -63,7 +63,7 @@ const getImageUrl = (path, slug) => {
                         {{ experience.category }}
                     </span>
                     <span v-if="experience.duration" class="px-3 py-1 bg-black/40 backdrop-blur-xs text-white text-xs font-sans font-semibold rounded border border-white/20">
-                        â±ï¸ {{ experience.duration }}
+                        {{ experience.duration }}
                     </span>
                 </div>
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-wide text-[#F7F3EA] font-serif leading-tight drop-shadow-md">
@@ -84,7 +84,8 @@ const getImageUrl = (path, slug) => {
                     prefetch
                     class="text-xs font-bold font-sans text-gray-500 hover:text-[#2C3E2B] transition inline-flex items-center gap-1.5"
                 >
-                    â† Back to Experiences
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    <span>Back to Experiences</span>
                 </Link>
             </div>
 
@@ -106,7 +107,7 @@ const getImageUrl = (path, slug) => {
                         <h3 class="font-serif text-xl text-gray-950 font-light">Experience Highlights</h3>
                         <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans text-gray-600">
                             <li v-for="(hl, idx) in experience.highlights" :key="idx" class="flex gap-2">
-                                <span class="text-[#C98A3E] font-bold">â˜…</span>
+                                <span class="text-[#C98A3E] font-bold">•</span>
                                 <span class="leading-relaxed">{{ hl }}</span>
                             </li>
                         </ul>
@@ -121,7 +122,7 @@ const getImageUrl = (path, slug) => {
                                 :key="idx" 
                                 class="p-4 bg-white border border-gray-200 rounded-xl flex items-center gap-2 text-gray-700 shadow-xs"
                             >
-                                <span class="text-emerald-700 font-extrabold text-sm">âœ“</span>
+                                <svg class="w-4 h-4 text-emerald-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                 <span>{{ inc }}</span>
                             </div>
                         </div>
@@ -165,9 +166,9 @@ const getImageUrl = (path, slug) => {
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Contact Details</h4>
                     <div class="space-y-2 text-[#F7F3EA]/70">
-                        <p>âœ‰ï¸  <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
-                        <p>ðŸ“ž <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
-                        <p>ðŸ“  Kitonga Farm, Komkonga, Tanga, Tanzania</p>
+                        <p><a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
+                        <p><a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
+                        <p>Kitonga Farm, Komkonga, Tanga, Tanzania</p>
                     </div>
                 </div>
             </div>

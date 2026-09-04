@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref, computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
@@ -50,12 +50,12 @@ const inclusionMatrix = [
     },
     {
         feature: 'Dairy Cattle Stables & Pastures',
-        normal: 'â€”',
+        normal: '-',
         general: 'Full Access',
     },
     {
         feature: 'Poultry & Small Animal Enclosures',
-        normal: 'â€”',
+        normal: '-',
         general: 'Full Access',
     },
     {
@@ -122,7 +122,7 @@ const inclusionMatrix = [
                             GUIDED EXPERIENCE
                         </span>
                         <span v-if="currentTour.duration" class="px-3 py-1 bg-black/40 backdrop-blur-xs text-white text-xs font-semibold rounded border border-white/20">
-                            â±ï¸ {{ currentTour.duration }}
+                            {{ currentTour.duration }}
                         </span>
                     </div>
                     <h3 class="text-3xl font-serif font-light text-[#F7F3EA]">
@@ -151,7 +151,7 @@ const inclusionMatrix = [
                             </div>
                         </div>
                         <span class="text-xs font-semibold px-3 py-1 bg-[#FAF8F5] rounded-lg border border-gray-200 text-gray-700">
-                            ðŸ‘¥ All Ages Welcome
+                            All Ages Welcome
                         </span>
                     </div>
 
@@ -163,14 +163,14 @@ const inclusionMatrix = [
                         <div class="divide-y divide-gray-100 border border-gray-150 rounded-2xl overflow-hidden text-xs">
                             <div 
                                 v-for="(item, idx) in inclusionMatrix" 
-                                :key="idx"
+                                :key="idx" 
                                 class="px-4 py-3 flex items-center justify-between bg-white hover:bg-[#FAF8F5] transition"
                             >
                                 <span class="text-gray-700 font-medium">{{ item.feature }}</span>
                                 <span 
                                     :class="[
                                         'font-bold text-xs',
-                                        (currentTour.slug === 'normal-farm-tour' ? item.normal : item.general) === 'â€”' 
+                                        (currentTour.slug === 'normal-farm-tour' ? item.normal : item.general) === '-' 
                                             ? 'text-gray-300' 
                                             : 'text-emerald-700'
                                     ]"
@@ -187,9 +187,10 @@ const inclusionMatrix = [
                     <Link 
                         :href="route('experiences.show', currentTour.slug)" 
                         prefetch
-                        class="flex-1 py-3.5 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 text-center shadow-md cursor-pointer"
+                        class="flex-1 py-3.5 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 text-center shadow-md cursor-pointer flex items-center justify-center gap-2"
                     >
-                        Explore Full Itinerary & Details â†’
+                        <span>Explore Full Itinerary & Details</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </Link>
                     <Link 
                         :href="route('booking.form')" 
@@ -199,11 +200,8 @@ const inclusionMatrix = [
                         Book Stay
                     </Link>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 </template>
 

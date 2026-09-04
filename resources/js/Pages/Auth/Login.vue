@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
@@ -30,7 +30,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Sign In â€” Kitonga Farm Villas" />
+    <Head title="Sign In — Kitonga Farm Villas" />
 
     <div class="min-h-screen flex bg-[#FAF8F5] text-[#14231C] font-sans selection:bg-[#C98A3E] selection:text-white">
 
@@ -76,15 +76,15 @@ const submit = () => {
                 <!-- 3 Feature Points -->
                 <div class="space-y-3 pt-4 border-t border-white/10 text-xs text-gray-300">
                     <div class="flex items-center gap-3">
-                        <span class="text-[#E6C387] text-base">âœ¦</span>
+                        <span class="text-[#E6C387] text-base">•</span>
                         <span>Manage private residence & villa reservations</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-[#E6C387] text-base">âœ¦</span>
+                        <span class="text-[#E6C387] text-base">•</span>
                         <span>Single-click organic farm harvest orders</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="text-[#E6C387] text-base">âœ¦</span>
+                        <span class="text-[#E6C387] text-base">•</span>
                         <span>Direct 24/7 WhatsApp butler & concierge support</span>
                     </div>
                 </div>
@@ -92,7 +92,7 @@ const submit = () => {
 
             <!-- Bottom Location Tag -->
             <div class="relative z-10 flex justify-between items-center text-xs text-gray-400 border-t border-white/10 pt-6">
-                <span>Komkonga Highlands Â· Tanga, Tanzania</span>
+                <span>Komkonga Highlands · Tanga, Tanzania</span>
                 <span>&copy; 2026 Kitonga Farm Villas</span>
             </div>
         </div>
@@ -106,7 +106,7 @@ const submit = () => {
                     :href="route('home')" 
                     class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#C98A3E] transition group"
                 >
-                    <span class="transition group-hover:-translate-x-1">â†</span>
+                    <svg class="w-3.5 h-3.5 transition group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     <span>Return to Home</span>
                 </Link>
 
@@ -139,7 +139,7 @@ const submit = () => {
                     v-if="status" 
                     class="p-4 rounded-2xl bg-green-50 border border-green-200 text-xs font-bold text-green-800 flex items-center gap-2"
                 >
-                    <span>âœ“</span>
+                    <span>✓</span>
                     <span>{{ status }}</span>
                 </div>
 
@@ -193,7 +193,7 @@ const submit = () => {
                                 v-model="form.password"
                                 required
                                 autocomplete="current-password"
-                                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                                placeholder="••••••••••••"
                                 class="w-full pl-12 pr-12 py-3.5 bg-white border border-gray-200 rounded-2xl text-sm font-sans focus:outline-none focus:ring-2 focus:ring-[#C98A3E]/40 focus:border-[#C98A3E] transition shadow-xs"
                             />
                             <button 
@@ -231,7 +231,7 @@ const submit = () => {
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                             </svg>
                             <span>{{ form.processing ? 'Verifying...' : 'Sign In to Account' }}</span>
-                            <span v-if="!form.processing">â†’</span>
+                            <svg v-if="!form.processing" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </button>
                     </div>
 
@@ -260,7 +260,7 @@ const submit = () => {
                             target="_blank"
                             class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#25D366] hover:underline pt-1"
                         >
-                            <span>ðŸ’¬ Chat with Concierge (+255 758 774 695)</span>
+                            <span>Chat with Concierge (+255 758 774 695)</span>
                         </a>
                     </div>
                 </div>

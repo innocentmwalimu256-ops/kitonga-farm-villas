@@ -313,7 +313,7 @@ const handleLogoClick = (e) => {
             </div>
         </section>
 
-        <!-- 2.2. THE DAILY RHYTHM AT KITONGA (PURE TEXT NARRATIVE â€” NO NEW IMAGES) -->
+        <!-- 2.2. THE DAILY RHYTHM AT KITONGA (PURE TEXT NARRATIVE — NO NEW IMAGES) -->
         <section class="content-auto py-20 px-6 md:px-12 max-w-5xl mx-auto space-y-12">
             <div class="text-center space-y-3">
                 <span class="text-xs text-emerald-800 uppercase tracking-widest font-sans font-bold">The Experience</span>
@@ -396,7 +396,7 @@ const handleLogoClick = (e) => {
                             </div>
                         </div>
                         <p class="text-xs text-gray-600 line-clamp-3 font-sans leading-relaxed">{{ villa.description }}</p>
-                        <Link :href="route('villas.show', villa.slug)" prefetch class="inline-block text-xs font-bold text-emerald-700 hover:text-emerald-950 font-sans tracking-wider uppercase border-b-2 border-emerald-700 pb-0.5 mt-2">Explore Villa Details âž”</Link>
+                        <Link :href="route('villas.show', villa.slug)" prefetch class="inline-block text-xs font-bold text-emerald-700 hover:text-emerald-950 font-sans tracking-wider uppercase border-b-2 border-emerald-700 pb-0.5 mt-2">Explore Villa Details →</Link>
                     </div>
                 </div>
             </div>
