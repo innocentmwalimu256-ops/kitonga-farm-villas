@@ -465,10 +465,29 @@ const getImageUrl = (path, slug) => {
         </teleport>
 
         <!-- FOOTER -->
-        <footer class="bg-[#14231C] text-[#F7F3EA]/80 py-12 px-6 md:px-12 border-t border-white/10 text-center font-sans text-xs">
-            <p class="font-serif font-semibold text-white text-sm mb-2 uppercase tracking-widest">KITONGA FARM VILLAS</p>
-            <p class="text-[#F7F3EA]/60 mb-4">Komkonga Village, Tanga Region, Tanzania</p>
-            <p class="text-[10px] text-[#F7F3EA]/40">© 2026 Kitonga Farm Villas. All rights reserved.</p>
+        <footer class="bg-[#14231C] text-[#F7F3EA]/80 py-12 px-6 md:px-12 border-t border-white/10 font-sans text-xs">
+            <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div>
+                    <p class="font-serif font-semibold text-white text-sm uppercase tracking-widest">KITONGA FARM VILLAS</p>
+                    <p class="text-[#F7F3EA]/60 text-xs mt-1">Komkonga Village, Tanga Region, Tanzania</p>
+                </div>
+                <div class="flex items-center gap-2 text-[11px]">
+                    <span class="text-gray-400">Created by</span>
+                    <a 
+                        href="https://wa.me/255675315279" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E3326] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                        title="Chat on WhatsApp"
+                    >
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>0675 315 279</span>
+                    </a>
+                </div>
+            </div>
+            <div class="max-w-6xl mx-auto mt-6 pt-4 border-t border-white/10 text-center text-[10px] text-[#F7F3EA]/40">
+                © 2026 Kitonga Farm Villas. All rights reserved.
+            </div>
         </footer>
 
     </div>

@@ -450,8 +450,21 @@ const handleLogoClick = (e) => {
                     <p>Komkonga Village, Tanga Region, Tanzania</p>
                 </div>
             </div>
-            <div class="max-w-6xl mx-auto border-t border-[#293627] mt-12 pt-6 text-center text-[10px] text-gray-500 font-sans">
-                Â© {{ new Date().getFullYear() }} Kitonga Farm Villas. All rights reserved. Price lists and check-in times remain configurable by management.
+            <div class="max-w-6xl mx-auto border-t border-[#293627] mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-gray-400 font-sans">
+                <p>© {{ new Date().getFullYear() }} Kitonga Farm Villas. All rights reserved.</p>
+                <div class="flex items-center gap-2">
+                    <span class="text-gray-400">Created by</span>
+                    <a 
+                        href="https://wa.me/255675315279" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#14231C] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                        title="Chat on WhatsApp"
+                    >
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>0675 315 279</span>
+                    </a>
+                </div>
             </div>
         </footer>
 

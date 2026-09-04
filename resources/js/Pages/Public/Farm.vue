@@ -539,9 +539,21 @@ const orderProduct = (product) => {
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto px-6 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+            <div class="max-w-7xl mx-auto px-6 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-4">
                 <p>&copy; 2026 Kitonga Farm Villas. All rights reserved.</p>
-                <p class="text-gray-400">Crafted for tranquil luxury living.</p>
+                <div class="flex items-center gap-2 text-[11px]">
+                    <span class="text-gray-400">Created by</span>
+                    <a 
+                        href="https://wa.me/255675315279" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#14231C] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                        title="Chat on WhatsApp"
+                    >
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>0675 315 279</span>
+                    </a>
+                </div>
             </div>
         </footer>
 

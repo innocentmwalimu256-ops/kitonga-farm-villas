@@ -124,8 +124,23 @@ const whatsappLink = computed(() => {
         </main>
 
         <!-- Footer -->
-        <footer class="bg-[#14231C] text-gray-400 py-6 px-6 text-center text-xs border-t border-white/10">
-            <p>© 2026 Kitonga Farm Villas. All rights reserved.</p>
+        <footer class="bg-[#14231C] text-gray-400 py-6 px-6 border-t border-white/10 font-sans text-xs">
+            <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p>© 2026 Kitonga Farm Villas. All rights reserved.</p>
+                <div class="flex items-center gap-2 text-[11px]">
+                    <span class="text-gray-400">Created by</span>
+                    <a 
+                        href="https://wa.me/255675315279" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E3326] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                        title="Chat on WhatsApp"
+                    >
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>0675 315 279</span>
+                    </a>
+                </div>
+            </div>
         </footer>
 
     </div>

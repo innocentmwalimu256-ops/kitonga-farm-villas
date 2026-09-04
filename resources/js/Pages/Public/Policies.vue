@@ -75,7 +75,22 @@ defineProps({
                 <Link :href="route('policies', 'terms')" prefetch class="hover:text-white transition">Terms & Policies</Link>
                 <Link :href="route('contact')" prefetch class="hover:text-white transition">Contact</Link>
             </div>
-            <p>&copy; 2026 Kitonga Farm Villas. All rights reserved.</p>
+            <div class="max-w-4xl mx-auto border-t border-emerald-900/50 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs px-6">
+                <p>&copy; 2026 Kitonga Farm Villas. All rights reserved.</p>
+                <div class="flex items-center gap-2 text-[11px]">
+                    <span class="text-gray-400">Created by</span>
+                    <a 
+                        href="https://wa.me/255675315279" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#14231C] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                        title="Chat on WhatsApp"
+                    >
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>0675 315 279</span>
+                    </a>
+                </div>
+            </div>
         </footer>
 
     </div>

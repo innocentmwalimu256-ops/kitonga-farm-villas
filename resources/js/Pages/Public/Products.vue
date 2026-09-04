@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted } from 'vue';
 
@@ -689,8 +689,21 @@ const whatsappUrl = computed(() => {
                 <p class="text-xs text-white/60 max-w-md mx-auto">
                     Organic farm and luxury private villas in the Komkonga highlands, Tanga, Tanzania.
                 </p>
-                <div class="text-xs text-white/40 pt-4 border-t border-white/10">
-                    Â© 2026 Kitonga Farm Villas Sanctuary. All rights reserved.
+                <div class="text-xs text-white/50 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p>© 2026 Kitonga Farm Villas Sanctuary. All rights reserved.</p>
+                    <div class="flex items-center gap-2 text-[11px]">
+                        <span class="text-gray-400">Created by</span>
+                        <a 
+                            href="https://wa.me/255675315279" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E3326] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                            title="Chat on WhatsApp"
+                        >
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>0675 315 279</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </footer>

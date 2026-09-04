@@ -432,7 +432,7 @@
     ]
   },
   "resources/js/Pages/Public/About.vue": {
-    "file": "assets/About-C8677c1w.js",
+    "file": "assets/About-C-vG2amK.js",
     "name": "About",
     "src": "resources/js/Pages/Public/About.vue",
     "isDynamicEntry": true,
@@ -442,7 +442,7 @@
     ]
   },
   "resources/js/Pages/Public/Book.vue": {
-    "file": "assets/Book-zP6Ux7tK.js",
+    "file": "assets/Book-DXVmEY4R.js",
     "name": "Book",
     "src": "resources/js/Pages/Public/Book.vue",
     "isDynamicEntry": true,
@@ -452,7 +452,7 @@
     ]
   },
   "resources/js/Pages/Public/BookingSuccess.vue": {
-    "file": "assets/BookingSuccess-C5HE_xZq.js",
+    "file": "assets/BookingSuccess-ug4GLac3.js",
     "name": "BookingSuccess",
     "src": "resources/js/Pages/Public/BookingSuccess.vue",
     "isDynamicEntry": true,
@@ -462,7 +462,7 @@
     ]
   },
   "resources/js/Pages/Public/Contact.vue": {
-    "file": "assets/Contact-BGSusQB-.js",
+    "file": "assets/Contact-CBtzbKft.js",
     "name": "Contact",
     "src": "resources/js/Pages/Public/Contact.vue",
     "isDynamicEntry": true,
@@ -472,7 +472,7 @@
     ]
   },
   "resources/js/Pages/Public/ExperienceDetail.vue": {
-    "file": "assets/ExperienceDetail-DpdV_Amp.js",
+    "file": "assets/ExperienceDetail-B3utDXoM.js",
     "name": "ExperienceDetail",
     "src": "resources/js/Pages/Public/ExperienceDetail.vue",
     "isDynamicEntry": true,
@@ -484,7 +484,7 @@
     ]
   },
   "resources/js/Pages/Public/Experiences.vue": {
-    "file": "assets/Experiences-C8CuGkKI.js",
+    "file": "assets/Experiences-DDPl1pJj.js",
     "name": "Experiences",
     "src": "resources/js/Pages/Public/Experiences.vue",
     "isDynamicEntry": true,
@@ -678,7 +678,7 @@
     ]
   },
   "resources/js/Pages/Public/Farm.vue": {
-    "file": "assets/Farm-Dkn-QgWK.js",
+    "file": "assets/Farm-XPgVm7WK.js",
     "name": "Farm",
     "src": "resources/js/Pages/Public/Farm.vue",
     "isDynamicEntry": true,
@@ -688,7 +688,7 @@
     ]
   },
   "resources/js/Pages/Public/Gallery.vue": {
-    "file": "assets/Gallery-J_I1p6SM.js",
+    "file": "assets/Gallery-BcnB2-7-.js",
     "name": "Gallery",
     "src": "resources/js/Pages/Public/Gallery.vue",
     "isDynamicEntry": true,
@@ -698,7 +698,7 @@
     ]
   },
   "resources/js/Pages/Public/Home.vue": {
-    "file": "assets/Home-De6PF0-g.js",
+    "file": "assets/Home-DfjeSfX_.js",
     "name": "Home",
     "src": "resources/js/Pages/Public/Home.vue",
     "isDynamicEntry": true,
@@ -708,7 +708,7 @@
     ]
   },
   "resources/js/Pages/Public/Location.vue": {
-    "file": "assets/Location-BxVPoxXu.js",
+    "file": "assets/Location-DK5lw-p_.js",
     "name": "Location",
     "src": "resources/js/Pages/Public/Location.vue",
     "isDynamicEntry": true,
@@ -718,7 +718,7 @@
     ]
   },
   "resources/js/Pages/Public/Policies.vue": {
-    "file": "assets/Policies-BImSRhPI.js",
+    "file": "assets/Policies-D4wX6-Fl.js",
     "name": "Policies",
     "src": "resources/js/Pages/Public/Policies.vue",
     "isDynamicEntry": true,
@@ -728,7 +728,7 @@
     ]
   },
   "resources/js/Pages/Public/Products.vue": {
-    "file": "assets/Products-BO25z2nF.js",
+    "file": "assets/Products-DnuH8GgY.js",
     "name": "Products",
     "src": "resources/js/Pages/Public/Products.vue",
     "isDynamicEntry": true,
@@ -738,7 +738,7 @@
     ]
   },
   "resources/js/Pages/Public/VillaDetail.vue": {
-    "file": "assets/VillaDetail-DiudCR7r.js",
+    "file": "assets/VillaDetail-CXndwjqH.js",
     "name": "VillaDetail",
     "src": "resources/js/Pages/Public/VillaDetail.vue",
     "isDynamicEntry": true,
@@ -748,7 +748,7 @@
     ]
   },
   "resources/js/Pages/Public/Villas.vue": {
-    "file": "assets/Villas-DyPKfVmQ.js",
+    "file": "assets/Villas-BHDlKYk2.js",
     "name": "Villas",
     "src": "resources/js/Pages/Public/Villas.vue",
     "isDynamicEntry": true,
@@ -768,7 +768,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-D26d5gJk.js",
+    "file": "assets/app-CcyY0PtP.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -846,7 +846,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-B_0p0YVJ.css"
+      "assets/app-CNsJlvK8.css"
     ]
   }
 }

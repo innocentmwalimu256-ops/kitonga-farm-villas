@@ -55,8 +55,21 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
-            <div class="max-w-6xl mx-auto mt-12 pt-6 border-t border-white/10 text-center text-[10px] text-[#F7F3EA]/50 font-sans">
-                © 2026 Kitonga Farm Villas. All rights reserved.
+            <div class="max-w-6xl mx-auto mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#F7F3EA]/60 font-sans">
+                <p>© 2026 Kitonga Farm Villas. All rights reserved.</p>
+                <div class="flex items-center gap-2">
+                    <span class="text-gray-400">Created by</span>
+                    <a 
+                        href="https://wa.me/255675315279" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E3326] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                        title="Chat on WhatsApp"
+                    >
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>0675 315 279</span>
+                    </a>
+                </div>
             </div>
         </footer>
 
