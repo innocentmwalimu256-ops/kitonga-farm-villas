@@ -63,21 +63,26 @@ class ProductController extends Controller
             'sku' => 'required|string|unique:products,sku',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|string',
             'unit' => 'required|string',
             'selling_price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',
             'low_stock_threshold' => 'required|integer|min:0',
-            'initial_stock' => 'required|integer|min:0',
+            'stock' => 'nullable|integer|min:0',
+            'initial_stock' => 'nullable|integer|min:0',
         ]);
 
+        $initialStock = $validated['initial_stock'] ?? $validated['stock'] ?? 0;
+        unset($validated['initial_stock']);
+
         try {
-            $product = Product::create($validated + ['stock' => 0, 'active' => true]);
+            $product = Product::create(array_merge($validated, ['stock' => 0, 'active' => true]));
 
             // Add initial stock movement
-            if ($validated['initial_stock'] > 0) {
+            if ($initialStock > 0) {
                 $this->inventoryService->adjustStock(
                     $product->id,
-                    $validated['initial_stock'],
+                    $initialStock,
                     'opening',
                     'Initial stock seeding on product creation',
                     auth()->id()
@@ -105,6 +110,7 @@ class ProductController extends Controller
             'sku' => 'required|string|unique:products,sku,' . $product->id,
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|string',
             'unit' => 'required|string',
             'selling_price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',
@@ -116,6 +122,35 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product details updated successfully.');
+    }
+
+    /**
+     * Delete product.
+     */
+    public function destroy($id)
+    {
+        abort_if(!auth()->user()->hasPermissionTo('adjust_inventory'), 403, 'Unauthorized to delete products.');
+
+        $product = Product::findOrFail($id);
+
+        try {
+            // Check if product has sales records
+            $hasSales = \App\Models\SaleItem::where('product_id', $product->id)->exists();
+            if ($hasSales) {
+                $product->update(['active' => false]);
+                return redirect()->route('admin.products.index')
+                    ->with('success', 'Product has existing sales history, so it was marked inactive instead of permanent deletion.');
+            }
+
+            // Clean up inventory movements before deleting product
+            \App\Models\InventoryMovement::where('product_id', $product->id)->delete();
+            $product->delete();
+
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Product deleted successfully.');
+        } catch (Exception $e) {
+            return back()->withErrors(['error' => 'Could not delete product: ' . $e->getMessage()]);
+        }
     }
 
     /**
