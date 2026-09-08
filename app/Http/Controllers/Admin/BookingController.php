@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\AccommodationType;
 use App\Models\AccommodationUnit;
+use App\Models\AvailabilityBlock;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\BookingStatusHistory;
