@@ -405,6 +405,75 @@ const handleLogoClick = (e) => {
             </div>
         </section>
 
+        <!-- 4. SANCTUARY LOCATION & INTERACTIVE MAP -->
+        <section class="py-16 md:py-24 bg-[#FAF8F5] border-b border-gray-200">
+            <div class="max-w-6xl mx-auto px-6 md:px-12 space-y-10">
+                <div class="text-center space-y-2 max-w-2xl mx-auto">
+                    <span class="text-xs text-[#C98A3E] uppercase tracking-[3px] font-sans font-bold block">
+                        SANCTUARY LOCATION
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-serif font-light text-[#14231C]">
+                        Ramani & Safari ya Kuja Kitonga
+                    </h2>
+                    <p class="text-xs sm:text-sm text-gray-600 font-sans leading-relaxed">
+                        Tupo Komkonga Village, Mkoani Tanga. Mazingira tulivu ya asili yaliyojitenga na kelele za mji, yakiwa na ufikiaji rahisi wa barabara kuu.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-xl">
+                    <div class="p-6 sm:p-8 bg-[#14231C] text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="space-y-1 text-center sm:text-left">
+                            <span class="text-[10px] uppercase font-bold tracking-[3px] text-[#E6C387]">
+                                📍 GPS COORDINATES
+                            </span>
+                            <p class="text-sm sm:text-base font-serif text-[#F7F3EA]">
+                                Komkonga, Tanga · GPS: {{ settings?.location_coordinates || '-5.0889, 39.0988' }}
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <a 
+                                :href="'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(settings?.location_coordinates || '-5.0889,39.0988')" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#C98A3E] hover:bg-[#b57a34] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition font-sans shadow-md"
+                            >
+                                <span>Pata Maelekezo (Google Maps)</span>
+                                <span>↗</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Live Embedded Google Map -->
+                    <div class="relative w-full h-80 sm:h-96 md:h-[400px] bg-[#e5e3df]">
+                        <iframe
+                            class="w-full h-full border-0"
+                            :src="'https://maps.google.com/maps?q=' + (settings?.location_coordinates || '-5.0889,39.0988') + '&hl=sw&z=13&output=embed'"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Kitonga Farm Villas Map"
+                        ></iframe>
+                    </div>
+
+                    <!-- Transport Highlights Grid -->
+                    <div class="p-6 sm:p-8 bg-[#FAF8F5] border-t border-gray-200 grid grid-cols-1 sm:grid-cols-3 gap-6 font-sans text-xs">
+                        <div class="space-y-1">
+                            <span class="text-sm font-bold text-[#14231C] block">🚗 Kutokea Tanga Mjini</span>
+                            <p class="text-gray-600 leading-relaxed">Dakika 45 tu kwa gari (~35 km) kupitia barabara kuu.</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-sm font-bold text-[#14231C] block">🚗 Kutokea Dar es Salaam</span>
+                            <p class="text-gray-600 leading-relaxed">Saa 4.5 – 5 kupitia njia ya Chalinze - Segera - Tanga.</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-sm font-bold text-[#14231C] block">✈️ Private Pickup Service</span>
+                            <p class="text-gray-600 leading-relaxed">Gari binafsi linapatikana kwa kuratibu na concierge yetu.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- LUXURY FOOTER -->
         <footer class="content-auto bg-[#1C261A] text-[#B5C2B4] py-16 px-6 md:px-12 border-t border-[#293627]">
             <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-xs font-sans">
