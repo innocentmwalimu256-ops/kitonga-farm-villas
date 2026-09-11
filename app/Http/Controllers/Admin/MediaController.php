@@ -139,7 +139,7 @@ class MediaController extends Controller
         $page = $request->input('page', 'gallery');
         $isHero = filter_var($request->input('is_hero', false), FILTER_VALIDATE_BOOLEAN);
 
-        // Upload through Spatie Media Library
+        // Upload through Spatie Media Library (Auto-convert images to WebP for maximum speed)
         $customProps = [
             'title' => $request->input('title', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
             'page' => $page,
@@ -151,9 +151,25 @@ class MediaController extends Controller
             'caption' => $request->input('caption', ''),
         ];
 
-        $media = $user->addMedia($file)
-            ->withCustomProperties($customProps)
-            ->toMediaCollection('cms_media');
+        if (!$isVideo && function_exists('imagewebp') && in_array($ext, ['jpg', 'jpeg', 'png', 'bmp', 'gif'])) {
+            $webpPath = $this->convertToWebp($file);
+            if ($webpPath && file_exists($webpPath)) {
+                $cleanBaseName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+                $media = $user->addMedia($webpPath)
+                    ->usingFileName($cleanBaseName . '.webp')
+                    ->withCustomProperties($customProps)
+                    ->toMediaCollection('cms_media');
+                @unlink($webpPath);
+            } else {
+                $media = $user->addMedia($file)
+                    ->withCustomProperties($customProps)
+                    ->toMediaCollection('cms_media');
+            }
+        } else {
+            $media = $user->addMedia($file)
+                ->withCustomProperties($customProps)
+                ->toMediaCollection('cms_media');
+        }
 
         // Audit Log
         ActivityLog::create([
@@ -166,12 +182,52 @@ class MediaController extends Controller
                 'media_type' => $mediaType,
                 'page' => $page,
                 'is_hero' => $isHero,
+                'format' => $media->mime_type,
             ],
             'created_at' => Carbon::now(),
         ]);
 
+        $formatMsg = (!$isVideo && $media->mime_type === 'image/webp') ? ' (Auto-converted to optimized WebP for lightning-fast speed)' : '';
+
         return redirect()->route('admin.media.index')
-            ->with('success', ucfirst($mediaType) . ' uploaded successfully for ' . ucfirst($page) . ' page.');
+            ->with('success', ucfirst($mediaType) . ' uploaded successfully for ' . ucfirst($page) . ' page' . $formatMsg . '.');
+    }
+
+    /**
+     * Helper to convert an uploaded image to optimized WebP format.
+     */
+    protected function convertToWebp($uploadedFile): ?string
+    {
+        try {
+            $imageContent = file_get_contents($uploadedFile->getRealPath());
+            if (!$imageContent) return null;
+
+            $image = @imagecreatefromstring($imageContent);
+            if (!$image) return null;
+
+            // Preserve alpha channel / transparency for PNG/GIF
+            imagealphablending($image, false);
+            imagesavealpha($image, true);
+
+            $tempDir = storage_path('app/temp_webp');
+            if (!is_dir($tempDir)) {
+                @mkdir($tempDir, 0755, true);
+            }
+
+            $cleanName = Str::slug(pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME));
+            $tempPath = $tempDir . '/' . $cleanName . '_' . uniqid() . '.webp';
+
+            // Convert with 85% quality: crystal-clear clarity with 70-80% smaller size
+            if (imagewebp($image, $tempPath, 85)) {
+                imagedestroy($image);
+                return $tempPath;
+            }
+
+            imagedestroy($image);
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**
