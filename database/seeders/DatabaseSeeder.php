@@ -195,7 +195,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Family Villa',
                 'slug' => 'family-villa',
-                'description' => 'Spacious 2-bedroom house with an interior kitchen, large private dining area, and dedicated parking. Ideal for families and small groups wanting home-cooked farm food.',
+                'description' => 'Spacious 2-bedroom house with an interior kitchen and private parking. Ideal for families and small groups wanting home-cooked farm food.',
                 'short_description' => '2 Bedrooms + Interior Kitchen.',
                 'base_price' => 400000.00,
                 'capacity' => 6,
