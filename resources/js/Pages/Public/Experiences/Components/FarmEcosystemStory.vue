@@ -1,10 +1,10 @@
-﻿<script setup>
+<script setup>
 const ecosystemStories = [
     {
         title: 'Crops & Orchards',
         category: 'THE LIVING SOIL',
         description: 'Mangoes, papayas, pineapples, avocados, coconuts, chillies, and vegetables.',
-        narrative: 'Across fertile countryside fields, our plantations cultivate seasonal tropical fruits, rich vanilla, and vibrant vegetables that thrive in the fresh mountain air.',
+        narrative: 'Across fertile countryside fields, our plantations cultivate seasonal tropical fruits, modern greenhouse horticulture, and vibrant vegetables that thrive in the fresh mountain air.',
         image: '/images/gallery_img_0223.webp',
     },
     {
@@ -17,8 +17,8 @@ const ecosystemStories = [
     {
         title: 'Farm Fresh Harvest',
         category: 'EARTH TO TABLE',
-        description: 'Pure honey, eggs, fresh milk, yogurt, coffee, and tea.',
-        narrative: 'Every harvest reflects the purity of our soil. From fresh dairy and local honey to rich coffee, Kitonga products embody true countryside freshness.',
+        description: 'Pure honey, eggs, fresh milk, yogurt, and farm-fresh produce.',
+        narrative: 'Every harvest reflects the purity of our soil. From fresh dairy and local honey to nutrient-rich horticulture crops, Kitonga products embody true countryside freshness.',
         image: '/images/farm_gallery_1.webp',
     },
 ];

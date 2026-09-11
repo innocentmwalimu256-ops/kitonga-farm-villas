@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref } from 'vue';
 
 const activeZoneIndex = ref(0);
@@ -39,9 +39,9 @@ const farmZones = [
         number: '04',
         title: 'Crops & Greenhouses',
         subtitle: 'Tropical Orchards & Plants',
-        summary: 'Fields of papayas, pineapples, avocados, chillies, vanilla, and vegetables.',
+        summary: 'Fields of papayas, pineapples, avocados, chillies, greenhouse horticulture, and vegetables.',
         description: 'Walk through rows of tropical fruit trees and greenhouse zones where rich volcanic soils yield seasonal harvest crops in the mountain air.',
-        highlights: ['Papayas, pineapples & avocados', 'Greenhouse vanilla & chillies', 'Fresh organic greens'],
+        highlights: ['Papayas, pineapples & avocados', 'Greenhouse horticulture & vegetables', 'Fresh organic greens'],
         image: '/images/gallery_img_0223.webp',
     },
     {

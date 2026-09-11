@@ -386,7 +386,7 @@ const orderProduct = (product) => {
                         Moments Captured on the Estate
                     </h2>
                     <p class="text-xs sm:text-sm text-gray-600 font-sans">
-                        Glimpses into our coffee hills, greenhouses, dairy pastures, and native canopy.
+                        Glimpses into our horticulture fields, greenhouses, dairy pastures, and native canopy.
                     </p>
                 </div>
             </div>

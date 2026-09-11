@@ -21,7 +21,7 @@ const baseGalleryImages = [
     { id: 'b3', src: '/images/IMG_0064.webp', title: 'Highland Sunset & Architecture', category: 'villas', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
     { id: 'b4', src: '/images/IMG_0362.webp', title: 'Organic Avocado Tree Orchards', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
     { id: 'b5', src: '/images/three_cows.webp', title: 'Purebred Dairy Pastoral Zone', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b6', src: '/images/IMG_0389.webp', title: 'Lush Coffee Plantation', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b6', src: '/images/IMG_0389.webp', title: 'Horticulture & Greenhouse Zones', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
     { id: 'b7', src: '/images/IMG_0119.webp', title: 'Verdant Farm Greenhouses', category: 'farm', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
     { id: 'b8', src: '/images/IMG_0419.webp', title: 'Poultry & Layer Coops', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
     { id: 'b9', src: '/images/IMG_0321.webp', title: 'Tasting Pure Kitonga Honey', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },

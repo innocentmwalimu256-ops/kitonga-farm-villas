@@ -214,7 +214,7 @@ const getImageUrl = (path, slug) => {
                         Slow Living & Countryside Serenity
                     </h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Wake up to the soft morning chorus of countryside birds, sip freshly harvested Kitonga coffee on your private terrace, and enjoy total seclusion away from urban noise. From sunrise farm walks to evening relaxation under starlit skies, your stay is centered entirely around peaceful rejuvenation.
+                        Wake up to the soft morning chorus of countryside birds, sip fresh farm tea or beverages on your private terrace, and enjoy total seclusion away from urban noise. From sunrise farm walks to evening relaxation under starlit skies, your stay is centered entirely around peaceful rejuvenation.
                     </p>
                 </section>
 

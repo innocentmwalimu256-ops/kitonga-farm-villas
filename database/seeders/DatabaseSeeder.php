@@ -286,7 +286,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'General Farm Tour',
                 'slug' => 'general-farm-tour',
-                'description' => 'Our complete agritourism experience. Dive deep into all operational aspects of Kitonga Farm: visit vanilla and strawberry greenhouses, interact with dairy and poultry livestock, and taste farm-fresh organic items right from the soil.',
+                'description' => 'Our complete agritourism experience. Dive deep into all operational aspects of Kitonga Farm: visit modern horticulture greenhouses, interact with dairy and poultry livestock, and taste farm-fresh organic items right from the soil.',
                 'price' => 50000.00,
                 'capacity_per_slot' => 15,
                 'category' => 'Complete Ecosystem',
@@ -300,13 +300,13 @@ class DatabaseSeeder extends Seeder
                 ],
                 'inclusions' => [
                     'Complete farm tour covering all zones',
-                    'Greenhouses and vanilla farms admission',
+                    'Greenhouses and modern horticulture admission',
                     'Livestock interaction (cattle, goats, poultry)',
                     'Mini-bar beverage & farm yogurt tasting',
                     'Swimming pool access'
                 ],
                 'highlights' => [
-                    'High-tech vanilla and strawberry greenhouses',
+                    'High-tech horticulture and vegetable greenhouses',
                     'Interacting with dairy cows and poultry birds',
                     'Local yogurt and milk tasting session'
                 ],
@@ -315,7 +315,7 @@ class DatabaseSeeder extends Seeder
                 'sort_order' => 2,
                 'status' => 'published',
                 'seo_title' => 'General Farm Tour - Immersive Experience',
-                'seo_description' => 'Detailed wider tour including livestock sections (dairy/cattle, goat farm, poultry houses: chicken, turkeys, ducks) plus vanilla and strawberry greenhouses.',
+                'seo_description' => 'Detailed wider tour including livestock sections (dairy/cattle, goat farm, poultry houses: chicken, turkeys, ducks) plus modern horticulture greenhouses.',
             ]
         ];
         foreach ($tours as $t) {
@@ -467,7 +467,7 @@ class DatabaseSeeder extends Seeder
             'cms_page_id' => $farmPage->id,
             'key' => 'farm_story',
             'type' => 'text',
-            'value' => 'Kitonga Farm Villas is built on a 50-acre organic reserve dedicated to agroecology. We cultivate arabica coffee, harvest raw honey, and raise dairy cows, all while maintaining absolute preservation of the native countryside flora and fauna.',
+            'value' => 'Kitonga Farm Villas is built on a 150-acre organic reserve dedicated to agroecology. We cultivate modern horticulture, harvest raw honey, and raise dairy cows, all while maintaining absolute preservation of the native countryside flora and fauna.',
         ]);
 
         // Experiences Page

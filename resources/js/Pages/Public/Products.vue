@@ -72,7 +72,7 @@ const defaultProducts = [
         category: 'Dairy & Eggs',
         selling_price: 6000,
         unit: '1 Liter',
-        description: 'Smooth, velvety artisanal drinking yogurt cultured from fresh morning milk, available in luscious Vanilla and ripe Strawberry infusions in a 1L bottle.',
+        description: 'Smooth, velvety artisanal drinking yogurt cultured from fresh morning milk, rich in natural probiotics and authentic farm sweetness in a 1L bottle.',
         image: '/images/yogurt_1l.webp',
     },
     {
