@@ -94,7 +94,7 @@ const showingNavigationDropdown = ref(false);
                                             <div class="py-1">
                                                 <DropdownLink :href="route('admin.reports.index')">Reports Center</DropdownLink>
                                                 <DropdownLink :href="route('admin.cms.index')">CMS Manager</DropdownLink>
-                                                <DropdownLink :href="route('admin.media.index')">Media Library</DropdownLink>
+                                                <DropdownLink :href="route('admin.media.index')">📸 Media & Video Studio</DropdownLink>
                                                 <DropdownLink :href="route('admin.guests.index')">Guests Registry</DropdownLink>
                                                 <DropdownLink :href="route('admin.users.index')">Staff Accounts</DropdownLink>
                                                 <DropdownLink :href="route('admin.audit_logs.index')">Audit Logs</DropdownLink>
@@ -243,7 +243,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="grid grid-cols-2 gap-1.5 mt-2">
                             <Link :href="route('admin.reports.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Reports Center</Link>
                             <Link :href="route('admin.cms.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">CMS Manager</Link>
-                            <Link :href="route('admin.media.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Media Library</Link>
+                            <Link :href="route('admin.media.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-emerald-700 font-bold">Media & Videos</Link>
                             <Link :href="route('admin.guests.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Guests</Link>
                             <Link :href="route('admin.users.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Staff Accounts</Link>
                             <Link :href="route('admin.settings.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Settings</Link>

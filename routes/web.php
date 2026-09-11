@@ -168,6 +168,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     Route::get('/media', [AdminMediaController::class, 'index'])->name('media.index');
     Route::post('/media', [AdminMediaController::class, 'store'])->name('media.store');
+    Route::post('/media/{id}', [AdminMediaController::class, 'update'])->name('media.update');
     Route::delete('/media/{id}', [AdminMediaController::class, 'destroy'])->name('media.destroy');
 
     // Agritourism Experiences

@@ -7,6 +7,8 @@ const props = defineProps({
     experiences: Array,
     products: Array,
     cms: Object,
+    media: Array,
+    hero_video_url: String,
     settings: Object,
 });
 
@@ -200,6 +202,7 @@ const handleLogoClick = (e) => {
                 webkit-playsinline="true"
                 preload="auto"
             >
+                <source v-if="hero_video_url" :src="hero_video_url" type="video/mp4">
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
                 <source src="/stream/hero-video" type="video/mp4">
                 <source src="/videos/hero_cinematic.webm" type="video/webm">

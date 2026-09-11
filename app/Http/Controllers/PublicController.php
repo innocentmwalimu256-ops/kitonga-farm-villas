@@ -9,8 +9,10 @@ use App\Models\ProductCategory;
 use App\Models\Setting;
 use App\Models\CmsPage;
 use App\Models\CmsSection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class PublicController extends Controller
 {
@@ -37,6 +39,48 @@ class PublicController extends Controller
         return $content;
     }
 
+    /**
+     * Helper to get uploaded CMS media assets for a given page.
+     */
+    protected function getPageMedia(?string $pageSlug = null): array
+    {
+        try {
+            $query = Media::where('collection_name', 'cms_media')->orderBy('created_at', 'desc');
+
+            if ($pageSlug && $pageSlug !== 'all') {
+                $query->where(function ($q) use ($pageSlug) {
+                    $q->whereJsonContains('custom_properties->page', $pageSlug)
+                      ->orWhere('custom_properties->page', $pageSlug)
+                      ->orWhereJsonContains('custom_properties->page', 'all')
+                      ->orWhere('custom_properties->page', 'general');
+                });
+            }
+
+            return $query->get()->map(function ($item) {
+                $mime = $item->mime_type ?? '';
+                $isVideo = Str::startsWith($mime, 'video/') || in_array(strtolower(pathinfo($item->file_name, PATHINFO_EXTENSION)), ['mp4', 'webm', 'mov', 'ogg', 'm4v', 'mkv']);
+
+                return [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'title' => $item->getCustomProperty('title', $item->name),
+                    'filename' => $item->file_name,
+                    'path' => $item->getUrl(),
+                    'mime_type' => $item->mime_type,
+                    'media_type' => $isVideo ? 'video' : 'image',
+                    'page' => $item->getCustomProperty('page', 'general'),
+                    'section' => $item->getCustomProperty('section', 'general'),
+                    'category' => $item->getCustomProperty('category', 'general'),
+                    'is_hero' => (bool) $item->getCustomProperty('is_hero', false),
+                    'alt_text' => $item->getCustomProperty('alt_text', ''),
+                    'caption' => $item->getCustomProperty('caption', ''),
+                ];
+            })->toArray();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
     public function home()
     {
         try {
@@ -44,6 +88,14 @@ class PublicController extends Controller
             $experiences = FarmTour::where('active', true)->get();
             $products = Product::where('active', true)->take(6)->get();
             $cms = $this->getCmsContent('home');
+            $homeMedia = $this->getPageMedia('home');
+
+            // Check if a custom hero video was uploaded for home
+            $heroVideo = collect($homeMedia)->first(function($m) {
+                return $m['media_type'] === 'video' && ($m['is_hero'] || $m['section'] === 'hero_video' || $m['page'] === 'home');
+            });
+            $heroVideoUrl = $heroVideo ? $heroVideo['path'] : null;
+
             $settings = [
                 'contact_email' => Setting::get('contact_email'),
                 'contact_phone' => Setting::get('contact_phone'),
@@ -55,6 +107,8 @@ class PublicController extends Controller
             $experiences = [];
             $products = [];
             $cms = [];
+            $homeMedia = [];
+            $heroVideoUrl = null;
             $settings = [
                 'contact_email' => 'kitongafarmvillas@gmail.com',
                 'contact_phone' => '+255 758 774 695',
@@ -66,6 +120,8 @@ class PublicController extends Controller
             'experiences' => $experiences,
             'products' => $products,
             'cms' => $cms,
+            'media' => $homeMedia,
+            'hero_video_url' => $heroVideoUrl,
             'settings' => $settings,
         ]);
     }
@@ -73,7 +129,8 @@ class PublicController extends Controller
     public function villas()
     {
         return Inertia::render('Public/Villas', [
-            'villas' => AccommodationType::where('active', true)->with('amenities')->get()
+            'villas' => AccommodationType::where('active', true)->with('amenities')->get(),
+            'media' => $this->getPageMedia('villas'),
         ]);
     }
 
@@ -97,6 +154,7 @@ class PublicController extends Controller
         return Inertia::render('Public/Experiences', [
             'experiences' => FarmTour::where('active', true)->orderBy('sort_order')->orderBy('id')->get(),
             'villas' => AccommodationType::where('active', true)->orderBy('sort_order')->get(),
+            'media' => $this->getPageMedia('experiences'),
         ]);
     }
 
@@ -159,13 +217,16 @@ class PublicController extends Controller
             'cms' => $this->getCmsContent('farm'),
             'products' => Product::where('active', true)->take(8)->get(),
             'experiences' => FarmTour::where('active', true)->orderBy('sort_order')->take(3)->get(),
+            'media' => $this->getPageMedia('farm'),
         ]);
     }
 
     public function gallery()
     {
+        // Load all uploaded media library assets for gallery
         return Inertia::render('Public/Gallery', [
             'cms' => $this->getCmsContent('gallery'),
+            'uploaded_media' => $this->getPageMedia('gallery'),
         ]);
     }
 
@@ -173,6 +234,7 @@ class PublicController extends Controller
     {
         return Inertia::render('Public/About', [
             'cms' => $this->getCmsContent('about'),
+            'media' => $this->getPageMedia('about'),
         ]);
     }
 
