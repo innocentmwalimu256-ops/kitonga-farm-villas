@@ -220,6 +220,50 @@ const submitContact = () => {
 
                     </div>
 
+                    <!-- Compact Designer Map Card -->
+                    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs font-sans">
+                        <div class="px-4 py-2.5 bg-[#14231C] text-white flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[#C98A3E]">📍</span>
+                                <span class="font-serif text-xs font-medium text-[#F5F1E8] uppercase tracking-wider">Ramani ya Komkonga, Tanga</span>
+                            </div>
+                            <a 
+                                :href="'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(settings.location_coordinates || '-5.0889,39.0988')" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="inline-flex items-center gap-1 text-[10px] font-bold text-[#E6C387] hover:text-white transition uppercase tracking-wider"
+                            >
+                                <span>Fungua Maps</span>
+                                <span>↗</span>
+                            </a>
+                        </div>
+                        
+                        <!-- Compact Map Frame -->
+                        <div class="relative w-full h-44 bg-[#e5e3df]">
+                            <iframe
+                                class="w-full h-full border-0"
+                                :src="'https://maps.google.com/maps?q=' + (settings.location_coordinates || '-5.0889,39.0988') + '&hl=sw&z=13&output=embed'"
+                                loading="lazy"
+                                allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="Kitonga Location Map"
+                            ></iframe>
+                        </div>
+
+                        <!-- Micro Travel Badges -->
+                        <div class="px-3.5 py-2.5 bg-[#FAF8F5] border-t border-gray-150 flex flex-wrap items-center justify-between gap-2 text-[10px] text-gray-600">
+                            <span class="inline-flex items-center gap-1">
+                                <span class="text-[#C98A3E]">🚗</span> Tanga: 45 min
+                            </span>
+                            <span class="inline-flex items-center gap-1">
+                                <span class="text-[#C98A3E]">🚗</span> Segera: 1h 15m
+                            </span>
+                            <span class="inline-flex items-center gap-1">
+                                <span class="text-[#C98A3E]">✈️</span> Pickup ipo
+                            </span>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Right Column: Simple Clean Form -->
@@ -269,6 +313,7 @@ const submitContact = () => {
                                     type="tel" 
                                     placeholder="+255 7..."
                                     class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#C98A3E] transition"
+                                    required 
                                 />
                             </div>
                         </div>
@@ -313,84 +358,7 @@ const submitContact = () => {
 
         </section>
 
-        <!-- 4. REAL INTERACTIVE MAP & DIRECTIONS SECTION -->
-        <section class="max-w-6xl mx-auto px-6 pb-16">
-            <div class="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-lg">
-                <div class="p-6 sm:p-8 bg-[#14231C] text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div class="space-y-1">
-                        <span class="text-[10px] uppercase font-bold tracking-[3px] text-[#E6C387]">
-                            📍 GPS & RAMANI YA MAHALI
-                        </span>
-                        <h2 class="font-serif text-2xl sm:text-3xl font-light text-[#F7F3EA]">
-                            Ramani Halisi ya Kitonga Farm Villas
-                        </h2>
-                        <p class="text-xs text-gray-300 font-sans">
-                            Komkonga Village, Tanga Region, Tanzania · GPS: {{ settings.location_coordinates || '-5.0889, 39.0988' }}
-                        </p>
-                    </div>
-                    <div>
-                        <a 
-                            :href="'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(settings.location_coordinates || '-5.0889,39.0988')" 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            class="inline-flex items-center gap-2 px-5 py-3 bg-[#C98A3E] hover:bg-[#b57a34] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 shadow-md font-sans"
-                        >
-                            <span>Fungua Google Maps</span>
-                            <span>↗</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Google Maps Interactive Iframe -->
-                <div class="relative w-full h-80 sm:h-96 md:h-[420px] bg-[#e5e3df]">
-                    <iframe
-                        class="w-full h-full border-0"
-                        :src="'https://maps.google.com/maps?q=' + (settings.location_coordinates || '-5.0889,39.0988') + '&hl=sw&z=13&output=embed'"
-                        loading="lazy"
-                        allowfullscreen
-                        referrerpolicy="no-referrer-when-downgrade"
-                        title="Kitonga Farm Villas Location Map"
-                    ></iframe>
-                </div>
-
-                <!-- Transport / Distance Badges -->
-                <div class="p-6 sm:p-8 bg-[#FAF8F5] border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-sans text-xs">
-                    <div class="p-4 rounded-2xl bg-white border border-gray-150 space-y-1">
-                        <div class="flex items-center gap-2 text-[#C98A3E] font-bold">
-                            <span>🚗</span>
-                            <span>Kutokea Tanga Mjini</span>
-                        </div>
-                        <p class="text-gray-600">Dakika 45 tu kwa gari (~35 km) kupitia barabara kuu.</p>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-white border border-gray-150 space-y-1">
-                        <div class="flex items-center gap-2 text-[#C98A3E] font-bold">
-                            <span>🚗</span>
-                            <span>Kutokea Korogwe / Segera</span>
-                        </div>
-                        <p class="text-gray-600">Saa 1 na dakika 15 kwa barabara ya lami na njia ya shamba.</p>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-white border border-gray-150 space-y-1">
-                        <div class="flex items-center gap-2 text-[#C98A3E] font-bold">
-                            <span>🚗</span>
-                            <span>Kutokea Dar es Salaam</span>
-                        </div>
-                        <p class="text-gray-600">Saa 4.5 – 5 kupitia Chalinze - Segera - Tanga.</p>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-white border border-gray-150 space-y-1">
-                        <div class="flex items-center gap-2 text-[#C98A3E] font-bold">
-                            <span>✈️</span>
-                            <span>Pickup / Mapokezi</span>
-                        </div>
-                        <p class="text-gray-600">Huduma ya gari la mapokezi kutoka Airport/Standi inaratibiwa.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. FOOTER -->
+        <!-- 4. FOOTER -->
         <footer class="bg-[#14231C] text-gray-400 text-xs py-12 border-t border-white/10 font-sans">
             <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="space-y-2.5">
