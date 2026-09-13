@@ -91,10 +91,42 @@ class PublicController extends Controller
             $homeMedia = $this->getPageMedia('home');
 
             // Check if a custom hero video was uploaded for home
-            $heroVideo = collect($homeMedia)->first(function($m) {
-                return $m['media_type'] === 'video' && ($m['is_hero'] || $m['section'] === 'hero_video' || $m['page'] === 'home');
-            });
-            $heroVideoUrl = $heroVideo ? $heroVideo['path'] : null;
+            $heroVideo = Media::where('collection_name', 'cms_media')
+                ->where(function($q) {
+                    $q->where('custom_properties->is_hero', true)
+                      ->orWhere('custom_properties->is_hero', '1')
+                      ->orWhere('custom_properties->is_hero', 1)
+                      ->orWhere('custom_properties->section', 'hero_video')
+                      ->orWhere('custom_properties->section', 'hero')
+                      ->orWhere('custom_properties->page', 'home');
+                })
+                ->where(function($q) {
+                    $q->where('mime_type', 'like', 'video/%')
+                      ->orWhere('file_name', 'like', '%.mp4')
+                      ->orWhere('file_name', 'like', '%.mov')
+                      ->orWhere('file_name', 'like', '%.webm')
+                      ->orWhere('file_name', 'like', '%.m4v')
+                      ->orWhere('file_name', 'like', '%.mkv');
+                })
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if (!$heroVideo) {
+                // Fallback to any uploaded video in cms_media
+                $heroVideo = Media::where('collection_name', 'cms_media')
+                    ->where(function($q) {
+                        $q->where('mime_type', 'like', 'video/%')
+                          ->orWhere('file_name', 'like', '%.mp4')
+                          ->orWhere('file_name', 'like', '%.mov')
+                          ->orWhere('file_name', 'like', '%.webm')
+                          ->orWhere('file_name', 'like', '%.m4v')
+                          ->orWhere('file_name', 'like', '%.mkv');
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
+
+            $heroVideoUrl = $heroVideo ? $heroVideo->getUrl() : null;
 
             $settings = [
                 'contact_email' => Setting::get('contact_email'),

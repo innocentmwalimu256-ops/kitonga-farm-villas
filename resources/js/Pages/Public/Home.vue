@@ -192,8 +192,11 @@ const handleLogoClick = (e) => {
             <!-- Hero Video -->
             <video 
                 ref="videoPlayer"
+                :key="hero_video_url || 'default-hero'"
+                :src="hero_video_url || '/videos/hero_cinematic.mp4'"
                 poster="/images/hero_poster.webp"
-                class="absolute inset-0 w-full h-full object-cover"
+                class="absolute inset-0 w-full h-full object-cover object-center"
+                style="transform: translateZ(0); -webkit-transform: translateZ(0); backface-visibility: hidden; will-change: transform;"
                 autoplay 
                 loop 
                 muted
@@ -202,14 +205,12 @@ const handleLogoClick = (e) => {
                 webkit-playsinline="true"
                 preload="auto"
             >
-                <source v-if="hero_video_url" :src="hero_video_url" type="video/mp4">
+                <source v-if="hero_video_url" :src="hero_video_url">
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
-                <source src="/stream/hero-video" type="video/mp4">
-                <source src="/videos/hero_cinematic.webm" type="video/webm">
             </video>
 
-            <!-- Subtle Gradient for Top Navbar Contrast -->
-            <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/30 pointer-events-none"></div>
+            <!-- Subtle Gradient for Top Navbar Contrast (Maintains full video brightness and crisp clarity) -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/20 pointer-events-none"></div>
 
             <!-- Floating Minimal Glass Video Controls (Icons Only) -->
             <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2.5 font-sans" @click.stop>
