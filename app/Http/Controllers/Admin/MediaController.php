@@ -119,7 +119,7 @@ class MediaController extends Controller
         abort_if(!auth()->user()->hasPermissionTo('manage_media'), 403, 'Unauthorized to upload media.');
 
         $request->validate([
-            'file' => 'required|file|mimes:jpeg,jpg,png,webp,gif,svg,mp4,webm,mov,ogg,m4v,mkv|max:153600', // Max 150MB
+            'file' => 'required|file|mimes:jpeg,jpg,png,webp,gif,svg,mp4,webm,mov,ogg,m4v,mkv|max:512000', // Max 500MB
             'title' => 'nullable|string|max:255',
             'page' => 'nullable|string|in:home,gallery,farm,villas,experiences,about,location,general',
             'section' => 'nullable|string|max:100',
