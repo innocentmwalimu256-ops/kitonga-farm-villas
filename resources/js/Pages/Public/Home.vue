@@ -9,6 +9,7 @@ const props = defineProps({
     cms: Object,
     media: Array,
     hero_video_url: String,
+    hero_video_mime: String,
     settings: Object,
 });
 
@@ -189,11 +190,10 @@ const handleLogoClick = (e) => {
             class="relative min-h-[75vh] md:min-h-[85vh] lg:min-h-[90vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
             title="Click anywhere to Play / Pause video"
         >
-            <!-- Hero Video -->
+            <!-- Hero Video (Web-Optimized Multi-Source Stream) -->
             <video 
                 ref="videoPlayer"
                 :key="hero_video_url || 'default-hero'"
-                :src="hero_video_url || '/videos/hero_cinematic.mp4'"
                 poster="/images/hero_poster.webp"
                 class="absolute inset-0 w-full h-full object-cover object-center"
                 style="transform: translateZ(0); -webkit-transform: translateZ(0); backface-visibility: hidden; will-change: transform;"
@@ -205,7 +205,9 @@ const handleLogoClick = (e) => {
                 webkit-playsinline="true"
                 preload="auto"
             >
-                <source v-if="hero_video_url" :src="hero_video_url">
+                <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
+                <source src="/stream/hero-video" type="video/mp4">
+                <source src="/videos/hero_cinematic.webm" type="video/webm">
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
             </video>
 

@@ -127,6 +127,7 @@ class PublicController extends Controller
             }
 
             $heroVideoUrl = $heroVideo ? $heroVideo->getUrl() : null;
+            $heroVideoMime = $heroVideo ? ($heroVideo->mime_type ?: 'video/mp4') : null;
 
             $settings = [
                 'contact_email' => Setting::get('contact_email'),
@@ -141,6 +142,7 @@ class PublicController extends Controller
             $cms = [];
             $homeMedia = [];
             $heroVideoUrl = null;
+            $heroVideoMime = null;
             $settings = [
                 'contact_email' => 'kitongafarmvillas@gmail.com',
                 'contact_phone' => '+255 758 774 695',
@@ -154,6 +156,7 @@ class PublicController extends Controller
             'cms' => $cms,
             'media' => $homeMedia,
             'hero_video_url' => $heroVideoUrl,
+            'hero_video_mime' => $heroVideoMime,
             'settings' => $settings,
         ]);
     }

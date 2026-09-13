@@ -16,13 +16,48 @@ use App\Http\Controllers\Admin\AccommodationController as AdminAccommodationCont
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use Illuminate\Support\Facades\Route;
 
-// --- Ultra-Fast HTTP 206 Partial Content Video Streamer ---
+// --- Ultra-Fast HTTP 206 Partial Content Web Video Streamer ---
 Route::get('/stream/hero-video', function () {
-    $path = public_path('videos/IMG_2249.mp4');
-    if (!file_exists($path)) {
-        $path = public_path('videos/hero_cinematic.mp4');
+    $heroMedia = \Spatie\MediaLibrary\MediaCollections\Models\Media::where('collection_name', 'cms_media')
+        ->where(function($q) {
+            $q->where('custom_properties->is_hero', true)
+              ->orWhere('custom_properties->is_hero', '1')
+              ->orWhere('custom_properties->is_hero', 1)
+              ->orWhere('custom_properties->section', 'hero_video')
+              ->orWhere('custom_properties->section', 'hero')
+              ->orWhere('custom_properties->page', 'home');
+        })
+        ->where(function($q) {
+            $q->where('mime_type', 'like', 'video/%')
+              ->orWhere('file_name', 'like', '%.mp4')
+              ->orWhere('file_name', 'like', '%.mov')
+              ->orWhere('file_name', 'like', '%.webm');
+        })
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+    $path = null;
+    $mimeType = 'video/mp4';
+
+    if ($heroMedia && file_exists($heroMedia->getPath())) {
+        $path = $heroMedia->getPath();
+        $mimeType = $heroMedia->mime_type ?: 'video/mp4';
     }
-    if (!file_exists($path)) {
+
+    if (!$path || !file_exists($path)) {
+        if (file_exists(public_path('videos/hero_cinematic.webm'))) {
+            $path = public_path('videos/hero_cinematic.webm');
+            $mimeType = 'video/webm';
+        } elseif (file_exists(public_path('videos/hero_cinematic.mp4'))) {
+            $path = public_path('videos/hero_cinematic.mp4');
+            $mimeType = 'video/mp4';
+        } elseif (file_exists(public_path('videos/IMG_2249.mp4'))) {
+            $path = public_path('videos/IMG_2249.mp4');
+            $mimeType = 'video/mp4';
+        }
+    }
+
+    if (!$path || !file_exists($path)) {
         abort(404);
     }
 
@@ -33,7 +68,7 @@ Route::get('/stream/hero-video', function () {
     $length = $size;
     $status = 200;
     $headers = [
-        'Content-Type' => 'video/mp4',
+        'Content-Type' => $mimeType,
         'Accept-Ranges' => 'bytes',
         'Cache-Control' => 'public, max-age=31536000',
     ];
@@ -75,7 +110,7 @@ Route::get('/stream/hero-video', function () {
     }
 
     return response()->stream(function () use ($file, $length) {
-        $chunkSize = 1024 * 128;
+        $chunkSize = 1024 * 256;
         $bytesSent = 0;
         while (!feof($file) && $bytesSent < $length && connection_status() == 0) {
             $readSize = min($chunkSize, $length - $bytesSent);
