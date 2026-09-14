@@ -51,7 +51,13 @@ defineProps({
             <div v-if="policy === 'terms'" class="space-y-4">
                 <h3 class="font-extrabold text-sm text-gray-900 font-serif">1. Reservation Agreements</h3>
                 <p>All bookings must satisfy our minimum stay guidelines. Guest names must match verified national IDs presented during physical check-in.</p>
-                <h3 class="font-extrabold text-sm text-gray-900 font-serif">2. Stay Conduct</h3>
+                <h3 class="font-extrabold text-sm text-gray-900 font-serif">2. Check-In & Check-Out Schedule</h3>
+                <ul class="list-disc list-inside space-y-1 pl-2 text-gray-700">
+                    <li><strong>Muda wa Check-out:</strong> Saa sita kamili mchana (12:00 PM Noon).</li>
+                    <li><strong>Muda wa Check-in:</strong> Saa saba kamili mchana (1:00 PM / 13:00).</li>
+                    <li><strong>Early Check-In:</strong> Iwapo villa haina wageni wanaoondoka siku hiyo, mgeni anaruhusiwa kufanya Check-in mapema kuanzia Saa sita kamili mchana (12:00 PM).</li>
+                </ul>
+                <h3 class="font-extrabold text-sm text-gray-900 font-serif">3. Stay Conduct</h3>
                 <p>We maintain a peaceful countryside atmosphere. Excessive noise, illegal activities, and unapproved commercial filming are strictly prohibited.</p>
             </div>
             

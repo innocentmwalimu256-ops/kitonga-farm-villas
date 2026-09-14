@@ -81,6 +81,14 @@ const whatsappLink = computed(() => {
                         <span class="font-bold text-gray-900">{{ booking.check_in }} → {{ booking.check_out }}</span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
+                        <span class="text-gray-500">Muda wa Kuingia (Check-in):</span>
+                        <span class="font-bold text-gray-900">1:00 PM (13:00) <span class="text-[10px] text-emerald-700 font-normal">/ 12:00 PM (Early)</span></span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-gray-200/60">
+                        <span class="text-gray-500">Muda wa Kuondoka (Check-out):</span>
+                        <span class="font-bold text-gray-900">12:00 PM (Saa Sita Mchana)</span>
+                    </div>
+                    <div class="flex justify-between py-1 border-b border-gray-200/60">
                         <span class="text-gray-500">Idadi ya Wageni:</span>
                         <span class="font-bold text-gray-900">{{ booking.guests_count }} Guests</span>
                     </div>

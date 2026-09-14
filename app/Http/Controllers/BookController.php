@@ -53,6 +53,8 @@ class BookController extends Controller
                 'tax_rate' => Setting::get('tax_rate', '18.00'),
                 'deposit_percentage' => Setting::get('deposit_percentage', '50.00'),
                 'cancellation_policy' => Setting::get('cancellation_policy'),
+                'check_in_time' => Setting::get('check_in_time', '13:00'),
+                'check_out_time' => Setting::get('check_out_time', '12:00'),
             ]
         ]);
     }
@@ -102,6 +104,8 @@ class BookController extends Controller
                 'deposit_percentage' => Setting::get('deposit_percentage', '50.00'),
                 'contact_email' => Setting::get('contact_email'),
                 'contact_phone' => Setting::get('contact_phone'),
+                'check_in_time' => Setting::get('check_in_time', '13:00'),
+                'check_out_time' => Setting::get('check_out_time', '12:00'),
             ]
         ]);
     }
