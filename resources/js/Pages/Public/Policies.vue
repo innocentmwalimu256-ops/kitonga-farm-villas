@@ -53,8 +53,8 @@ defineProps({
                 <p>All bookings must satisfy our minimum stay guidelines. Guest names must match verified national IDs presented during physical check-in.</p>
                 <h3 class="font-extrabold text-sm text-gray-900 font-serif">2. Check-In & Check-Out Schedule</h3>
                 <ul class="list-disc list-inside space-y-1.5 pl-2 text-gray-700">
-                    <li><strong>Check-Out Time:</strong> 12:00 PM (Noon).</li>
-                    <li><strong>Check-In Time:</strong> 1:00 PM (Early check-in from 12:00 PM is accommodated if the residence has no departing guests on your arrival date).</li>
+                    <li><strong>Check-Out Time:</strong> Strictly 12:00 PM (Noon).</li>
+                    <li><strong>Check-In Time:</strong> Standard at 1:00 PM (Anytime check-in is warmly welcomed whenever the villa is unoccupied prior to your arrival).</li>
                 </ul>
                 <h3 class="font-extrabold text-sm text-gray-900 font-serif">3. Stay Conduct</h3>
                 <p>We maintain a peaceful countryside atmosphere. Excessive noise, illegal activities, and unapproved commercial filming are strictly prohibited.</p>

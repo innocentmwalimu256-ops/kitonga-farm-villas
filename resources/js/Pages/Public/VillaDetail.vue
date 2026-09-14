@@ -288,12 +288,12 @@ const getImageUrl = (path, slug) => {
                         <div>
                             <span class="text-[9px] uppercase font-bold text-gray-400 block">Check-in</span>
                             <span class="font-bold text-gray-900 text-sm">1:00 PM</span>
-                            <span class="text-[9px] text-emerald-800 block leading-tight mt-0.5">*From 12:00 PM if vacant</span>
+                            <span class="text-[9px] text-emerald-800 block leading-tight mt-0.5">*Anytime if vacant</span>
                         </div>
                         <div>
                             <span class="text-[9px] uppercase font-bold text-gray-400 block">Check-out</span>
                             <span class="font-bold text-gray-900 text-sm">12:00 PM</span>
-                            <span class="text-[9px] text-gray-400 block leading-tight mt-0.5">Standard Checkout</span>
+                            <span class="text-[9px] text-gray-400 block leading-tight mt-0.5">Strictly 12:00 PM</span>
                         </div>
                         <div class="col-span-2 pt-1.5 border-t border-gray-200 flex justify-between">
                             <span class="text-gray-400">Min. Stay:</span>

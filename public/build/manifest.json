@@ -442,7 +442,7 @@
     ]
   },
   "resources/js/Pages/Public/Book.vue": {
-    "file": "assets/Book-BrfJyfpj.js",
+    "file": "assets/Book-D2NHE5It.js",
     "name": "Book",
     "src": "resources/js/Pages/Public/Book.vue",
     "isDynamicEntry": true,
@@ -452,7 +452,7 @@
     ]
   },
   "resources/js/Pages/Public/BookingSuccess.vue": {
-    "file": "assets/BookingSuccess-C82ZICI7.js",
+    "file": "assets/BookingSuccess-DUIok_Bw.js",
     "name": "BookingSuccess",
     "src": "resources/js/Pages/Public/BookingSuccess.vue",
     "isDynamicEntry": true,
@@ -718,7 +718,7 @@
     ]
   },
   "resources/js/Pages/Public/Policies.vue": {
-    "file": "assets/Policies-Dn0YtoSC.js",
+    "file": "assets/Policies-B7cxf5By.js",
     "name": "Policies",
     "src": "resources/js/Pages/Public/Policies.vue",
     "isDynamicEntry": true,
@@ -738,7 +738,7 @@
     ]
   },
   "resources/js/Pages/Public/VillaDetail.vue": {
-    "file": "assets/VillaDetail-CDWtt04X.js",
+    "file": "assets/VillaDetail-E-UGNAOe.js",
     "name": "VillaDetail",
     "src": "resources/js/Pages/Public/VillaDetail.vue",
     "isDynamicEntry": true,
@@ -768,7 +768,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CC8nJWWB.js",
+    "file": "assets/app-CYMnh1YD.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

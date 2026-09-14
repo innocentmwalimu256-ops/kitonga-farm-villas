@@ -302,7 +302,7 @@ const submitBooking = () => {
                         <span class="font-bold text-gray-400 uppercase text-[10px] block">Villa Stay</span>
                         <p class="font-bold text-gray-900">{{ selectedVilla?.name }}</p>
                         <p class="text-gray-600">{{ bookingForm.check_in }} to {{ bookingForm.check_out }} ({{ calculateNights() }} Nights)</p>
-                        <p class="text-[11px] text-emerald-800 font-medium">Check-in: 1:00 PM (*From 12:00 PM if vacant) | Check-out: 12:00 PM</p>
+                        <p class="text-[11px] text-emerald-800 font-medium">Check-in: 1:00 PM (*Anytime if vacant) | Check-out: Strictly 12:00 PM</p>
                         <p class="text-gray-600">{{ bookingForm.guests_count }} Guests Occupancy</p>
                     </div>
                 </div>

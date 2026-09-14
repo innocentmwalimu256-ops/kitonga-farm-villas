@@ -82,11 +82,11 @@ const whatsappLink = computed(() => {
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
                         <span class="text-gray-500">Check-In Time:</span>
-                        <span class="font-bold text-gray-900">1:00 PM <span class="text-[10px] text-emerald-700 font-normal">(*From 12:00 PM if vacant)</span></span>
+                        <span class="font-bold text-gray-900">1:00 PM <span class="text-[10px] text-emerald-700 font-normal">(*Anytime if vacant)</span></span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
                         <span class="text-gray-500">Check-Out Time:</span>
-                        <span class="font-bold text-gray-900">12:00 PM</span>
+                        <span class="font-bold text-gray-900">12:00 PM <span class="text-[10px] text-gray-500 font-normal">(Strictly)</span></span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
                         <span class="text-gray-500">Idadi ya Wageni:</span>
