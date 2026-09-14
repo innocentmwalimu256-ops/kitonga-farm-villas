@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
@@ -13,8 +13,8 @@ return new class extends Migration
         DB::table('settings')->updateOrInsert(
             ['key' => 'check_out_time'],
             [
-                'value' => '12:00',
-                'description' => 'Check-out is strictly 12:00 PM (Saa sita kamili mchana)',
+                'value' => '12:00 PM',
+                'description' => 'Check-out is strictly 12:00 PM (Noon)',
                 'updated_at' => now(),
             ]
         );
@@ -22,8 +22,8 @@ return new class extends Migration
         DB::table('settings')->updateOrInsert(
             ['key' => 'check_in_time'],
             [
-                'value' => '13:00',
-                'description' => 'Check-in is 1:00 PM (Saa saba mchana), or from 12:00 PM (Saa sita kamili) if no guests are checking out on that day',
+                'value' => '1:00 PM',
+                'description' => 'Check-in is 1:00 PM (or from 12:00 PM if vacant)',
                 'updated_at' => now(),
             ]
         );

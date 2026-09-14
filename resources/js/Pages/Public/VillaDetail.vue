@@ -287,13 +287,13 @@ const getImageUrl = (path, slug) => {
                     <div class="grid grid-cols-2 gap-3 text-xs text-gray-600 bg-[#FAF8F5] p-3.5 rounded-xl border border-[#E5E0D8]">
                         <div>
                             <span class="text-[9px] uppercase font-bold text-gray-400 block">Check-in</span>
-                            <span class="font-bold text-gray-900">{{ settings.check_in_time || '13:00' }} (1:00 PM)</span>
-                            <span class="text-[9px] text-emerald-700 block leading-tight mt-0.5">*Kuanzia 12:00 PM kama hakuna wageni wanaoondoka</span>
+                            <span class="font-bold text-gray-900 text-sm">1:00 PM</span>
+                            <span class="text-[9px] text-emerald-800 block leading-tight mt-0.5">*From 12:00 PM if vacant</span>
                         </div>
                         <div>
                             <span class="text-[9px] uppercase font-bold text-gray-400 block">Check-out</span>
-                            <span class="font-bold text-gray-900">{{ settings.check_out_time || '12:00' }} (12:00 PM)</span>
-                            <span class="text-[9px] text-gray-500 block leading-tight mt-0.5">Saa Sita Kamili Mchana</span>
+                            <span class="font-bold text-gray-900 text-sm">12:00 PM</span>
+                            <span class="text-[9px] text-gray-400 block leading-tight mt-0.5">Standard Checkout</span>
                         </div>
                         <div class="col-span-2 pt-1.5 border-t border-gray-200 flex justify-between">
                             <span class="text-gray-400">Min. Stay:</span>

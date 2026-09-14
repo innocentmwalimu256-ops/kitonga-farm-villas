@@ -115,8 +115,8 @@ class DatabaseSeeder extends Seeder
 
         // 4. Default Settings
         $settings = [
-            'check_in_time' => ['value' => '13:00', 'desc' => 'Default villa check-in time (1:00 PM / Saa Saba Mchana, au 12:00 PM kama hakuna wanao-check out)'],
-            'check_out_time' => ['value' => '12:00', 'desc' => 'Default villa check-out time (12:00 PM / Saa Sita Kamili Mchana)'],
+            'check_in_time' => ['value' => '1:00 PM', 'desc' => 'Default villa check-in time: 1:00 PM (or from 12:00 PM if vacant)'],
+            'check_out_time' => ['value' => '12:00 PM', 'desc' => 'Default villa check-out time: 12:00 PM (Noon)'],
             'tax_rate' => ['value' => '18.00', 'desc' => 'VAT percentage in Tanzania'],
             'currency' => ['value' => 'TZS', 'desc' => 'System currency symbol'],
             'cancellation_policy' => ['value' => 'Full refund up to 7 days before check-in. 50% refund 3-7 days. No refund under 3 days.', 'desc' => 'Default booking cancellation policy description'],

@@ -141,8 +141,8 @@ class PublicController extends Controller
             'villa' => $villa,
             'other_villas' => AccommodationType::where('active', true)->where('id', '!=', $villa->id)->with('amenities')->take(2)->get(),
             'settings' => [
-                'check_in_time' => Setting::get('check_in_time', '13:00'),
-                'check_out_time' => Setting::get('check_out_time', '12:00'),
+                'check_in_time' => Setting::get('check_in_time', '1:00 PM'),
+                'check_out_time' => Setting::get('check_out_time', '12:00 PM'),
                 'breakfast_policy' => Setting::get('breakfast_policy'),
             ]
         ]);
