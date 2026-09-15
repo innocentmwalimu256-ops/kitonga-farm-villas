@@ -87,6 +87,7 @@ const handleFileSelect = (e) => {
 
 const openUploadModal = (defaultPage = 'gallery') => {
     uploadForm.reset();
+    uploadForm.clearErrors();
     uploadForm.page = defaultPage !== 'all' ? defaultPage : 'gallery';
     previewUrl.value = null;
     previewType.value = null;
@@ -96,6 +97,7 @@ const openUploadModal = (defaultPage = 'gallery') => {
 const closeUploadModal = () => {
     showUploadModal.value = false;
     uploadForm.reset();
+    uploadForm.clearErrors();
     if (previewUrl.value) {
         URL.revokeObjectURL(previewUrl.value);
         previewUrl.value = null;
@@ -103,7 +105,10 @@ const closeUploadModal = () => {
 };
 
 const submitUpload = () => {
+    uploadForm.clearErrors();
     uploadForm.post(route('admin.media.store'), {
+        forceFormData: true,
+        preserveScroll: true,
         onSuccess: () => {
             closeUploadModal();
         },
@@ -464,6 +469,16 @@ const pageTabs = [
                 <!-- Form Content -->
                 <form @submit.prevent="submitUpload" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
                     
+                    <!-- Validation Errors Alert -->
+                    <div v-if="Object.keys(uploadForm.errors).length > 0" class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 space-y-1">
+                        <div class="font-bold flex items-center gap-1.5">
+                            <span>⚠️</span> Upload Warning / Error:
+                        </div>
+                        <ul class="list-disc list-inside space-y-0.5 pl-1">
+                            <li v-for="(err, key) in uploadForm.errors" :key="key">{{ err }}</li>
+                        </ul>
+                    </div>
+
                     <!-- File Selector / Drop Area -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold text-gray-700 uppercase tracking-wider block">

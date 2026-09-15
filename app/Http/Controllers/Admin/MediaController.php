@@ -118,8 +118,27 @@ class MediaController extends Controller
     {
         abort_if(!auth()->user()->hasPermissionTo('manage_media'), 403, 'Unauthorized to upload media.');
 
+        @set_time_limit(600);
+        @ini_set('max_execution_time', '600');
+        @ini_set('memory_limit', '1024M');
+
         $request->validate([
-            'file' => 'required|file|mimes:jpeg,jpg,png,webp,gif,svg,mp4,webm,mov,ogg,m4v,mkv|max:512000', // Max 500MB
+            'file' => [
+                'required',
+                'file',
+                'max:524288', // Max 512MB
+                function ($attribute, $value, $fail) {
+                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg', 'mp4', 'webm', 'mov', 'ogg', 'm4v', 'mkv', 'avi', '3gp', 'qt'];
+                    $ext = strtolower($value->getClientOriginalExtension());
+                    $mime = strtolower($value->getMimeType() ?? '');
+                    $isAllowedExt = in_array($ext, $allowedExtensions);
+                    $isAllowedMime = str_starts_with($mime, 'image/') || str_starts_with($mime, 'video/') || $mime === 'application/octet-stream';
+                    
+                    if (!$isAllowedExt && !$isAllowedMime) {
+                        $fail('The uploaded file must be a valid image (JPG, PNG, WEBP, GIF, SVG) or video (MP4, WEBM, MOV, M4V, MKV).');
+                    }
+                }
+            ],
             'title' => 'nullable|string|max:255',
             'page' => 'nullable|string|in:home,gallery,farm,villas,experiences,about,location,general',
             'section' => 'nullable|string|max:100',
@@ -129,68 +148,73 @@ class MediaController extends Controller
             'caption' => 'nullable|string|max:1000',
         ]);
 
-        $file = $request->file('file');
-        $user = auth()->user();
-        $mime = $file->getMimeType() ?? '';
-        $ext = strtolower($file->getClientOriginalExtension());
-        $isVideo = Str::startsWith($mime, 'video/') || in_array($ext, ['mp4', 'webm', 'mov', 'ogg', 'm4v', 'mkv']);
-        $mediaType = $isVideo ? 'video' : 'image';
+        try {
+            $file = $request->file('file');
+            $user = auth()->user();
+            $mime = $file->getMimeType() ?? '';
+            $ext = strtolower($file->getClientOriginalExtension());
+            $isVideo = Str::startsWith($mime, 'video/') || in_array($ext, ['mp4', 'webm', 'mov', 'ogg', 'm4v', 'mkv', 'avi', '3gp', 'qt']);
+            $mediaType = $isVideo ? 'video' : 'image';
 
-        $page = $request->input('page', 'gallery');
-        $isHero = filter_var($request->input('is_hero', false), FILTER_VALIDATE_BOOLEAN);
+            $page = $request->input('page', 'gallery');
+            $isHero = filter_var($request->input('is_hero', false), FILTER_VALIDATE_BOOLEAN);
 
-        // Upload through Spatie Media Library (Auto-convert images to WebP for maximum speed)
-        $customProps = [
-            'title' => $request->input('title', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
-            'page' => $page,
-            'section' => $request->input('section', 'general'),
-            'category' => $request->input('category', 'general'),
-            'is_hero' => $isHero,
-            'media_type' => $mediaType,
-            'alt_text' => $request->input('alt_text', ''),
-            'caption' => $request->input('caption', ''),
-        ];
+            // Upload through Spatie Media Library (Auto-convert images to WebP for maximum speed)
+            $customProps = [
+                'title' => $request->input('title', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
+                'page' => $page,
+                'section' => $request->input('section', 'general'),
+                'category' => $request->input('category', 'general'),
+                'is_hero' => $isHero,
+                'media_type' => $mediaType,
+                'alt_text' => $request->input('alt_text', ''),
+                'caption' => $request->input('caption', ''),
+            ];
 
-        if (!$isVideo && function_exists('imagewebp') && in_array($ext, ['jpg', 'jpeg', 'png', 'bmp', 'gif'])) {
-            $webpPath = $this->convertToWebp($file);
-            if ($webpPath && file_exists($webpPath)) {
-                $cleanBaseName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-                $media = $user->addMedia($webpPath)
-                    ->usingFileName($cleanBaseName . '.webp')
-                    ->withCustomProperties($customProps)
-                    ->toMediaCollection('cms_media');
-                @unlink($webpPath);
+            if (!$isVideo && function_exists('imagewebp') && in_array($ext, ['jpg', 'jpeg', 'png', 'bmp', 'gif'])) {
+                $webpPath = $this->convertToWebp($file);
+                if ($webpPath && file_exists($webpPath)) {
+                    $cleanBaseName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+                    $media = $user->addMedia($webpPath)
+                        ->usingFileName($cleanBaseName . '.webp')
+                        ->withCustomProperties($customProps)
+                        ->toMediaCollection('cms_media');
+                    @unlink($webpPath);
+                } else {
+                    $media = $user->addMedia($file)
+                        ->withCustomProperties($customProps)
+                        ->toMediaCollection('cms_media');
+                }
             } else {
                 $media = $user->addMedia($file)
                     ->withCustomProperties($customProps)
                     ->toMediaCollection('cms_media');
             }
-        } else {
-            $media = $user->addMedia($file)
-                ->withCustomProperties($customProps)
-                ->toMediaCollection('cms_media');
+
+            // Audit Log
+            ActivityLog::create([
+                'user_id' => $user->id,
+                'action' => 'media_uploaded',
+                'entity_type' => 'Media',
+                'entity_id' => $media->id,
+                'new_values' => [
+                    'filename' => $media->file_name,
+                    'media_type' => $mediaType,
+                    'page' => $page,
+                    'is_hero' => $isHero,
+                    'format' => $media->mime_type,
+                ],
+                'created_at' => Carbon::now(),
+            ]);
+
+            $formatMsg = (!$isVideo && $media->mime_type === 'image/webp') ? ' (Auto-converted to optimized WebP for lightning-fast speed)' : '';
+
+            return redirect()->route('admin.media.index')
+                ->with('success', ucfirst($mediaType) . ' published successfully for ' . ucfirst($page) . ' page' . $formatMsg . '.');
+        } catch (\Exception $e) {
+            \Log::error('Media publish error: ' . $e->getMessage());
+            return back()->withErrors(['file' => 'Failed to publish media: ' . $e->getMessage()]);
         }
-
-        // Audit Log
-        ActivityLog::create([
-            'user_id' => $user->id,
-            'action' => 'media_uploaded',
-            'entity_type' => 'Media',
-            'entity_id' => $media->id,
-            'new_values' => [
-                'filename' => $media->file_name,
-                'media_type' => $mediaType,
-                'page' => $page,
-                'is_hero' => $isHero,
-                'format' => $media->mime_type,
-            ],
-            'created_at' => Carbon::now(),
-        ]);
-
-        $formatMsg = (!$isVideo && $media->mime_type === 'image/webp') ? ' (Auto-converted to optimized WebP for lightning-fast speed)' : '';
-
-        return redirect()->route('admin.media.index')
-            ->with('success', ucfirst($mediaType) . ' uploaded successfully for ' . ucfirst($page) . ' page' . $formatMsg . '.');
     }
 
     /**
