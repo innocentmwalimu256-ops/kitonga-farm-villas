@@ -136,15 +136,15 @@ const submitContact = () => {
         <section class="bg-white text-[#14231C] pt-14 pb-14 md:pt-20 md:pb-16 px-6 md:px-12 border-b border-gray-200">
             <div class="max-w-4xl mx-auto text-center space-y-4">
                 <span class="text-xs uppercase tracking-[3px] font-bold text-[#C98A3E] font-sans">
-                    Mawasiliano & Taarifa
+                    Contact & Inquiries
                 </span>
                 
                 <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#14231C]">
-                    Wasiliana Nasi Kitonga Farm Villas
+                    Get in Touch with Kitonga Farm Villas
                 </h1>
                 
                 <p class="font-sans text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                    Kwa maswali yoyote kuhusu ukaaji wa villa, kutembelea shamba letu, kununua bidhaa halisi za shamba, au maandalizi ya safari yako Komkonga, tuko tayari kukusaidia wakati wowote.
+                    For villa reservations, farm tours, fresh organic produce inquiries, or directions to our estate in Komkonga, our team is always delighted to assist you.
                 </p>
             </div>
         </section>
@@ -154,27 +154,27 @@ const submitContact = () => {
             
             <div class="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 items-start">
                 
-                <!-- Left Column: Njia za Mawasiliano -->
+                <!-- Left Column: Contact Details -->
                 <div class="md:col-span-5 space-y-6">
                     
                     <div class="space-y-2">
-                        <h2 class="font-serif text-2xl font-bold text-[#14231C]">Taarifa za Mawasiliano</h2>
+                        <h2 class="font-serif text-2xl font-bold text-[#14231C]">Contact Information</h2>
                         <p class="text-xs text-gray-600 leading-relaxed">
-                            Unaweza kuwasiliana nasi moja kwa moja kwa simu, WhatsApp, au barua pepe:
+                            Reach out to our reservations and concierge desk directly:
                         </p>
                     </div>
 
                     <!-- Direct WhatsApp Button -->
                     <a 
-                        :href="'https://wa.me/' + (settings.contact_phone || '+255758774695').replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent('Habari Kitonga Farm Villas, ningependa kupata taarifa zaidi kuhusu ukaaji na huduma zenu.')"
+                        :href="'https://wa.me/' + (settings.contact_phone || '+255758774695').replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent('Hello Kitonga Farm Villas, I would like to inquire about reservations and experiences.')"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="flex items-center gap-3.5 p-4 rounded-xl bg-[#25D366] text-white hover:bg-[#20ba59] transition shadow-sm font-sans"
                     >
                         <span class="text-2xl">💬</span>
                         <div class="flex-1">
-                            <span class="text-xs font-bold block">Tuma Ujumbe WhatsApp</span>
-                            <span class="text-[11px] text-white/90">Wasiliana moja kwa moja kwa WhatsApp</span>
+                            <span class="text-xs font-bold block">Chat on WhatsApp</span>
+                            <span class="text-[11px] text-white/90">Instant concierge assistance via WhatsApp</span>
                         </div>
                         <span class="text-sm font-bold">↗</span>
                     </a>
@@ -185,7 +185,7 @@ const submitContact = () => {
                         <div class="flex items-start gap-3.5">
                             <span class="text-lg text-[#C98A3E]">📞</span>
                             <div>
-                                <strong class="text-gray-900 block text-xs">Simu ya Moja kwa Moja</strong>
+                                <strong class="text-gray-900 block text-xs">Direct Phone Line</strong>
                                 <a :href="'tel:' + (settings.contact_phone || '+255758774695').replace(/\s+/g, '')" class="text-gray-600 hover:text-[#C98A3E] transition mt-0.5 inline-block">
                                     {{ settings.contact_phone || '+255 758 774 695' }}
                                 </a>
@@ -195,7 +195,7 @@ const submitContact = () => {
                         <div class="flex items-start gap-3.5 pt-3 border-t border-gray-150">
                             <span class="text-lg text-[#C98A3E]">✉️</span>
                             <div>
-                                <strong class="text-gray-900 block text-xs">Barua Pepe (Email)</strong>
+                                <strong class="text-gray-900 block text-xs">Email Address</strong>
                                 <a :href="'mailto:' + (settings.contact_email || 'info@kitongafarmvillas.com')" class="text-gray-600 hover:text-[#C98A3E] transition mt-0.5 inline-block">
                                     {{ settings.contact_email || 'info@kitongafarmvillas.com' }}
                                 </a>
@@ -205,7 +205,7 @@ const submitContact = () => {
                         <div class="flex items-start gap-3.5 pt-3 border-t border-gray-150">
                             <span class="text-lg text-[#C98A3E]">📍</span>
                             <div>
-                                <strong class="text-gray-900 block text-xs">Mahali Lilipo Shamba</strong>
+                                <strong class="text-gray-900 block text-xs">Estate Location</strong>
                                 <span class="text-gray-600 block mt-0.5">Komkonga Village, Tanga Region, Tanzania</span>
                             </div>
                         </div>
@@ -213,8 +213,8 @@ const submitContact = () => {
                         <div class="flex items-start gap-3.5 pt-3 border-t border-gray-150">
                             <span class="text-lg text-[#C98A3E]">🕒</span>
                             <div>
-                                <strong class="text-gray-900 block text-xs">Muda wa Huduma</strong>
-                                <span class="text-gray-600 block mt-0.5">Jumatatu – Jumapili (Saa 24 kwa wageni waliopo)</span>
+                                <strong class="text-gray-900 block text-xs">Service Hours</strong>
+                                <span class="text-gray-600 block mt-0.5">Monday – Sunday (24/7 for in-house guests)</span>
                             </div>
                         </div>
 
@@ -225,7 +225,7 @@ const submitContact = () => {
                         <div class="px-4 py-2.5 bg-[#14231C] text-white flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <span class="text-xs text-[#C98A3E]">📍</span>
-                                <span class="font-serif text-xs font-medium text-[#F5F1E8] uppercase tracking-wider">Ramani ya Komkonga, Tanga</span>
+                                <span class="font-serif text-xs font-medium text-[#F5F1E8] uppercase tracking-wider">Komkonga, Tanga Map</span>
                             </div>
                             <a 
                                 :href="'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(settings.location_coordinates || '-5.0889,39.0988')" 
@@ -233,7 +233,7 @@ const submitContact = () => {
                                 rel="noopener noreferrer" 
                                 class="inline-flex items-center gap-1 text-[10px] font-bold text-[#E6C387] hover:text-white transition uppercase tracking-wider"
                             >
-                                <span>Fungua Maps</span>
+                                <span>Open in Maps</span>
                                 <span>↗</span>
                             </a>
                         </div>
@@ -242,7 +242,7 @@ const submitContact = () => {
                         <div class="relative w-full h-44 bg-[#e5e3df]">
                             <iframe
                                 class="w-full h-full border-0"
-                                :src="'https://maps.google.com/maps?q=' + (settings.location_coordinates || '-5.0889,39.0988') + '&hl=sw&z=13&output=embed'"
+                                :src="'https://maps.google.com/maps?q=' + (settings.location_coordinates || '-5.0889,39.0988') + '&hl=en&z=13&output=embed'"
                                 loading="lazy"
                                 allowfullscreen
                                 referrerpolicy="no-referrer-when-downgrade"
@@ -259,7 +259,7 @@ const submitContact = () => {
                                 <span class="text-[#C98A3E]">🚗</span> Segera: 1h 15m
                             </span>
                             <span class="inline-flex items-center gap-1">
-                                <span class="text-[#C98A3E]">✈️</span> Pickup ipo
+                                <span class="text-[#C98A3E]">✈️</span> Transfer available
                             </span>
                         </div>
                     </div>
@@ -270,25 +270,25 @@ const submitContact = () => {
                 <div class="md:col-span-7 bg-white p-7 sm:p-9 rounded-2xl border border-gray-200 shadow-xs">
                     
                     <div class="mb-5">
-                        <h2 class="font-serif text-2xl font-bold text-[#14231C]">Tuma Ujumbe Wako</h2>
+                        <h2 class="font-serif text-2xl font-bold text-[#14231C]">Send Us a Message</h2>
                         <p class="text-xs text-gray-500 mt-1 font-sans">
-                            Tafadhali jaza fomu hii fupi na tutakujibu haraka iwezekanavyo:
+                            Please fill out the form below and our team will get back to you promptly:
                         </p>
                     </div>
 
                     <!-- Success Alert -->
                     <div v-if="isSuccess" class="mb-5 p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-sans">
-                        ✓ Ujumbe wako umetumwa kwa mafanikio. Tutawasiliana nawe hivi punde!
+                        ✓ Your message has been sent successfully. We will get back to you shortly!
                     </div>
 
                     <form @submit.prevent="submitContact" class="space-y-4 font-sans text-xs">
                         
                         <div>
-                            <label class="block font-semibold text-gray-700 mb-1">Jina Lako Kamili *</label>
+                            <label class="block font-semibold text-gray-700 mb-1">Full Name *</label>
                             <input 
                                 v-model="form.name" 
                                 type="text" 
-                                placeholder="Mfano: Juma Rashid"
+                                placeholder="e.g. Johnathan Smith"
                                 class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#C98A3E] transition"
                                 required 
                             />
@@ -296,18 +296,18 @@ const submitContact = () => {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                             <div>
-                                <label class="block font-semibold text-gray-700 mb-1">Barua Pepe (Email) *</label>
+                                <label class="block font-semibold text-gray-700 mb-1">Email Address *</label>
                                 <input 
                                     v-model="form.email" 
                                     type="email" 
-                                    placeholder="juma@example.com"
+                                    placeholder="john@example.com"
                                     class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#C98A3E] transition"
                                     required 
                                 />
                             </div>
 
                             <div>
-                                <label class="block font-semibold text-gray-700 mb-1">Namba ya Simu / WhatsApp</label>
+                                <label class="block font-semibold text-gray-700 mb-1">Phone Number / WhatsApp</label>
                                 <input 
                                     v-model="form.phone" 
                                     type="tel" 
@@ -319,24 +319,24 @@ const submitContact = () => {
                         </div>
 
                         <div>
-                            <label class="block font-semibold text-gray-700 mb-1">Aina ya Ombi / Sababu</label>
+                            <label class="block font-semibold text-gray-700 mb-1">Inquiry Type</label>
                             <select 
                                 v-model="form.subject"
                                 class="w-full text-xs p-2.5 rounded-lg border border-gray-300 bg-white focus:outline-none focus:border-[#C98A3E] transition"
                             >
-                                <option value="Villa Reservation">Kuhifadhi Villa (Booking)</option>
-                                <option value="Farm Tour & Experiences">Kutembelea Shamba & Ziara</option>
-                                <option value="Produce & Direct Harvest">Kuagiza Mazao ya Shamba</option>
-                                <option value="General Concierge Inquiry">Maulizo Mengine ya Jumla</option>
+                                <option value="Villa Reservation">Villa Reservation</option>
+                                <option value="Farm Tour & Experiences">Farm Tour & Experiences</option>
+                                <option value="Produce & Direct Harvest">Produce & Direct Harvest</option>
+                                <option value="General Concierge Inquiry">General Concierge Inquiry</option>
                             </select>
                         </div>
 
                         <div>
-                            <label class="block font-semibold text-gray-700 mb-1">Ujumbe Wako *</label>
+                            <label class="block font-semibold text-gray-700 mb-1">Your Message *</label>
                             <textarea 
                                 v-model="form.message" 
                                 rows="4"
-                                placeholder="Andika maelezo ya ujumbe wako hapa..."
+                                placeholder="Write your message or inquiry details here..."
                                 class="w-full text-xs p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#C98A3E] transition"
                                 required
                             ></textarea>
@@ -347,7 +347,7 @@ const submitContact = () => {
                             :disabled="form.processing"
                             class="w-full py-3 bg-[#14231C] hover:bg-[#C98A3E] text-white text-xs font-bold uppercase tracking-wider rounded-lg transition duration-200 shadow-sm cursor-pointer disabled:opacity-50"
                         >
-                            {{ form.processing ? 'Inatuma...' : 'Tuma Ujumbe' }}
+                            {{ form.processing ? 'Sending...' : 'Send Message' }}
                         </button>
 
                     </form>
@@ -363,22 +363,22 @@ const submitContact = () => {
             <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="space-y-2.5">
                     <p class="font-bold text-white text-sm font-serif uppercase tracking-widest">KITONGA FARM VILLAS</p>
-                    <p class="text-gray-400 text-xs leading-relaxed">Makazi ya kifahari ya mashambani Komkonga, Tanga, Tanzania.</p>
+                    <p class="text-gray-400 text-xs leading-relaxed">A luxury countryside retreat and organic farm-stay in Komkonga, Tanga, Tanzania.</p>
                 </div>
                 <div class="space-y-2">
-                    <p class="font-bold text-white uppercase tracking-wider text-xs">Kurasa za Haraka</p>
+                    <p class="font-bold text-white uppercase tracking-wider text-xs">Quick Links</p>
                     <div class="flex flex-col space-y-1.5">
-                        <Link :href="route('villas')" class="hover:text-white transition">Villa na Makazi</Link>
-                        <Link :href="route('experiences')" class="hover:text-white transition">Ziara za Shamba</Link>
-                        <Link :href="route('farm')" class="hover:text-white transition">Shamba Letu</Link>
-                        <Link :href="route('products')" class="hover:text-white transition">Mazao ya Shamba</Link>
-                        <Link :href="route('gallery')" class="hover:text-white transition">Gallery ya Picha</Link>
+                        <Link :href="route('villas')" class="hover:text-white transition">Villas & Accommodation</Link>
+                        <Link :href="route('experiences')" class="hover:text-white transition">Farm Experiences</Link>
+                        <Link :href="route('farm')" class="hover:text-white transition">Our Farm</Link>
+                        <Link :href="route('products')" class="hover:text-white transition">Farm Produce</Link>
+                        <Link :href="route('gallery')" class="hover:text-white transition">Photo Gallery</Link>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <p class="font-bold text-white uppercase tracking-wider text-xs">Mawasiliano</p>
+                    <p class="font-bold text-white uppercase tracking-wider text-xs">Contact Information</p>
                     <p class="text-gray-400">Komkonga Village, Tanga, Tanzania</p>
-                    <p class="text-gray-400">Simu: +255 758 774 695</p>
+                    <p class="text-gray-400">Phone: +255 758 774 695</p>
                     <p class="text-gray-400">Email: info@kitongafarmvillas.com</p>
                 </div>
             </div>
