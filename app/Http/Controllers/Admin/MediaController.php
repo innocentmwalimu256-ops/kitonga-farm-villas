@@ -171,6 +171,8 @@ class MediaController extends Controller
                 'caption' => $request->input('caption', ''),
             ];
 
+            $formatMsg = '';
+
             if (!$isVideo && function_exists('imagewebp') && in_array($ext, ['jpg', 'jpeg', 'png', 'bmp', 'gif'])) {
                 $webpPath = $this->convertToWebp($file);
                 if ($webpPath && file_exists($webpPath)) {
@@ -180,6 +182,23 @@ class MediaController extends Controller
                         ->withCustomProperties($customProps)
                         ->toMediaCollection('cms_media');
                     @unlink($webpPath);
+                    $formatMsg = ' (Auto-converted to optimized WebP for lightning-fast speed)';
+                } else {
+                    $media = $user->addMedia($file)
+                        ->withCustomProperties($customProps)
+                        ->toMediaCollection('cms_media');
+                }
+            } elseif ($isVideo) {
+                // Attempt high-definition FastStart Web Video optimization
+                $optVideoPath = $this->optimizeWebVideo($file);
+                if ($optVideoPath && file_exists($optVideoPath)) {
+                    $cleanBaseName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+                    $media = $user->addMedia($optVideoPath)
+                        ->usingFileName($cleanBaseName . '.mp4')
+                        ->withCustomProperties($customProps)
+                        ->toMediaCollection('cms_media');
+                    @unlink($optVideoPath);
+                    $formatMsg = ' (Auto-optimized for instant Web playback with H.264 & FastStart)';
                 } else {
                     $media = $user->addMedia($file)
                         ->withCustomProperties($customProps)
@@ -207,14 +226,77 @@ class MediaController extends Controller
                 'created_at' => Carbon::now(),
             ]);
 
-            $formatMsg = (!$isVideo && $media->mime_type === 'image/webp') ? ' (Auto-converted to optimized WebP for lightning-fast speed)' : '';
-
             return redirect()->route('admin.media.index')
                 ->with('success', ucfirst($mediaType) . ' published successfully for ' . ucfirst($page) . ' page' . $formatMsg . '.');
         } catch (\Exception $e) {
             \Log::error('Media publish error: ' . $e->getMessage());
             return back()->withErrors(['file' => 'Failed to publish media: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Helper to optimize uploaded video for web streaming (H.264, FastStart, CRF 22, max 1080p).
+     */
+    protected function optimizeWebVideo($uploadedFile): ?string
+    {
+        try {
+            $ffmpeg = $this->findFfmpegBinary();
+            if (!$ffmpeg) {
+                return null;
+            }
+
+            $tempDir = storage_path('app/temp_video');
+            if (!is_dir($tempDir)) {
+                @mkdir($tempDir, 0755, true);
+            }
+
+            $cleanName = Str::slug(pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME));
+            $tempPath = $tempDir . '/' . $cleanName . '_' . uniqid() . '.mp4';
+            $inputPath = $uploadedFile->getRealPath();
+
+            // Run FFmpeg web optimization (H.264 + FastStart + Max 1080p + 128k AAC audio)
+            $cmd = sprintf(
+                '%s -y -i %s -c:v libx264 -profile:v high -level 4.1 -preset medium -crf 22 -vf "scale=\'min(1920,iw)\':-2" -c:a aac -b:a 128k -movflags +faststart %s 2>&1',
+                escapeshellcmd($ffmpeg),
+                escapeshellarg($inputPath),
+                escapeshellarg($tempPath)
+            );
+
+            @exec($cmd, $output, $returnCode);
+
+            if ($returnCode === 0 && file_exists($tempPath) && filesize($tempPath) > 0) {
+                return $tempPath;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            \Log::warning('Video optimization notice: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Find FFmpeg binary in system path or standard locations.
+     */
+    protected function findFfmpegBinary(): ?string
+    {
+        $candidates = [
+            config('media-library.ffmpeg_path'),
+            '/usr/bin/ffmpeg',
+            '/usr/local/bin/ffmpeg',
+            '/opt/homebrew/bin/ffmpeg',
+            'ffmpeg',
+        ];
+
+        foreach ($candidates as $bin) {
+            if (!$bin) continue;
+            $test = @shell_exec(escapeshellcmd($bin) . ' -version 2>&1');
+            if ($test && stripos($test, 'ffmpeg version') !== false) {
+                return $bin;
+            }
+        }
+
+        return null;
     }
 
     /**
