@@ -142,6 +142,20 @@ const submitEdit = () => {
     });
 };
 
+const setAsHero = (item) => {
+    router.post(route('admin.media.update', item.id), {
+        title: item.title || item.name,
+        page: 'home',
+        section: item.media_type === 'video' ? 'hero_video' : 'hero_banner',
+        category: item.category || 'general',
+        is_hero: true,
+        alt_text: item.alt_text || '',
+        caption: item.caption || '',
+    }, {
+        preserveScroll: true,
+    });
+};
+
 const deleteMedia = (id) => {
     if (confirm('Are you sure you want to permanently delete this media file?')) {
         router.delete(route('admin.media.destroy', id), {
@@ -366,6 +380,21 @@ const pageTabs = [
 
                                 <!-- Action Buttons Bar -->
                                 <div class="pt-2 border-t border-gray-100 flex items-center justify-between gap-1.5">
+                                    <!-- Set as Hero Quick Button -->
+                                    <button 
+                                        v-if="!item.is_hero"
+                                        @click.stop="setAsHero(item)"
+                                        type="button"
+                                        class="px-2 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer border border-amber-200"
+                                        :title="item.media_type === 'video' ? 'Set as Home Hero Video' : 'Set as Home Hero Banner'"
+                                    >
+                                        <span>⭐</span>
+                                        <span>Set Hero</span>
+                                    </button>
+                                    <span v-else class="px-2 py-0.5 rounded-md bg-amber-400 text-amber-950 text-[10px] font-extrabold flex items-center gap-0.5 shadow-xs">
+                                        <span>✓</span> Hero
+                                    </span>
+
                                     <!-- Copy Link Button -->
                                     <button 
                                         @click.stop="copyUrl(item)" 
@@ -379,7 +408,7 @@ const pageTabs = [
                                         <svg v-else class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                         </svg>
-                                        <span>{{ copiedId === item.id ? 'Copied!' : 'Copy Link' }}</span>
+                                        <span>{{ copiedId === item.id ? 'Copied!' : 'Copy' }}</span>
                                     </button>
 
                                     <!-- Edit Button -->
@@ -648,7 +677,7 @@ const pageTabs = [
                         <input v-model="editForm.title" type="text" class="w-full text-xs rounded-lg border-gray-300 mt-1" required />
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
                             <label class="text-xs font-bold text-gray-700 block">Target Page</label>
                             <select v-model="editForm.page" class="w-full text-xs rounded-lg border-gray-300 mt-1">
@@ -659,6 +688,17 @@ const pageTabs = [
                                 <option value="experiences">Experiences</option>
                                 <option value="about">About & Location</option>
                                 <option value="general">General</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block">Section Role</label>
+                            <select v-model="editForm.section" class="w-full text-xs rounded-lg border-gray-300 mt-1">
+                                <option value="hero_video">Hero Video (Home Top)</option>
+                                <option value="hero_banner">Hero Banner Poster</option>
+                                <option value="gallery_showcase">Gallery Item</option>
+                                <option value="farm_spotlight">Farm Spotlight</option>
+                                <option value="villa_showcase">Villa Feature</option>
+                                <option value="general">Standard</option>
                             </select>
                         </div>
                         <div>

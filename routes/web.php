@@ -21,15 +21,43 @@ Route::get('/stream/hero-video', function () {
     $path = null;
     $mimeType = 'video/mp4';
 
-    if (file_exists(public_path('videos/hero_cinematic.mp4'))) {
-        $path = public_path('videos/hero_cinematic.mp4');
-        $mimeType = 'video/mp4';
-    } elseif (file_exists(public_path('videos/hero_cinematic.webm'))) {
-        $path = public_path('videos/hero_cinematic.webm');
-        $mimeType = 'video/webm';
-    } elseif (file_exists(public_path('videos/IMG_2249.mp4'))) {
-        $path = public_path('videos/IMG_2249.mp4');
-        $mimeType = 'video/mp4';
+    try {
+        $heroMedia = \Spatie\MediaLibrary\MediaCollections\Models\Media::where('collection_name', 'cms_media')
+            ->where(function ($q) {
+                $q->where('custom_properties->section', 'hero_video')
+                  ->orWhere('custom_properties->page', 'home')
+                  ->orWhere('custom_properties->is_hero', true)
+                  ->orWhere('custom_properties->is_hero', '1');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->first(function ($item) {
+                $mime = strtolower($item->mime_type ?? '');
+                $ext = strtolower(pathinfo($item->file_name, PATHINFO_EXTENSION));
+                $customProps = $item->custom_properties ?? [];
+                $mediaType = $customProps['media_type'] ?? '';
+                return $mediaType === 'video' || \Illuminate\Support\Str::startsWith($mime, 'video/') || in_array($ext, ['mp4', 'webm', 'mov', 'm4v', 'mkv', 'avi', '3gp', 'qt', 'ogg']);
+            });
+
+        if ($heroMedia && file_exists($heroMedia->getPath())) {
+            $path = $heroMedia->getPath();
+            $mimeType = $heroMedia->mime_type ?? 'video/mp4';
+        }
+    } catch (\Exception $e) {
+        // Fall back to static files
+    }
+
+    if (!$path) {
+        if (file_exists(public_path('videos/hero_cinematic.mp4'))) {
+            $path = public_path('videos/hero_cinematic.mp4');
+            $mimeType = 'video/mp4';
+        } elseif (file_exists(public_path('videos/hero_cinematic.webm'))) {
+            $path = public_path('videos/hero_cinematic.webm');
+            $mimeType = 'video/webm';
+        } elseif (file_exists(public_path('videos/IMG_2249.mp4'))) {
+            $path = public_path('videos/IMG_2249.mp4');
+            $mimeType = 'video/mp4';
+        }
     }
 
     if (!$path || !file_exists($path)) {

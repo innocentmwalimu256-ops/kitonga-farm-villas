@@ -90,8 +90,51 @@ class PublicController extends Controller
             $cms = $this->getCmsContent('home');
             $homeMedia = $this->getPageMedia('home');
 
+            // Find dynamically uploaded or configured Hero Video
             $heroVideoUrl = null;
             $heroVideoMime = null;
+
+            try {
+                $heroVideoMedia = Media::where('collection_name', 'cms_media')
+                    ->where(function ($q) {
+                        $q->where('custom_properties->section', 'hero_video')
+                          ->orWhereJsonContains('custom_properties->section', 'hero_video')
+                          ->orWhere(function ($sq) {
+                              $sq->where(function ($ssq) {
+                                  $ssq->where('custom_properties->page', 'home')
+                                      ->orWhereJsonContains('custom_properties->page', 'home');
+                              })->where(function ($ssq2) {
+                                  $ssq2->where('custom_properties->is_hero', true)
+                                       ->orWhere('custom_properties->is_hero', '1')
+                                       ->orWhereJsonContains('custom_properties->is_hero', true);
+                              });
+                          })
+                          ->orWhere('custom_properties->page', 'home')
+                          ->orWhereJsonContains('custom_properties->page', 'home');
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->first(function ($item) {
+                        $mime = strtolower($item->mime_type ?? '');
+                        $ext = strtolower(pathinfo($item->file_name, PATHINFO_EXTENSION));
+                        $customProps = $item->custom_properties ?? [];
+                        $mediaType = $customProps['media_type'] ?? '';
+                        return $mediaType === 'video' || Str::startsWith($mime, 'video/') || in_array($ext, ['mp4', 'webm', 'mov', 'm4v', 'mkv', 'avi', '3gp', 'qt', 'ogg']);
+                    });
+
+                if ($heroVideoMedia) {
+                    $heroVideoUrl = $heroVideoMedia->getUrl();
+                    $heroVideoMime = $heroVideoMedia->mime_type ?? 'video/mp4';
+                } elseif (!empty($cms['hero_video'])) {
+                    $heroVideoUrl = $cms['hero_video'];
+                    $heroVideoMime = 'video/mp4';
+                } elseif ($customSettingVideo = Setting::get('hero_video_url')) {
+                    $heroVideoUrl = $customSettingVideo;
+                    $heroVideoMime = 'video/mp4';
+                }
+            } catch (\Exception $mediaEx) {
+                // Ignore media query error, fall back to default
+            }
 
             $settings = [
                 'contact_email' => Setting::get('contact_email'),

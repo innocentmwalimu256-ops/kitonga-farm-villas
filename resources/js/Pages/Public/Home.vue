@@ -190,9 +190,10 @@ const handleLogoClick = (e) => {
             class="relative min-h-[75vh] md:min-h-[85vh] lg:min-h-[90vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
             title="Click anywhere to Play / Pause video"
         >
-            <!-- Hero Video (Original High Quality Cinematic Video) -->
+            <!-- Hero Video (Dynamic uploaded video with high quality static fallbacks) -->
             <video 
                 ref="videoPlayer"
+                :key="hero_video_url || 'default-hero-video'"
                 poster="/images/hero_poster.webp"
                 class="absolute inset-0 w-full h-full object-cover object-center"
                 style="transform: translateZ(0); -webkit-transform: translateZ(0); backface-visibility: hidden; will-change: transform;"
@@ -204,8 +205,12 @@ const handleLogoClick = (e) => {
                 webkit-playsinline="true"
                 preload="auto"
             >
-                <source src="/videos/hero_cinematic.mp4" type="video/mp4">
+                <!-- Priority 1: Uploaded Hero Video from Admin Media -->
+                <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
+                <!-- Priority 2: Ultra-Fast HTTP 206 Streamer -->
                 <source src="/stream/hero-video" type="video/mp4">
+                <!-- Priority 3: Local Static Files -->
+                <source src="/videos/hero_cinematic.mp4" type="video/mp4">
                 <source src="/videos/hero_cinematic.webm" type="video/webm">
             </video>
 
