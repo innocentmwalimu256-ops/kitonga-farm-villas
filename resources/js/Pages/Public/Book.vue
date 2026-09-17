@@ -362,7 +362,7 @@ const submitBooking = () => {
                 <div class="space-y-1.5">
                     <p class="font-bold text-white uppercase tracking-wider text-xs">Direct Concierge Desk</p>
                     <p class="text-gray-400">Phone / WhatsApp: +255 758 774 695</p>
-                    <p class="text-gray-400">Email: info@kitongafarmvillas.com</p>
+                    <p class="text-gray-400">Email: kitongafarmvillas@gmail.com</p>
                 </div>
                 <div class="space-y-1.5">
                     <p class="font-bold text-white uppercase tracking-wider text-xs">Guaranteed Best Rates</p>

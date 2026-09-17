@@ -102,8 +102,8 @@ class BookController extends Controller
             'settings' => [
                 'cancellation_policy' => Setting::get('cancellation_policy'),
                 'deposit_percentage' => Setting::get('deposit_percentage', '50.00'),
-                'contact_email' => Setting::get('contact_email'),
-                'contact_phone' => Setting::get('contact_phone'),
+                'contact_email' => Setting::get('contact_email', 'kitongafarmvillas@gmail.com'),
+                'contact_phone' => Setting::get('contact_phone', '+255 758 774 695'),
                 'check_in_time' => Setting::get('check_in_time', '1:00 PM'),
                 'check_out_time' => Setting::get('check_out_time', '12:00 PM'),
             ]

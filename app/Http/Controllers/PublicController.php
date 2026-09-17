@@ -137,9 +137,9 @@ class PublicController extends Controller
             }
 
             $settings = [
-                'contact_email' => Setting::get('contact_email'),
-                'contact_phone' => Setting::get('contact_phone'),
-                'location_coordinates' => Setting::get('location_coordinates'),
+                'contact_email' => Setting::get('contact_email', 'kitongafarmvillas@gmail.com'),
+                'contact_phone' => Setting::get('contact_phone', '+255 758 774 695'),
+                'location_coordinates' => Setting::get('location_coordinates', '-5.0889, 39.0988'),
                 'breakfast_policy' => Setting::get('breakfast_policy'),
             ];
         } catch (\Exception $e) {
@@ -284,9 +284,9 @@ class PublicController extends Controller
     {
         return Inertia::render('Public/Contact', [
             'settings' => [
-                'contact_email' => Setting::get('contact_email'),
-                'contact_phone' => Setting::get('contact_phone'),
-                'location_coordinates' => Setting::get('location_coordinates'),
+                'contact_email' => Setting::get('contact_email', 'kitongafarmvillas@gmail.com'),
+                'contact_phone' => Setting::get('contact_phone', '+255 758 774 695'),
+                'location_coordinates' => Setting::get('location_coordinates', '-5.0889, 39.0988'),
             ]
         ]);
     }

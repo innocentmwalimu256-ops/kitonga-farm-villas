@@ -409,7 +409,7 @@ const categories = [
                     <p class="font-bold text-white uppercase tracking-wider text-xs">Contact Concierge</p>
                     <p class="text-gray-400">Komkonga Village, Tanga, Tanzania</p>
                     <p class="text-gray-400">Phone: +255 758 774 695</p>
-                    <p class="text-gray-400">Email: info@kitongafarmvillas.com</p>
+                    <p class="text-gray-400">Email: kitongafarmvillas@gmail.com</p>
                 </div>
             </div>
             <div class="max-w-6xl mx-auto px-6 mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-400 text-xs">

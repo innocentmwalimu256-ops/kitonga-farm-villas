@@ -339,7 +339,7 @@ const scrollToResidences = () => {
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Contact Details</h4>
                     <div class="space-y-2 text-[#F7F3EA]/70">
-                        <p>✉️ <a href="mailto:info@kitongafarmvillas.com" class="hover:text-[#C98A3E] transition">info@kitongafarmvillas.com</a></p>
+                        <p>✉️ <a href="mailto:kitongafarmvillas@gmail.com" class="hover:text-[#C98A3E] transition">kitongafarmvillas@gmail.com</a></p>
                         <p>📞 <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
                         <p>📍 Kitonga Farm, Komkonga, Tanga, Tanzania</p>
                     </div>

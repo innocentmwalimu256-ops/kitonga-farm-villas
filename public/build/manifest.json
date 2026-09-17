@@ -442,7 +442,7 @@
     ]
   },
   "resources/js/Pages/Public/Book.vue": {
-    "file": "assets/Book-D2NHE5It.js",
+    "file": "assets/Book-Zl4-bEC1.js",
     "name": "Book",
     "src": "resources/js/Pages/Public/Book.vue",
     "isDynamicEntry": true,
@@ -462,7 +462,7 @@
     ]
   },
   "resources/js/Pages/Public/Contact.vue": {
-    "file": "assets/Contact-C-QX__Bm.js",
+    "file": "assets/Contact-CCExPAd2.js",
     "name": "Contact",
     "src": "resources/js/Pages/Public/Contact.vue",
     "isDynamicEntry": true,
@@ -472,7 +472,7 @@
     ]
   },
   "resources/js/Pages/Public/ExperienceDetail.vue": {
-    "file": "assets/ExperienceDetail-CxKZOtOz.js",
+    "file": "assets/ExperienceDetail-_mOMtVLg.js",
     "name": "ExperienceDetail",
     "src": "resources/js/Pages/Public/ExperienceDetail.vue",
     "isDynamicEntry": true,
@@ -484,7 +484,7 @@
     ]
   },
   "resources/js/Pages/Public/Experiences.vue": {
-    "file": "assets/Experiences-CJOydUA9.js",
+    "file": "assets/Experiences-B1YJA_ey.js",
     "name": "Experiences",
     "src": "resources/js/Pages/Public/Experiences.vue",
     "isDynamicEntry": true,
@@ -688,7 +688,7 @@
     ]
   },
   "resources/js/Pages/Public/Gallery.vue": {
-    "file": "assets/Gallery-CTQdS_tw.js",
+    "file": "assets/Gallery-DA8c8kla.js",
     "name": "Gallery",
     "src": "resources/js/Pages/Public/Gallery.vue",
     "isDynamicEntry": true,
@@ -708,7 +708,7 @@
     ]
   },
   "resources/js/Pages/Public/Location.vue": {
-    "file": "assets/Location-DxnCaSt3.js",
+    "file": "assets/Location-BUSz6dJL.js",
     "name": "Location",
     "src": "resources/js/Pages/Public/Location.vue",
     "isDynamicEntry": true,
@@ -748,7 +748,7 @@
     ]
   },
   "resources/js/Pages/Public/Villas.vue": {
-    "file": "assets/Villas-CfSMTgUU.js",
+    "file": "assets/Villas-DOWCFtcA.js",
     "name": "Villas",
     "src": "resources/js/Pages/Public/Villas.vue",
     "isDynamicEntry": true,
@@ -768,7 +768,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CDOEtvAL.js",
+    "file": "assets/app-DtAVSFxP.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

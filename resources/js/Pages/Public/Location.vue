@@ -7,7 +7,7 @@ defineProps({
         type: Object,
         default: () => ({
             contact_phone: '+255 758 774 695',
-            contact_email: 'info@kitongafarmvillas.com',
+            contact_email: 'kitongafarmvillas@gmail.com',
             location_coordinates: '-5.0889, 39.0988',
         }),
     },
@@ -210,7 +210,7 @@ const isMobileMenuOpen = ref(false);
                     <p class="font-bold text-white uppercase tracking-wider text-xs">Mawasiliano</p>
                     <p class="text-gray-400">Komkonga Village, Tanga, Tanzania</p>
                     <p class="text-gray-400">Simu: +255 758 774 695</p>
-                    <p class="text-gray-400">Email: info@kitongafarmvillas.com</p>
+                    <p class="text-gray-400">Email: kitongafarmvillas@gmail.com</p>
                 </div>
             </div>
             <div class="max-w-6xl mx-auto px-6 mt-8 pt-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-400 text-xs">
