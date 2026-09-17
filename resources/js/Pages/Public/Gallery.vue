@@ -14,34 +14,35 @@ const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
 
-// 20 Authentic Kitonga Estate Photographs
+// 20 Authentic Kitonga Estate Photographs with Fast WebP Thumbnails
 const baseGalleryImages = [
-    { id: 'b1', src: '/images/dji_0298.webp', title: 'Estate Panoramic View', category: 'villas', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 'b2', src: '/images/luxury_villa_img.webp', title: 'Luxury Villa Sanctuary', category: 'villas', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b3', src: '/images/IMG_0064.webp', title: 'Highland Sunset & Architecture', category: 'villas', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b4', src: '/images/IMG_0362.webp', title: 'Organic Avocado Tree Orchards', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b5', src: '/images/three_cows.webp', title: 'Purebred Dairy Pastoral Zone', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b6', src: '/images/IMG_0389.webp', title: 'Horticulture & Greenhouse Zones', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b7', src: '/images/IMG_0119.webp', title: 'Verdant Farm Greenhouses', category: 'farm', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 'b8', src: '/images/IMG_0419.webp', title: 'Poultry & Layer Coops', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b9', src: '/images/IMG_0321.webp', title: 'Tasting Pure Kitonga Honey', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b10', src: '/images/IMG_0326.webp', title: 'Fresh Dairy Yogurt & Milk', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b11', src: '/images/farm_egg_trays.webp', title: 'Daily Harvest Farm Eggs', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b12', src: '/images/IMG_0120.webp', title: 'Guided Agritourism Walking Tour', category: 'experiences', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 'b13', src: '/images/IMG_0094.webp', title: 'Estate Gardens & Flora', category: 'nature', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b14', src: '/images/IMG_0328.webp', title: 'Bespoke Private Villa Suite', category: 'villas', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b15', src: '/images/IMG_0404.webp', title: 'Modern Irrigation & Drip System', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b16', src: '/images/IMG_0334.webp', title: 'Pasture Cattle Grazing', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b17', src: '/images/IMG_0061.webp', title: 'Evening Glow over Villa Lounge', category: 'villas', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
-    { id: 'b18', src: '/images/IMG_0394.webp', title: 'Organic Vegetable Harvesting', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b19', src: '/images/IMG_0353.webp', title: 'Apiary Bee Keeping Sanctuary', category: 'experiences', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
-    { id: 'b20', src: '/images/IMG_0252.webp', title: 'Highland Countryside Horizon', category: 'nature', media_type: 'image', aspect: 'col-span-1 sm:col-span-3 aspect-[21/9]' },
+    { id: 'b1', thumb: '/images/thumbs/dji_0298.webp', src: '/images/dji_0298.webp', title: 'Estate Panoramic View', category: 'villas', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 'b2', thumb: '/images/thumbs/luxury_villa_img.webp', src: '/images/luxury_villa_img.webp', title: 'Luxury Villa Sanctuary', category: 'villas', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b3', thumb: '/images/thumbs/IMG_0064.webp', src: '/images/IMG_0064.webp', title: 'Highland Sunset & Architecture', category: 'villas', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b4', thumb: '/images/thumbs/IMG_0362.webp', src: '/images/IMG_0362.webp', title: 'Organic Avocado Tree Orchards', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b5', thumb: '/images/thumbs/three_cows.webp', src: '/images/three_cows.webp', title: 'Purebred Dairy Pastoral Zone', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b6', thumb: '/images/thumbs/IMG_0389.webp', src: '/images/IMG_0389.webp', title: 'Horticulture & Greenhouse Zones', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b7', thumb: '/images/thumbs/IMG_0119.webp', src: '/images/IMG_0119.webp', title: 'Verdant Farm Greenhouses', category: 'farm', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 'b8', thumb: '/images/thumbs/IMG_0419.webp', src: '/images/IMG_0419.webp', title: 'Poultry & Layer Coops', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b9', thumb: '/images/thumbs/IMG_0321.webp', src: '/images/IMG_0321.webp', title: 'Tasting Pure Kitonga Honey', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b10', thumb: '/images/thumbs/IMG_0326.webp', src: '/images/IMG_0326.webp', title: 'Fresh Dairy Yogurt & Milk', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b11', thumb: '/images/thumbs/farm_egg_trays.webp', src: '/images/farm_egg_trays.webp', title: 'Daily Harvest Farm Eggs', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b12', thumb: '/images/thumbs/IMG_0120.webp', src: '/images/IMG_0120.webp', title: 'Guided Agritourism Walking Tour', category: 'experiences', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 'b13', thumb: '/images/thumbs/IMG_0094.webp', src: '/images/IMG_0094.webp', title: 'Estate Gardens & Flora', category: 'nature', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b14', thumb: '/images/thumbs/IMG_0328.webp', src: '/images/IMG_0328.webp', title: 'Bespoke Private Villa Suite', category: 'villas', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b15', thumb: '/images/thumbs/IMG_0404.webp', src: '/images/IMG_0404.webp', title: 'Modern Irrigation & Drip System', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b16', thumb: '/images/thumbs/IMG_0334.webp', src: '/images/IMG_0334.webp', title: 'Pasture Cattle Grazing', category: 'farm', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b17', thumb: '/images/thumbs/IMG_0061.webp', src: '/images/IMG_0061.webp', title: 'Evening Glow over Villa Lounge', category: 'villas', media_type: 'image', aspect: 'col-span-1 sm:col-span-2 aspect-[16/10]' },
+    { id: 'b18', thumb: '/images/thumbs/IMG_0394.webp', src: '/images/IMG_0394.webp', title: 'Organic Vegetable Harvesting', category: 'food', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b19', thumb: '/images/thumbs/IMG_0353.webp', src: '/images/IMG_0353.webp', title: 'Apiary Bee Keeping Sanctuary', category: 'experiences', media_type: 'image', aspect: 'col-span-1 aspect-[4/3]' },
+    { id: 'b20', thumb: '/images/thumbs/IMG_0252.webp', src: '/images/IMG_0252.webp', title: 'Highland Countryside Horizon', category: 'nature', media_type: 'image', aspect: 'col-span-1 sm:col-span-3 aspect-[21/9]' },
 ];
 
 // Combined Dynamic Gallery Items
 const allGalleryItems = computed(() => {
     const dynamicItems = (props.uploaded_media || []).map((m, idx) => ({
         id: `u_${m.id}`,
+        thumb: m.thumb || m.path,
         src: m.path,
         title: m.title || m.name,
         caption: m.caption || '',
@@ -73,9 +74,21 @@ const currentItem = computed(() => {
     return filteredGalleryItems.value[activeIndex.value] || null;
 });
 
+const preloadNext = () => {
+    if (activeIndex.value !== null && filteredGalleryItems.value.length > 0) {
+        const nextIdx = (activeIndex.value + 1) % filteredGalleryItems.value.length;
+        const item = filteredGalleryItems.value[nextIdx];
+        if (item && item.media_type === 'image' && item.src) {
+            const img = new Image();
+            img.src = item.src;
+        }
+    }
+};
+
 const openLightbox = (index) => {
     activeIndex.value = index;
     document.body.style.overflow = 'hidden';
+    preloadNext();
 };
 
 const closeLightbox = () => {
@@ -86,12 +99,14 @@ const closeLightbox = () => {
 const nextImage = () => {
     if (activeIndex.value !== null && filteredGalleryItems.value.length > 0) {
         activeIndex.value = (activeIndex.value + 1) % filteredGalleryItems.value.length;
+        preloadNext();
     }
 };
 
 const prevImage = () => {
     if (activeIndex.value !== null && filteredGalleryItems.value.length > 0) {
         activeIndex.value = (activeIndex.value - 1 + filteredGalleryItems.value.length) % filteredGalleryItems.value.length;
+        preloadNext();
     }
 };
 
@@ -245,12 +260,13 @@ const categories = [
                     @click="openLightbox(index)"
                     :class="[item.aspect, 'group relative overflow-hidden rounded-2xl bg-[#14231C] shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer']"
                 >
-                    <!-- Image Card -->
+                    <!-- Image Card (High Speed WebP Thumbnail) -->
                     <img 
                         v-if="item.media_type === 'image'"
-                        loading="lazy" 
+                        :loading="index < 6 ? 'eager' : 'lazy'" 
+                        :fetchpriority="index < 4 ? 'high' : 'auto'"
                         decoding="async" 
-                        :src="item.src" 
+                        :src="item.thumb || item.src" 
                         :alt="item.title || 'Kitonga Farm Perspective'"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
