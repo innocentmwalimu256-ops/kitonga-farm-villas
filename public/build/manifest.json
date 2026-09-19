@@ -198,7 +198,7 @@
     ]
   },
   "resources/js/Pages/Admin/Media/Index.vue": {
-    "file": "assets/Index-DoKYWOMS.js",
+    "file": "assets/Index-pZkLSjjd.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Media/Index.vue",
     "isDynamicEntry": true,
@@ -768,7 +768,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CknI72Ad.js",
+    "file": "assets/app-3YWCsOEe.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -846,7 +846,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-DZSFi0LX.css"
+      "assets/app-CWSvdsIe.css"
     ]
   }
 }

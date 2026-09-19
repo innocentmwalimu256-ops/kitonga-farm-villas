@@ -103,7 +103,7 @@ class MediaController extends Controller
 
         // Pass live villa models and experiences for dropdowns
         $villas = \App\Models\AccommodationType::select('id', 'name', 'slug', 'featured_image')->orderBy('name')->get();
-        $experiences = \App\Models\FarmTour::select('id', 'title', 'slug', 'featured_image')->orderBy('title')->get();
+        $experiences = \App\Models\FarmTour::select('id', 'name', 'slug', 'featured_image')->orderBy('name')->get();
 
         return Inertia::render('Admin/Media/Index', [
             'media' => $paginated,

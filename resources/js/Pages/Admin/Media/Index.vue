@@ -648,7 +648,7 @@ const pageTabs = [
                                 <select v-model="uploadForm.target_experience" class="w-full text-xs rounded-lg border-emerald-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
                                     <option value="">All Experiences / Header Banner</option>
                                     <option v-for="exp in experiences_list" :key="exp.id" :value="exp.id">
-                                        {{ exp.title }}
+                                        {{ exp.name || exp.title }}
                                     </option>
                                 </select>
                             </div>
@@ -825,7 +825,7 @@ const pageTabs = [
                             <label class="text-xs font-bold text-gray-700 block">Target Experience</label>
                             <select v-model="editForm.target_experience" class="w-full text-xs rounded-lg border-gray-300 mt-1">
                                 <option value="">None / General</option>
-                                <option v-for="exp in experiences_list" :key="exp.id" :value="exp.id">{{ exp.title }}</option>
+                                <option v-for="exp in experiences_list" :key="exp.id" :value="exp.id">{{ exp.name || exp.title }}</option>
                             </select>
                         </div>
                         <div v-else>
