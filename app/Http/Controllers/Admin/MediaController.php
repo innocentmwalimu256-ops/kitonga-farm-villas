@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class MediaController extends Controller
 {
@@ -280,6 +281,8 @@ class MediaController extends Controller
                 'created_at' => Carbon::now(),
             ]);
 
+            Cache::flush();
+
             return back()->with('success', "Media asset '{$media->name}' published successfully{$formatMsg}.");
         } catch (\Exception $e) {
             return back()->withErrors(['file' => 'Upload failed: ' . $e->getMessage()]);
@@ -462,6 +465,8 @@ class MediaController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
+        Cache::flush();
+
         return redirect()->back()->with('success', 'Media details updated successfully.');
     }
 
@@ -487,6 +492,8 @@ class MediaController extends Controller
             'old_values' => $oldValues,
             'created_at' => Carbon::now(),
         ]);
+
+        Cache::flush();
 
         return redirect()->route('admin.media.index')
             ->with('success', 'Media asset deleted successfully.');
