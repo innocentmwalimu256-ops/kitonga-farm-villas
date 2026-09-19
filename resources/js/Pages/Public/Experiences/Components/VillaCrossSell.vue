@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -9,9 +9,12 @@ const formatCurrency = (val) => {
     return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val);
 };
 
-const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80') => {
-    if (!path) return fallback;
-    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+const getImageUrl = (path, slug) => {
+    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
+    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
+    if (slug === 'family-villa') return '/images/family_villa_img.webp';
+    if (!path) return '/images/luxury_villa_img.webp';
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
     return `/images/${path}`;
 };
 </script>
@@ -33,7 +36,7 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1580587
                 <div>
                     <div class="h-56 bg-gray-50 relative overflow-hidden">
                         <img loading="lazy" decoding="async" 
-                            :src="getImageUrl(villa.featured_image)" 
+                            :src="getImageUrl(villa.featured_image, villa.slug)" 
                             class="absolute inset-0 w-full h-full object-cover transition duration-700 transform group-hover:scale-105" 
                             alt=""
                         />

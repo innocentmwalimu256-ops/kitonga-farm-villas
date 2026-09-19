@@ -14,15 +14,8 @@ const props = defineProps({
     },
 });
 
-// Dynamic Gallery Images per Villa (DB gallery with fallback to 4 Distinct Photos per Villa)
+// Dynamic Gallery Images per Villa (Original Authentic 4 Distinct Photos per Villa prioritized)
 const getGallery = (slug, dbGallery) => {
-    if (Array.isArray(dbGallery) && dbGallery.length > 0) {
-        return dbGallery.map((src, i) => ({
-            category: 'Villa Gallery',
-            src: (src.startsWith('http') || src.startsWith('/')) ? src : `/${src}`,
-            title: `${props.villa.name} View ${i + 1}`
-        }));
-    }
     if (slug === 'luxury-villa') {
         return [
             { category: 'Architecture & Grounds', src: '/images/villas_gallery/IMG_0063.webp', title: 'Private Residence Setting' },
@@ -39,7 +32,21 @@ const getGallery = (slug, dbGallery) => {
             { category: 'Sunset & Farm View', src: '/images/villas_gallery/IMG_0133.webp', title: 'Panoramic Countryside View' },
         ];
     }
-    // family-villa default
+    if (slug === 'family-villa') {
+        return [
+            { category: 'Family Residence', src: '/images/villas_gallery/IMG_0018.webp', title: 'Spacious Family Setting' },
+            { category: 'Estate Grounds', src: '/images/villas_gallery/IMG_0034.webp', title: 'Family Villa Environment' },
+            { category: 'Courtyard & Terrace', src: '/images/villas_gallery/IMG_0130.webp', title: 'Private Outdoor Terrace' },
+            { category: 'Estate Gardens', src: '/images/villas_gallery/IMG_0131.webp', title: 'Lush Tropical Landscapes' },
+        ];
+    }
+    if (Array.isArray(dbGallery) && dbGallery.length > 0) {
+        return dbGallery.map((src, i) => ({
+            category: 'Villa Gallery',
+            src: (src.startsWith('http') || src.startsWith('/')) ? src : `/${src}`,
+            title: `${props.villa.name} View ${i + 1}`
+        }));
+    }
     return [
         { category: 'Family Residence', src: '/images/villas_gallery/IMG_0018.webp', title: 'Spacious Family Setting' },
         { category: 'Estate Grounds', src: '/images/villas_gallery/IMG_0034.webp', title: 'Family Villa Environment' },
@@ -99,13 +106,13 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path, slug) => {
+    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
+    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
+    if (slug === 'family-villa') return '/images/family_villa_img.webp';
     if (path) {
         if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
         return `/${path}`;
     }
-    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
-    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
-    if (slug === 'family-villa') return '/images/family_villa_img.webp';
     return '/images/luxury_villa_img.webp';
 };
 </script>
@@ -155,7 +162,7 @@ const getImageUrl = (path, slug) => {
                     prefetch 
                     class="text-xs uppercase tracking-[3px] font-bold text-[#E6C387] hover:text-white transition flex items-center gap-1.5"
                 >
-                    <span>â†</span> <span>All Residences</span>
+                    <span>←</span> <span>All Residences</span>
                 </Link>
                 <h1 class="text-3xl sm:text-5xl md:text-6xl font-serif font-light text-[#F7F3EA] tracking-tight">
                     {{ villa.name }}
@@ -349,7 +356,7 @@ const getImageUrl = (path, slug) => {
                     <!-- Dynamic Subtotal Calculation -->
                     <div class="border-t border-[#E5E0D8] pt-4 space-y-1.5 text-xs text-gray-600">
                         <div class="flex justify-between">
-                            <span>{{ formatCurrency(villa.base_price) }} Ã— {{ numberOfNights }} {{ numberOfNights === 1 ? 'night' : 'nights' }}</span>
+                            <span>{{ formatCurrency(villa.base_price) }} × {{ numberOfNights }} {{ numberOfNights === 1 ? 'night' : 'nights' }}</span>
                             <span class="font-bold text-gray-900">{{ formatCurrency(estimatedTotal) }}</span>
                         </div>
                         <div class="flex justify-between items-baseline pt-2 border-t border-gray-150">

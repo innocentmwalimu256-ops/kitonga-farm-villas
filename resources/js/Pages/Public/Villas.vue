@@ -21,13 +21,13 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path, slug) => {
+    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
+    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
+    if (slug === 'family-villa') return '/images/family_villa_img.webp';
     if (path) {
         if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
         return `/${path}`;
     }
-    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
-    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
-    if (slug === 'family-villa') return '/images/family_villa_img.webp';
     return '/images/luxury_villa_img.webp';
 };
 

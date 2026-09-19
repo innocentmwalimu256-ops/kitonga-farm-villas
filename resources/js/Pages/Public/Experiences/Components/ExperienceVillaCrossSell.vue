@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -12,9 +12,12 @@ const formatCurrency = (val) => {
     return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val);
 };
 
-const getImageUrl = (path) => {
-    if (!path) return '/images/gallery_img_0220.webp';
-    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+const getImageUrl = (path, slug) => {
+    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
+    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
+    if (slug === 'family-villa') return '/images/family_villa_img.webp';
+    if (!path) return '/images/luxury_villa_img.webp';
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
     return `/images/${path}`;
 };
 </script>
@@ -44,7 +47,7 @@ const getImageUrl = (path) => {
                 <!-- Villa Image -->
                 <div class="aspect-[16/10] overflow-hidden bg-[#14231C] relative">
                     <img loading="lazy" decoding="async" 
-                        :src="getImageUrl(villa.featured_image || villa.image_url)" 
+                        :src="getImageUrl(villa.featured_image || villa.image_url, villa.slug)" 
                         :alt="villa.name" 
                         class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out" 
                     />
