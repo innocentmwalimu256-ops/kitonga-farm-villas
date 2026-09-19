@@ -5,6 +5,14 @@ import { ref, computed } from 'vue';
 
 const props = defineProps({
     media: Object,
+    villas_list: {
+        type: Array,
+        default: () => [],
+    },
+    experiences_list: {
+        type: Array,
+        default: () => [],
+    },
     filters: Object,
     counts: Object,
 });
@@ -49,6 +57,9 @@ const uploadForm = useForm({
     page: 'gallery',
     section: 'gallery_showcase',
     category: 'general',
+    target_villa: '',
+    target_experience: '',
+    target_role: 'featured_cover',
     is_hero: false,
     alt_text: '',
     caption: '',
@@ -59,6 +70,9 @@ const editForm = useForm({
     page: 'gallery',
     section: 'gallery_showcase',
     category: 'general',
+    target_villa: '',
+    target_experience: '',
+    target_role: 'featured_cover',
     is_hero: false,
     alt_text: '',
     caption: '',
@@ -89,9 +103,29 @@ const openUploadModal = (defaultPage = 'gallery') => {
     uploadForm.reset();
     uploadForm.clearErrors();
     uploadForm.page = defaultPage !== 'all' ? defaultPage : 'gallery';
+    if (uploadForm.page === 'villas' && props.villas_list?.length > 0) {
+        uploadForm.target_villa = props.villas_list[0].id;
+        uploadForm.target_role = 'featured_cover';
+    } else if (uploadForm.page === 'experiences' && props.experiences_list?.length > 0) {
+        uploadForm.target_experience = props.experiences_list[0].id;
+        uploadForm.target_role = 'featured_cover';
+    }
     previewUrl.value = null;
     previewType.value = null;
     showUploadModal.value = true;
+};
+
+const onPageChange = (targetPage) => {
+    if (targetPage === 'villas' && props.villas_list?.length > 0) {
+        uploadForm.target_villa = props.villas_list[0].id;
+        uploadForm.target_role = 'featured_cover';
+    } else if (targetPage === 'experiences' && props.experiences_list?.length > 0) {
+        uploadForm.target_experience = props.experiences_list[0].id;
+        uploadForm.target_role = 'featured_cover';
+    } else if (targetPage === 'home') {
+        uploadForm.section = 'hero_video';
+        uploadForm.is_hero = true;
+    }
 };
 
 const closeUploadModal = () => {
@@ -121,6 +155,9 @@ const openEditModal = (item) => {
     editForm.page = item.page || 'general';
     editForm.section = item.section || 'general';
     editForm.category = item.category || 'general';
+    editForm.target_villa = item.target_villa || '';
+    editForm.target_experience = item.target_experience || '';
+    editForm.target_role = item.target_role || 'general';
     editForm.is_hero = Boolean(item.is_hero);
     editForm.alt_text = item.alt_text || '';
     editForm.caption = item.caption || '';
@@ -191,13 +228,13 @@ const formatSize = (bytes) => {
 };
 
 const pageTabs = [
-    { id: 'all', label: 'All Media', icon: '📁' },
-    { id: 'home', label: 'Home Page', icon: '🏠' },
-    { id: 'gallery', label: 'Gallery', icon: '🖼️' },
-    { id: 'farm', label: 'Our Farm', icon: '🌾' },
-    { id: 'villas', label: 'Villas', icon: '🏡' },
-    { id: 'experiences', label: 'Experiences', icon: '🌿' },
-    { id: 'about', label: 'About & Location', icon: '📍' },
+    { id: 'all', label: 'All Media' },
+    { id: 'home', label: 'Home Page' },
+    { id: 'villas', label: 'Villas & Suites' },
+    { id: 'experiences', label: 'Experiences' },
+    { id: 'gallery', label: 'Gallery' },
+    { id: 'farm', label: 'Our Farm' },
+    { id: 'about', label: 'About & Location' },
 ];
 </script>
 
@@ -209,10 +246,12 @@ const pageTabs = [
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-                        <span>📸</span>
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
                         <span>Media & Video Studio</span>
                     </h2>
-                    <p class="text-xs text-gray-500 mt-0.5">Upload and manage high-quality photos and videos for any page on the website.</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Upload photos and videos that publish instantly to specific villas, experiences, or website pages.</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <button 
@@ -242,7 +281,6 @@ const pageTabs = [
                             ? 'bg-[#14231C] text-white shadow-xs' 
                             : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
                     >
-                        <span>{{ tab.icon }}</span>
                         <span>{{ tab.label }}</span>
                     </button>
                 </div>
@@ -260,7 +298,7 @@ const pageTabs = [
                             v-model="searchQuery" 
                             @input="applyFilters"
                             type="text" 
-                            placeholder="Search by title, caption, file..." 
+                            placeholder="Search by title, caption, villa, file..." 
                             class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border-gray-300 focus:ring-emerald-500 focus:border-emerald-500"
                         />
                     </div>
@@ -277,17 +315,23 @@ const pageTabs = [
                         </button>
                         <button 
                             @click="setTypeFilter('image')"
-                            class="flex-1 md:flex-none px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer"
+                            class="flex-1 md:flex-none px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer flex items-center gap-1.5"
                             :class="activeTypeFilter === 'image' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
                         >
-                            📷 Photos
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span>Photos</span>
                         </button>
                         <button 
                             @click="setTypeFilter('video')"
-                            class="flex-1 md:flex-none px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1"
+                            class="flex-1 md:flex-none px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5"
                             :class="activeTypeFilter === 'video' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
                         >
-                            <span>🎥 Videos</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                            <span>Videos</span>
                             <span v-if="counts?.total_videos" class="text-[10px] bg-emerald-500 text-white px-1.5 py-0.2 rounded-full font-mono font-bold">{{ counts.total_videos }}</span>
                         </button>
                     </div>
@@ -347,17 +391,17 @@ const pageTabs = [
 
                                     <!-- Media Type Badge -->
                                     <span 
-                                        class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider backdrop-blur-xs shadow-xs"
+                                        class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider backdrop-blur-xs shadow-xs flex items-center gap-1"
                                         :class="item.media_type === 'video' ? 'bg-amber-500 text-white' : 'bg-emerald-600 text-white'"
                                     >
-                                        {{ item.media_type === 'video' ? '▶ Video' : '📷 Image' }}
+                                        {{ item.media_type === 'video' ? 'Video' : 'Photo' }}
                                     </span>
                                 </div>
 
                                 <!-- Hero Badge (if applicable) -->
                                 <div v-if="item.is_hero" class="absolute bottom-2 left-2 pointer-events-none">
                                     <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-amber-400 text-amber-950 shadow-md flex items-center gap-1">
-                                        <span>⭐</span> Hero Media
+                                        Featured Hero
                                     </span>
                                 </div>
                             </div>
@@ -388,11 +432,10 @@ const pageTabs = [
                                         class="px-2 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 text-[10px] font-bold transition flex items-center gap-1 cursor-pointer border border-amber-200"
                                         :title="item.media_type === 'video' ? 'Set as Home Hero Video' : 'Set as Home Hero Banner'"
                                     >
-                                        <span>⭐</span>
                                         <span>Set Hero</span>
                                     </button>
                                     <span v-else class="px-2 py-0.5 rounded-md bg-amber-400 text-amber-950 text-[10px] font-extrabold flex items-center gap-0.5 shadow-xs">
-                                        <span>✓</span> Hero
+                                        Active Hero
                                     </span>
 
                                     <!-- Copy Link Button -->
@@ -405,15 +448,15 @@ const pageTabs = [
                                         <svg v-if="copiedId !== item.id" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
                                         </svg>
-                                        <svg v-else class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        <svg v-else class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                         </svg>
-                                        <span>{{ copiedId === item.id ? 'Copied!' : 'Copy' }}</span>
+                                        <span>{{ copiedId === item.id ? 'Copied' : 'Copy' }}</span>
                                     </button>
 
                                     <!-- Edit Button -->
                                     <button 
-                                        @click.stop="openEditModal(item)"
+                                        @click.stop="openEditModal(item)" 
                                         type="button"
                                         class="p-1.5 rounded-md bg-gray-100 hover:bg-emerald-50 hover:text-emerald-700 text-gray-600 transition cursor-pointer"
                                         title="Edit details"
@@ -441,8 +484,10 @@ const pageTabs = [
 
                     <!-- Empty State -->
                     <div v-else class="py-16 text-center space-y-3">
-                        <div class="w-16 h-16 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">
-                            📸
+                        <div class="w-16 h-16 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
                         </div>
                         <h3 class="text-sm font-bold text-gray-800">No media assets found</h3>
                         <p class="text-xs text-gray-500 max-w-sm mx-auto">
@@ -450,7 +495,7 @@ const pageTabs = [
                         </p>
                         <button 
                             @click="openUploadModal(activePageFilter)" 
-                            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition"
+                            class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition cursor-pointer"
                         >
                             Upload Now
                         </button>
@@ -483,12 +528,14 @@ const pageTabs = [
                 <div class="p-5 bg-[#14231C] text-white flex items-center justify-between">
                     <div>
                         <h3 class="text-base font-bold flex items-center gap-2">
-                            <span>📤</span>
-                            <span>Upload Media Asset</span>
+                            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                            <span>Upload Media Asset & Instant Publish</span>
                         </h3>
-                        <p class="text-xs text-gray-300 mt-0.5">Supports high-res Photos (JPG, PNG, WEBP) and Videos (MP4, WEBM, MOV) up to 150MB.</p>
+                        <p class="text-xs text-gray-300 mt-0.5">Supports high-res Photos (JPG, PNG, WEBP) and Videos (MP4, WEBM, MOV) with instant auto web compression.</p>
                     </div>
-                    <button @click="closeUploadModal" class="text-gray-400 hover:text-white transition p-1">
+                    <button @click="closeUploadModal" class="text-gray-400 hover:text-white transition p-1 cursor-pointer">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -501,7 +548,7 @@ const pageTabs = [
                     <!-- Validation Errors Alert -->
                     <div v-if="Object.keys(uploadForm.errors).length > 0" class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 space-y-1">
                         <div class="font-bold flex items-center gap-1.5">
-                            <span>⚠️</span> Upload Warning / Error:
+                            <span>Notice:</span> Upload Warning / Error:
                         </div>
                         <ul class="list-disc list-inside space-y-0.5 pl-1">
                             <li v-for="(err, key) in uploadForm.errors" :key="key">{{ err }}</li>
@@ -535,79 +582,150 @@ const pageTabs = [
                             </div>
 
                             <div v-else class="space-y-2 py-4">
-                                <div class="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl">
-                                    📁
+                                <div class="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                    </svg>
                                 </div>
                                 <div class="text-xs text-gray-600">
                                     <span class="font-bold text-emerald-600">Click to upload</span> or drag and drop photo/video here
                                 </div>
-                                <p class="text-[10px] text-gray-400">JPG, PNG, WEBP, GIF, MP4, WEBM, MOV (Max 150MB)</p>
+                                <p class="text-[10px] text-gray-400">JPG, PNG, WEBP, GIF, MP4, WEBM, MOV (Max 512MB)</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Target Page & Section -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs font-bold text-gray-700 block">Target Page</label>
-                            <select v-model="uploadForm.page" class="w-full text-xs rounded-lg border-gray-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
-                                <option value="gallery">🖼️ Gallery (Photo & Video Showcase)</option>
-                                <option value="home">🏠 Home Page (Hero & Highlights)</option>
-                                <option value="farm">🌾 Our Farm (Livestock & Crops)</option>
-                                <option value="villas">🏡 Villas (Rooms & Amenities)</option>
-                                <option value="experiences">🌿 Experiences (Tours & Activities)</option>
-                                <option value="about">📍 About & Location</option>
-                                <option value="general">🌐 General / All Pages</option>
-                            </select>
-                        </div>
+                    <!-- Target Page Selector -->
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-700 block uppercase tracking-wider">Target Page / Destination</label>
+                        <select 
+                            v-model="uploadForm.page" 
+                            @change="onPageChange(uploadForm.page)" 
+                            class="w-full text-xs rounded-lg border-gray-300 focus:ring-emerald-500 focus:border-emerald-500 font-medium"
+                        >
+                            <option value="villas">Villas & Luxury Suites (Luxury Villa, Semi-Luxury, Family Villa)</option>
+                            <option value="experiences">Experiences & Farm Tours (Coffee Tour, Dairy Walk, Gastronomy)</option>
+                            <option value="home">Home Page (Hero Video, Story, Highlights)</option>
+                            <option value="gallery">Visual Gallery (Showcase)</option>
+                            <option value="farm">Our Farm (Dairy, Orchard, Apiary, Livestock)</option>
+                            <option value="about">About & Location</option>
+                            <option value="products">Farm Produce / Shop</option>
+                            <option value="general">General / All Pages</option>
+                        </select>
+                    </div>
 
+                    <!-- 1. DYNAMIC SUB-OPTIONS: WHEN "VILLAS" IS SELECTED -->
+                    <div v-if="uploadForm.page === 'villas'" class="p-4 bg-emerald-50/60 rounded-xl border border-emerald-200/80 space-y-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-xs font-bold text-emerald-950 block">Select Target Villa</label>
+                                <select v-model="uploadForm.target_villa" class="w-full text-xs rounded-lg border-emerald-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="">All Villas / Header Banner</option>
+                                    <option v-for="v in villas_list" :key="v.id" :value="v.id">
+                                        {{ v.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-emerald-950 block">Media Role / Placement</label>
+                                <select v-model="uploadForm.target_role" class="w-full text-xs rounded-lg border-emerald-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="featured_cover">Main Villa Cover Photo (Directly updates card on Home & Villas page)</option>
+                                    <option value="gallery_item">Villa Gallery Image (Shows inside Villa Detail page)</option>
+                                    <option value="hero_banner">Villas Page Hero Header Visual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-emerald-800">
+                            Selecting <strong>Main Villa Cover Photo</strong> will automatically update the cover photo of that villa across the entire website immediately upon publishing.
+                        </p>
+                    </div>
+
+                    <!-- 2. DYNAMIC SUB-OPTIONS: WHEN "EXPERIENCES" IS SELECTED -->
+                    <div v-if="uploadForm.page === 'experiences'" class="p-4 bg-emerald-50/60 rounded-xl border border-emerald-200/80 space-y-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="text-xs font-bold text-emerald-950 block">Select Specific Experience / Tour</label>
+                                <select v-model="uploadForm.target_experience" class="w-full text-xs rounded-lg border-emerald-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="">All Experiences / Header Banner</option>
+                                    <option v-for="exp in experiences_list" :key="exp.id" :value="exp.id">
+                                        {{ exp.title }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-emerald-950 block">Role</label>
+                                <select v-model="uploadForm.target_role" class="w-full text-xs rounded-lg border-emerald-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="featured_cover">Main Experience Cover Photo</option>
+                                    <option value="gallery_item">Experience Photo Gallery</option>
+                                    <option value="hero_banner">Experiences Page Header Background</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. DYNAMIC SUB-OPTIONS: WHEN "HOME PAGE" IS SELECTED -->
+                    <div v-if="uploadForm.page === 'home'" class="p-4 bg-amber-50/60 rounded-xl border border-amber-200/80 space-y-3">
                         <div>
-                            <label class="text-xs font-bold text-gray-700 block">Section Role</label>
-                            <select v-model="uploadForm.section" class="w-full text-xs rounded-lg border-gray-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
-                                <option value="hero_video">Hero Video (Home Top Background)</option>
-                                <option value="hero_banner">Hero Banner / Header Poster</option>
-                                <option value="gallery_showcase">Gallery Grid Item</option>
-                                <option value="farm_spotlight">Farm Zone Spotlight</option>
-                                <option value="villa_showcase">Villa Feature</option>
-                                <option value="general">Standard Content</option>
+                            <label class="text-xs font-bold text-amber-950 block">Home Page Section</label>
+                            <select v-model="uploadForm.section" class="w-full text-xs rounded-lg border-amber-300 mt-1 focus:ring-amber-500 focus:border-amber-500">
+                                <option value="hero_video">Hero Video (Top Autoplay 4K Background)</option>
+                                <option value="hero_banner">Hero Banner Poster</option>
+                                <option value="story_section">Brand Story & Philosophy</option>
+                                <option value="farm_highlights">Farm Highlights Spotlight</option>
                             </select>
                         </div>
                     </div>
 
-                    <!-- Category & Title -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 4. DYNAMIC SUB-OPTIONS: WHEN "GALLERY" IS SELECTED -->
+                    <div v-if="uploadForm.page === 'gallery'" class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
                         <div>
-                            <label class="text-xs font-bold text-gray-700 block">Gallery Category</label>
+                            <label class="text-xs font-bold text-gray-800 block">Gallery Filter Category</label>
                             <select v-model="uploadForm.category" class="w-full text-xs rounded-lg border-gray-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
-                                <option value="general">General</option>
-                                <option value="villas">Luxury Villas & Rooms</option>
+                                <option value="general">All Perspectives / General</option>
+                                <option value="villas">Luxury Villas & Suites</option>
                                 <option value="farm">Shamba & Dairy Livestock</option>
-                                <option value="experiences">Farm Tours & Activities</option>
-                                <option value="food">Dining & Farm Fresh Produce</option>
+                                <option value="experiences">Farm Tours & Experiences</option>
+                                <option value="food">Produce & Dining</option>
                                 <option value="nature">Nature & Scenic Views</option>
+                                <option value="videos">Cinematic Videos</option>
                             </select>
                         </div>
+                    </div>
 
+                    <!-- 5. DYNAMIC SUB-OPTIONS: WHEN "OUR FARM" IS SELECTED -->
+                    <div v-if="uploadForm.page === 'farm'" class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
                         <div>
-                            <label class="text-xs font-bold text-gray-700 block">Title / Heading</label>
+                            <label class="text-xs font-bold text-gray-800 block">Farm Zone</label>
+                            <select v-model="uploadForm.section" class="w-full text-xs rounded-lg border-gray-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="farm_hero">Farm Header Banner</option>
+                                <option value="dairy_pasture">Dairy Cattle & Pasture</option>
+                                <option value="coffee_orchard">Coffee & Fruit Trees</option>
+                                <option value="greenhouse">Greenhouse & Organic Crops</option>
+                                <option value="poultry_apiary">Poultry & Apiary</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Title & Caption -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block">Title / Caption Label</label>
                             <input 
                                 v-model="uploadForm.title" 
                                 type="text" 
-                                placeholder="e.g. Sunset over Kitonga Coffee Field" 
+                                placeholder="e.g. Master Bedroom Suite Sunset" 
                                 class="w-full text-xs rounded-lg border-gray-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500" 
                             />
                         </div>
-                    </div>
-
-                    <!-- Caption -->
-                    <div>
-                        <label class="text-xs font-bold text-gray-700 block">Caption / Description</label>
-                        <textarea 
-                            v-model="uploadForm.caption" 
-                            rows="2" 
-                            placeholder="Optional description or story for this media..." 
-                            class="w-full text-xs rounded-lg border-gray-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500"
-                        ></textarea>
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block">Description (Optional)</label>
+                            <input 
+                                v-model="uploadForm.caption" 
+                                type="text" 
+                                placeholder="Short description..." 
+                                class="w-full text-xs rounded-lg border-gray-300 mt-1 focus:ring-emerald-500 focus:border-emerald-500" 
+                            />
+                        </div>
                     </div>
 
                     <!-- Set as Hero Toggle -->
@@ -619,14 +737,14 @@ const pageTabs = [
                             class="rounded border-amber-300 text-amber-600 focus:ring-amber-500 h-4 w-4"
                         />
                         <label for="is_hero" class="text-xs text-amber-900 font-semibold cursor-pointer">
-                            Set as Featured / Hero Media (Priority display for page)
+                            Mark as Priority / Hero Media (Top priority display on selected page)
                         </label>
                     </div>
 
                     <!-- Upload Progress Bar -->
                     <div v-if="uploadForm.progress" class="space-y-1">
                         <div class="flex justify-between text-xs font-bold text-emerald-700">
-                            <span>Uploading file to server...</span>
+                            <span>Uploading and optimizing for web speed...</span>
                             <span>{{ uploadForm.progress.percentage }}%</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -639,9 +757,13 @@ const pageTabs = [
                         <button 
                             type="submit" 
                             :disabled="uploadForm.processing || !uploadForm.file" 
-                            class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-sm disabled:opacity-50 cursor-pointer"
+                            class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-sm disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
                         >
-                            {{ uploadForm.processing ? 'Uploading Media...' : 'Publish Media Asset' }}
+                            <svg v-if="uploadForm.processing" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>{{ uploadForm.processing ? 'Optimizing & Publishing...' : 'Publish Media Asset' }}</span>
                         </button>
                         <button 
                             type="button" 
@@ -661,10 +783,12 @@ const pageTabs = [
             <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 <div class="p-5 bg-[#14231C] text-white flex items-center justify-between">
                     <h3 class="text-sm font-bold flex items-center gap-2">
-                        <span>✏️</span>
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
                         <span>Edit Media Details</span>
                     </h3>
-                    <button @click="closeEditModal" class="text-gray-400 hover:text-white transition p-1">
+                    <button @click="closeEditModal" class="text-gray-400 hover:text-white transition p-1 cursor-pointer">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -677,31 +801,34 @@ const pageTabs = [
                         <input v-model="editForm.title" type="text" class="w-full text-xs rounded-lg border-gray-300 mt-1" required />
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="text-xs font-bold text-gray-700 block">Target Page</label>
                             <select v-model="editForm.page" class="w-full text-xs rounded-lg border-gray-300 mt-1">
-                                <option value="gallery">Gallery</option>
-                                <option value="home">Home Page</option>
-                                <option value="farm">Our Farm</option>
                                 <option value="villas">Villas</option>
                                 <option value="experiences">Experiences</option>
+                                <option value="home">Home Page</option>
+                                <option value="gallery">Gallery</option>
+                                <option value="farm">Our Farm</option>
                                 <option value="about">About & Location</option>
                                 <option value="general">General</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-700 block">Section Role</label>
-                            <select v-model="editForm.section" class="w-full text-xs rounded-lg border-gray-300 mt-1">
-                                <option value="hero_video">Hero Video (Home Top)</option>
-                                <option value="hero_banner">Hero Banner Poster</option>
-                                <option value="gallery_showcase">Gallery Item</option>
-                                <option value="farm_spotlight">Farm Spotlight</option>
-                                <option value="villa_showcase">Villa Feature</option>
-                                <option value="general">Standard</option>
+                        <div v-if="editForm.page === 'villas'">
+                            <label class="text-xs font-bold text-gray-700 block">Target Villa</label>
+                            <select v-model="editForm.target_villa" class="w-full text-xs rounded-lg border-gray-300 mt-1">
+                                <option value="">None / General</option>
+                                <option v-for="v in villas_list" :key="v.id" :value="v.id">{{ v.name }}</option>
                             </select>
                         </div>
-                        <div>
+                        <div v-else-if="editForm.page === 'experiences'">
+                            <label class="text-xs font-bold text-gray-700 block">Target Experience</label>
+                            <select v-model="editForm.target_experience" class="w-full text-xs rounded-lg border-gray-300 mt-1">
+                                <option value="">None / General</option>
+                                <option v-for="exp in experiences_list" :key="exp.id" :value="exp.id">{{ exp.title }}</option>
+                            </select>
+                        </div>
+                        <div v-else>
                             <label class="text-xs font-bold text-gray-700 block">Category</label>
                             <select v-model="editForm.category" class="w-full text-xs rounded-lg border-gray-300 mt-1">
                                 <option value="general">General</option>
@@ -710,19 +837,20 @@ const pageTabs = [
                                 <option value="experiences">Experiences</option>
                                 <option value="food">Dining & Produce</option>
                                 <option value="nature">Nature</option>
+                                <option value="videos">Videos</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
                         <label class="text-xs font-bold text-gray-700 block">Caption</label>
-                        <textarea v-model="editForm.caption" rows="3" class="w-full text-xs rounded-lg border-gray-300 mt-1"></textarea>
+                        <textarea v-model="editForm.caption" rows="2" class="w-full text-xs rounded-lg border-gray-300 mt-1"></textarea>
                     </div>
 
                     <div class="flex items-center gap-2">
                         <input type="checkbox" id="edit_is_hero" v-model="editForm.is_hero" class="rounded border-gray-300 text-amber-600 focus:ring-amber-500" />
                         <label for="edit_is_hero" class="text-xs text-gray-700 font-semibold cursor-pointer">
-                            Mark as Featured / Hero
+                            Mark as Priority / Hero
                         </label>
                     </div>
 
@@ -784,9 +912,9 @@ const pageTabs = [
                     </div>
                     <button 
                         @click="copyUrl(activePreviewItem)" 
-                        class="px-3 py-1.5 bg-[#C98A3E] hover:bg-[#b07835] text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5"
+                        class="px-3 py-1.5 bg-[#C98A3E] hover:bg-[#b07835] text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 cursor-pointer"
                     >
-                        <span>{{ copiedId === activePreviewItem.id ? '✓ Copied' : 'Copy Direct URL' }}</span>
+                        <span>{{ copiedId === activePreviewItem.id ? 'Copied' : 'Copy Direct URL' }}</span>
                     </button>
                 </div>
             </div>

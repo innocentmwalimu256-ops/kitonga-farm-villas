@@ -152,7 +152,7 @@ const printTicket = () => {
                                 : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:bg-gray-100'
                         ]"
                     >
-                        🌅 Morning<br /><span class="text-[9px] opacity-80">9:00 AM</span>
+                        Morning<br /><span class="text-[9px] opacity-80">9:00 AM</span>
                     </button>
                     <button 
                         type="button" 
@@ -164,7 +164,7 @@ const printTicket = () => {
                                 : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:bg-gray-100'
                         ]"
                     >
-                        ☀️ Afternoon<br /><span class="text-[9px] opacity-80">2:00 PM</span>
+                        Afternoon<br /><span class="text-[9px] opacity-80">2:00 PM</span>
                     </button>
                 </div>
             </div>
@@ -256,9 +256,9 @@ const printTicket = () => {
                             
                             <!-- Reservation Summary Badges -->
                             <div class="flex flex-wrap gap-2 pt-2.5 text-xs text-gray-700">
-                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">📅 {{ bookingDate }}</span>
-                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">⏰ {{ timeSlot }}</span>
-                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">👥 {{ guests }} {{ guests === 1 ? 'Guest' : 'Guests' }}</span>
+                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">Date: {{ bookingDate }}</span>
+                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">Time: {{ timeSlot }}</span>
+                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">{{ guests }} {{ guests === 1 ? 'Guest' : 'Guests' }}</span>
                             </div>
                         </div>
 
@@ -270,7 +270,7 @@ const printTicket = () => {
                         <!-- Contact Details -->
                         <div class="space-y-3.5 text-xs">
                             <div>
-                                <label class="font-bold text-gray-700 block mb-1">Full Name / Jina Kamili *</label>
+                                <label class="font-bold text-gray-700 block mb-1">Full Name *</label>
                                 <input 
                                     v-model="form.customer_name" 
                                     type="text" 
@@ -284,7 +284,7 @@ const printTicket = () => {
                                 <div>
                                     <label class="font-bold text-gray-700 block mb-1">Phone Number (M-Pesa/WhatsApp) *</label>
                                     <input 
-                                        v-model="form.customer_phone" 
+                                       v-model="form.customer_phone" 
                                         type="tel" 
                                         placeholder="0758 774 695" 
                                         class="w-full text-xs rounded-lg border-gray-300 focus:border-[#1B2E22] focus:ring-1 focus:ring-[#1B2E22] py-2.5 px-3 bg-white" 
@@ -328,7 +328,7 @@ const printTicket = () => {
                                 class="w-full py-3.5 bg-[#1B2E22] hover:bg-[#14231C] text-[#F7F3EA] font-bold uppercase tracking-wider text-xs rounded-xl transition font-sans flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50"
                             >
                                 <span v-if="!isSubmitting">Send Booking Request ({{ formatCurrency(totalPrice) }})</span>
-                                <span v-else>Inatuma request... tafadhali subiri</span>
+                                <span v-else>Submitting request... please wait</span>
                             </button>
                         </div>
 
@@ -345,7 +345,7 @@ const printTicket = () => {
                             <span class="text-[11px] uppercase tracking-[3px] font-bold text-emerald-800 block">Booking Request Received</span>
                             <h3 class="text-2xl font-serif font-light text-[#1B2E22]">Your Farm Pass is Ready</h3>
                             <p class="text-xs text-gray-600 max-w-sm mx-auto">
-                                Asante {{ confirmedBooking.customer_name }}! Endelea na mawasiliano na resort kupitia WhatsApp kuthibitisha na kufanya malipo.
+                                Thank you {{ confirmedBooking.customer_name }}! Please connect with the resort concierge via WhatsApp to confirm and complete payment.
                             </p>
                         </div>
 
@@ -395,15 +395,21 @@ const printTicket = () => {
                                 rel="noopener"
                                 class="w-full py-3.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2 shadow-md cursor-pointer"
                             >
-                                <span>💬 CONTINUE ON WHATSAPP</span>
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.698.074-2.128-.517-1.745-.722-2.888-2.518-2.977-2.637-.086-.118-.707-.941-.707-1.796 0-.854.448-1.275.607-1.448.16-.174.348-.218.465-.218.117 0 .234.001.336.006.107.005.251-.041.393.3.144.347.493 1.202.536 1.29.043.087.072.189.014.304-.058.117-.087.19-.174.29-.087.102-.183.228-.261.306-.089.088-.182.184-.078.362.104.178.463.765.994 1.238.683.608 1.259.797 1.438.885.178.087.283.073.388-.048.106-.12.453-.527.575-.708.121-.182.243-.151.408-.09.166.06 1.054.497 1.235.588.182.09.303.136.348.213.044.076.044.444-.1.849z"/>
+                                </svg>
+                                <span>CONTINUE ON WHATSAPP</span>
                             </a>
 
                             <div class="flex gap-2">
                                 <button 
                                     @click="printTicket" 
-                                    class="w-1/2 py-2.5 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-bold rounded-xl transition cursor-pointer"
+                                    class="w-1/2 py-2.5 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5"
                                 >
-                                    🖨️ Print / Save Pass
+                                    <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                    </svg>
+                                    Print / Save Pass
                                 </button>
                                 <button 
                                     @click="closeModal" 

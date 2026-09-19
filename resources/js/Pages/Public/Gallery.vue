@@ -132,7 +132,7 @@ const categories = [
     { id: 'farm', label: 'Shamba & Dairy' },
     { id: 'experiences', label: 'Tours & Experiences' },
     { id: 'food', label: 'Produce & Dining' },
-    { id: 'videos', label: '🎥 Videos' },
+    { id: 'videos', label: 'Videos' },
 ];
 </script>
 

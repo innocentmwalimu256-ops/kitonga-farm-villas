@@ -97,11 +97,11 @@ const isMobileMenuOpen = ref(false);
                 </span>
                 
                 <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#14231C]">
-                    Safari ya Kufika Kitonga Farm Villas
+                    Journey to Kitonga Farm Villas
                 </h1>
                 
                 <p class="font-sans text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                    Kitonga Farm Villas ipo katika Kijiji cha Komkonga, Mkoani Tanga, Tanzania. Mazingira ya asili, utulivu wa mashambani, na njia rahisi ya kufika.
+                    Kitonga Farm Villas is located in Komkonga Village, Tanga Region, Tanzania. Experience pristine nature, countryside tranquility, and easy accessibility.
                 </p>
             </div>
         </section>
@@ -114,10 +114,10 @@ const isMobileMenuOpen = ref(false);
                 <div class="p-6 sm:p-8 bg-[#14231C] text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div class="space-y-1">
                         <span class="text-[10px] uppercase font-bold tracking-[3px] text-[#E6C387]">
-                            📍 GPS & RAMANI HALISI
+                            GPS & Real Map
                         </span>
                         <h2 class="font-serif text-2xl sm:text-3xl font-light text-[#F7F3EA]">
-                            Ramani ya Komkonga, Tanga
+                            Map of Komkonga, Tanga
                         </h2>
                         <p class="text-xs text-gray-300 font-sans">
                             Coordinates: {{ settings.location_coordinates || '-5.0889, 39.0988' }}
@@ -131,17 +131,19 @@ const isMobileMenuOpen = ref(false);
                             rel="noopener noreferrer" 
                             class="inline-flex items-center gap-2 px-5 py-3 bg-[#C98A3E] hover:bg-[#b57a34] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 shadow-md font-sans"
                         >
-                            <span>Fungua Google Maps App</span>
+                            <span>Open Google Maps</span>
                             <span>↗</span>
                         </a>
                         <a 
-                            :href="'https://wa.me/' + (settings.contact_phone || '+255758774695').replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent('Habari, ninaomba mwongozo wa njia ya kufika Kitonga Farm Villas.')" 
+                            :href="'https://wa.me/' + (settings.contact_phone || '+255758774695').replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent('Hello, I need driving directions to Kitonga Farm Villas.')" 
                             target="_blank" 
                             rel="noopener noreferrer" 
                             class="inline-flex items-center gap-2 px-5 py-3 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold uppercase tracking-wider rounded-xl transition duration-300 shadow-md font-sans"
                         >
-                            <span>Piga Simu / WhatsApp</span>
-                            <span>💬</span>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.698.074-2.128-.517-1.745-.722-2.888-2.518-2.977-2.637-.086-.118-.707-.941-.707-1.796 0-.854.448-1.275.607-1.448.16-.174.348-.218.465-.218.117 0 .234.001.336.006.107.005.251-.041.393.3.144.347.493 1.202.536 1.29.043.087.072.189.014.304-.058.117-.087.19-.174.29-.087.102-.183.228-.261.306-.089.088-.182.184-.078.362.104.178.463.765.994 1.238.683.608 1.259.797 1.438.885.178.087.283.073.388-.048.106-.12.453-.527.575-.708.121-.182.243-.151.408-.09.166.06 1.054.497 1.235.588.182.09.303.136.348.213.044.076.044.444-.1.849z"/>
+                            </svg>
+                            <span>Chat on WhatsApp</span>
                         </a>
                     </div>
                 </div>
@@ -150,7 +152,7 @@ const isMobileMenuOpen = ref(false);
                 <div class="relative w-full h-80 sm:h-96 md:h-[480px] bg-[#e5e3df]">
                     <iframe
                         class="w-full h-full border-0"
-                        :src="'https://maps.google.com/maps?q=' + (settings.location_coordinates || '-5.0889,39.0988') + '&hl=sw&z=13&output=embed'"
+                        :src="'https://maps.google.com/maps?q=' + (settings.location_coordinates || '-5.0889,39.0988') + '&hl=en&z=13&output=embed'"
                         loading="lazy"
                         allowfullscreen
                         referrerpolicy="no-referrer-when-downgrade"
@@ -160,28 +162,36 @@ const isMobileMenuOpen = ref(false);
 
                 <!-- 4 Travel Cards -->
                 <div class="p-6 sm:p-8 bg-[#FAF8F5] border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-sans text-xs">
-                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-1.5">
-                        <span class="text-base">🚗</span>
-                        <h3 class="font-bold text-gray-900 text-sm">Kutokea Tanga Mjini</h3>
-                        <p class="text-gray-600 leading-relaxed">Dakika 45 kwa gari (~35 km) kupitia barabara ya Tanga.</p>
+                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-2">
+                        <svg class="w-5 h-5 text-[#C98A3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8m-8 4h8m-8 4h4m5 4H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                        </svg>
+                        <h3 class="font-bold text-gray-900 text-sm">From Tanga City</h3>
+                        <p class="text-gray-600 leading-relaxed">45 minutes by car (~35 km) via Tanga main route.</p>
                     </div>
 
-                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-1.5">
-                        <span class="text-base">🚗</span>
-                        <h3 class="font-bold text-gray-900 text-sm">Kutokea Korogwe / Segera</h3>
-                        <p class="text-gray-600 leading-relaxed">Saa 1 na dakika 15 kwa barabara kuu kuelekea Komkonga.</p>
+                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-2">
+                        <svg class="w-5 h-5 text-[#C98A3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                        </svg>
+                        <h3 class="font-bold text-gray-900 text-sm">From Korogwe / Segera</h3>
+                        <p class="text-gray-600 leading-relaxed">1 hour 15 minutes along the main road towards Komkonga.</p>
                     </div>
 
-                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-1.5">
-                        <span class="text-base">🚗</span>
-                        <h3 class="font-bold text-gray-900 text-sm">Kutokea Dar es Salaam</h3>
-                        <p class="text-gray-600 leading-relaxed">Saa 4.5 – 5 kupitia njia ya Chalinze - Segera - Tanga.</p>
+                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-2">
+                        <svg class="w-5 h-5 text-[#C98A3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <h3 class="font-bold text-gray-900 text-sm">From Dar es Salaam</h3>
+                        <p class="text-gray-600 leading-relaxed">4.5 – 5 hours via Chalinze - Segera - Tanga corridor.</p>
                     </div>
 
-                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-1.5">
-                        <span class="text-base">✈️</span>
-                        <h3 class="font-bold text-gray-900 text-sm">Usafiri wa Mapokezi</h3>
-                        <p class="text-gray-600 leading-relaxed">Huduma ya gari binafsi (Private Transfer) ipo kwa uwanja wa ndege na stendi.</p>
+                    <div class="p-5 rounded-2xl bg-white border border-gray-150 space-y-2">
+                        <svg class="w-5 h-5 text-[#C98A3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <h3 class="font-bold text-gray-900 text-sm">Private Transfer Service</h3>
+                        <p class="text-gray-600 leading-relaxed">Dedicated chauffeur pickup available from Tanga airport or regional bus terminal.</p>
                     </div>
                 </div>
 
@@ -194,22 +204,22 @@ const isMobileMenuOpen = ref(false);
             <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="space-y-2.5">
                     <p class="font-bold text-white text-sm font-serif uppercase tracking-widest">KITONGA FARM VILLAS</p>
-                    <p class="text-gray-400 text-xs leading-relaxed">Makazi ya kifahari ya mashambani Komkonga, Tanga, Tanzania.</p>
+                    <p class="text-gray-400 text-xs leading-relaxed">A luxury countryside retreat and organic farm-stay in Komkonga, Tanga, Tanzania.</p>
                 </div>
                 <div class="space-y-2">
-                    <p class="font-bold text-white uppercase tracking-wider text-xs">Kurasa za Haraka</p>
+                    <p class="font-bold text-white uppercase tracking-wider text-xs">Quick Links</p>
                     <div class="flex flex-col space-y-1.5">
-                        <Link :href="route('villas')" class="hover:text-white transition">Villa na Makazi</Link>
-                        <Link :href="route('experiences')" class="hover:text-white transition">Ziara za Shamba</Link>
-                        <Link :href="route('farm')" class="hover:text-white transition">Shamba Letu</Link>
-                        <Link :href="route('products')" class="hover:text-white transition">Mazao ya Shamba</Link>
-                        <Link :href="route('gallery')" class="hover:text-white transition">Gallery ya Picha</Link>
+                        <Link :href="route('villas')" class="hover:text-white transition">Villas & Accommodation</Link>
+                        <Link :href="route('experiences')" class="hover:text-white transition">Farm Experiences</Link>
+                        <Link :href="route('farm')" class="hover:text-white transition">Our Farm</Link>
+                        <Link :href="route('products')" class="hover:text-white transition">Farm Produce</Link>
+                        <Link :href="route('gallery')" class="hover:text-white transition">Photo Gallery</Link>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <p class="font-bold text-white uppercase tracking-wider text-xs">Mawasiliano</p>
+                    <p class="font-bold text-white uppercase tracking-wider text-xs">Contact Information</p>
                     <p class="text-gray-400">Komkonga Village, Tanga, Tanzania</p>
-                    <p class="text-gray-400">Simu: +255 758 774 695</p>
+                    <p class="text-gray-400">Phone: +255 758 774 695</p>
                     <p class="text-gray-400">Email: kitongafarmvillas@gmail.com</p>
                 </div>
             </div>

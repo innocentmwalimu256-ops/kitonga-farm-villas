@@ -47,6 +47,7 @@ class AccommodationController extends Controller
             'has_interior_kitchen' => 'required|boolean',
             'minimum_stay' => 'required|integer|min:1',
             'description' => 'nullable|string',
+            'featured_image' => 'nullable|string|max:500',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
@@ -86,6 +87,7 @@ class AccommodationController extends Controller
             'has_interior_kitchen' => 'required|boolean',
             'minimum_stay' => 'required|integer|min:1',
             'description' => 'nullable|string',
+            'featured_image' => 'nullable|string|max:500',
             'active' => 'required|boolean',
         ]);
 

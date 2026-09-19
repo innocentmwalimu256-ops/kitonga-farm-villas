@@ -78,6 +78,9 @@ class MediaController extends Controller
                 'page' => $item->getCustomProperty('page', 'general'),
                 'section' => $item->getCustomProperty('section', 'general'),
                 'category' => $item->getCustomProperty('category', 'general'),
+                'target_villa' => $item->getCustomProperty('target_villa', ''),
+                'target_experience' => $item->getCustomProperty('target_experience', ''),
+                'target_role' => $item->getCustomProperty('target_role', 'general'),
                 'is_hero' => (bool) $item->getCustomProperty('is_hero', false),
                 'alt_text' => $item->getCustomProperty('alt_text', ''),
                 'caption' => $item->getCustomProperty('caption', ''),
@@ -97,8 +100,14 @@ class MediaController extends Controller
               ->orWhereJsonContains('custom_properties->media_type', 'video');
         })->count();
 
+        // Pass live villa models and experiences for dropdowns
+        $villas = \App\Models\AccommodationType::select('id', 'name', 'slug', 'featured_image')->orderBy('name')->get();
+        $experiences = \App\Models\FarmTour::select('id', 'title', 'slug', 'featured_image')->orderBy('title')->get();
+
         return Inertia::render('Admin/Media/Index', [
             'media' => $paginated,
+            'villas_list' => $villas,
+            'experiences_list' => $experiences,
             'filters' => [
                 'page_filter' => $request->input('page_filter', 'all'),
                 'type_filter' => $request->input('type_filter', 'all'),
@@ -140,9 +149,12 @@ class MediaController extends Controller
                 }
             ],
             'title' => 'nullable|string|max:255',
-            'page' => 'nullable|string|in:home,gallery,farm,villas,experiences,about,location,general',
+            'page' => 'nullable|string|in:home,gallery,farm,villas,experiences,about,products,location,general',
             'section' => 'nullable|string|max:100',
             'category' => 'nullable|string|max:100',
+            'target_villa' => 'nullable|string|max:100',
+            'target_experience' => 'nullable|string|max:100',
+            'target_role' => 'nullable|string|max:100',
             'is_hero' => 'nullable|boolean',
             'alt_text' => 'nullable|string|max:255',
             'caption' => 'nullable|string|max:1000',
@@ -157,14 +169,22 @@ class MediaController extends Controller
             $mediaType = $isVideo ? 'video' : 'image';
 
             $page = $request->input('page', 'gallery');
+            $section = $request->input('section', 'general');
+            $category = $request->input('category', 'general');
+            $targetVilla = $request->input('target_villa');
+            $targetExperience = $request->input('target_experience');
+            $targetRole = $request->input('target_role', 'general');
             $isHero = filter_var($request->input('is_hero', false), FILTER_VALIDATE_BOOLEAN);
 
             // Upload through Spatie Media Library (Auto-convert images to WebP for maximum speed)
             $customProps = [
                 'title' => $request->input('title', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
                 'page' => $page,
-                'section' => $request->input('section', 'general'),
-                'category' => $request->input('category', 'general'),
+                'section' => $section,
+                'category' => $category,
+                'target_villa' => $targetVilla,
+                'target_experience' => $targetExperience,
+                'target_role' => $targetRole,
                 'is_hero' => $isHero,
                 'media_type' => $mediaType,
                 'alt_text' => $request->input('alt_text', ''),
@@ -182,7 +202,7 @@ class MediaController extends Controller
                         ->withCustomProperties($customProps)
                         ->toMediaCollection('cms_media');
                     @unlink($webpPath);
-                    $formatMsg = ' (Auto-converted to optimized WebP for lightning-fast speed)';
+                    $formatMsg = ' (Optimized to WebP)';
                 } else {
                     $media = $user->addMedia($file)
                         ->withCustomProperties($customProps)
@@ -198,7 +218,7 @@ class MediaController extends Controller
                         ->withCustomProperties($customProps)
                         ->toMediaCollection('cms_media');
                     @unlink($optVideoPath);
-                    $formatMsg = ' (Auto-optimized for instant Web playback with H.264 & FastStart)';
+                    $formatMsg = ' (FastStart Web Video Optimized)';
                 } else {
                     $media = $user->addMedia($file)
                         ->withCustomProperties($customProps)
@@ -210,27 +230,59 @@ class MediaController extends Controller
                     ->toMediaCollection('cms_media');
             }
 
-            // Audit Log
+            $mediaUrl = $media->getUrl();
+
+            // Direct Model Publishing:
+            // 1. If assigned to a specific Villa
+            if ($page === 'villas' && !empty($targetVilla)) {
+                $villa = \App\Models\AccommodationType::where('id', $targetVilla)
+                    ->orWhere('slug', $targetVilla)
+                    ->first();
+                if ($villa) {
+                    if ($targetRole === 'featured_cover' || empty($targetRole) || $targetRole === 'general') {
+                        $villa->update(['featured_image' => $mediaUrl]);
+                    } elseif ($targetRole === 'gallery_item') {
+                        $currentGallery = is_array($villa->gallery_images) ? $villa->gallery_images : [];
+                        $currentGallery[] = $mediaUrl;
+                        $villa->update(['gallery_images' => array_values(array_unique($currentGallery))]);
+                    }
+                }
+            }
+
+            // 2. If assigned to a specific Experience / Tour
+            if ($page === 'experiences' && !empty($targetExperience)) {
+                $exp = \App\Models\FarmTour::where('id', $targetExperience)
+                    ->orWhere('slug', $targetExperience)
+                    ->first();
+                if ($exp) {
+                    if ($targetRole === 'featured_cover' || empty($targetRole) || $targetRole === 'general') {
+                        $exp->update(['featured_image' => $mediaUrl]);
+                    }
+                }
+            }
+
             ActivityLog::create([
                 'user_id' => $user->id,
                 'action' => 'media_uploaded',
                 'entity_type' => 'Media',
                 'entity_id' => $media->id,
                 'new_values' => [
-                    'filename' => $media->file_name,
-                    'media_type' => $mediaType,
+                    'name' => $media->name,
+                    'file_name' => $media->file_name,
+                    'url' => $mediaUrl,
                     'page' => $page,
-                    'is_hero' => $isHero,
-                    'format' => $media->mime_type,
+                    'section' => $section,
+                    'category' => $category,
+                    'target_villa' => $targetVilla,
+                    'target_experience' => $targetExperience,
+                    'target_role' => $targetRole,
                 ],
                 'created_at' => Carbon::now(),
             ]);
 
-            return redirect()->route('admin.media.index')
-                ->with('success', ucfirst($mediaType) . ' published successfully for ' . ucfirst($page) . ' page' . $formatMsg . '.');
+            return back()->with('success', "Media asset '{$media->name}' published successfully{$formatMsg}.");
         } catch (\Exception $e) {
-            \Log::error('Media publish error: ' . $e->getMessage());
-            return back()->withErrors(['file' => 'Failed to publish media: ' . $e->getMessage()]);
+            return back()->withErrors(['file' => 'Upload failed: ' . $e->getMessage()]);
         }
     }
 
@@ -347,9 +399,12 @@ class MediaController extends Controller
 
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
-            'page' => 'nullable|string|in:home,gallery,farm,villas,experiences,about,location,general',
+            'page' => 'nullable|string|in:home,gallery,farm,villas,experiences,about,products,location,general',
             'section' => 'nullable|string|max:100',
             'category' => 'nullable|string|max:100',
+            'target_villa' => 'nullable|string|max:100',
+            'target_experience' => 'nullable|string|max:100',
+            'target_role' => 'nullable|string|max:100',
             'is_hero' => 'nullable|boolean',
             'alt_text' => 'nullable|string|max:255',
             'caption' => 'nullable|string|max:1000',
@@ -361,12 +416,41 @@ class MediaController extends Controller
         $customProperties['page'] = $validated['page'] ?? ($customProperties['page'] ?? 'general');
         $customProperties['section'] = $validated['section'] ?? ($customProperties['section'] ?? 'general');
         $customProperties['category'] = $validated['category'] ?? ($customProperties['category'] ?? 'general');
+        $customProperties['target_villa'] = $validated['target_villa'] ?? ($customProperties['target_villa'] ?? '');
+        $customProperties['target_experience'] = $validated['target_experience'] ?? ($customProperties['target_experience'] ?? '');
+        $customProperties['target_role'] = $validated['target_role'] ?? ($customProperties['target_role'] ?? 'general');
         $customProperties['is_hero'] = filter_var($request->input('is_hero', false), FILTER_VALIDATE_BOOLEAN);
         $customProperties['alt_text'] = $validated['alt_text'] ?? '';
         $customProperties['caption'] = $validated['caption'] ?? '';
 
         $media->custom_properties = $customProperties;
         $media->save();
+
+        $mediaUrl = $media->getUrl();
+        $targetVilla = $customProperties['target_villa'] ?? '';
+        $targetRole = $customProperties['target_role'] ?? '';
+        $targetExperience = $customProperties['target_experience'] ?? '';
+        $page = $customProperties['page'] ?? '';
+
+        // If assigned as featured to a Villa
+        if ($page === 'villas' && !empty($targetVilla)) {
+            $villa = \App\Models\AccommodationType::where('id', $targetVilla)
+                ->orWhere('slug', $targetVilla)
+                ->first();
+            if ($villa && ($targetRole === 'featured_cover' || empty($targetRole) || $targetRole === 'general')) {
+                $villa->update(['featured_image' => $mediaUrl]);
+            }
+        }
+
+        // If assigned as featured to an Experience
+        if ($page === 'experiences' && !empty($targetExperience)) {
+            $exp = \App\Models\FarmTour::where('id', $targetExperience)
+                ->orWhere('slug', $targetExperience)
+                ->first();
+            if ($exp && ($targetRole === 'featured_cover' || empty($targetRole) || $targetRole === 'general')) {
+                $exp->update(['featured_image' => $mediaUrl]);
+            }
+        }
 
         // Audit Log
         ActivityLog::create([

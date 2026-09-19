@@ -62,8 +62,12 @@ const formatCurrency = (val) => {
                         <!-- Excel Bookings -->
                         <div class="p-6 border rounded-lg space-y-4 hover:border-emerald-500 transition text-center flex flex-col justify-between">
                             <div>
-                                <span class="text-3xl block">📊</span>
-                                <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mt-2">Bookings Registry (Excel)</h4>
+                                <div class="w-12 h-12 bg-emerald-50 text-emerald-700 rounded-full flex items-center justify-center mx-auto">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                </div>
+                                <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mt-3">Bookings Registry (Excel)</h4>
                                 <p class="text-[10px] text-gray-400 mt-1">Full reservation list containing customers details, room unit tags, dates, balances, and status flags.</p>
                             </div>
                             <a :href="route('admin.reports.excel.bookings')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded transition block text-center mt-4">
@@ -74,8 +78,12 @@ const formatCurrency = (val) => {
                         <!-- Excel Expenses -->
                         <div class="p-6 border rounded-lg space-y-4 hover:border-emerald-500 transition text-center flex flex-col justify-between">
                             <div>
-                                <span class="text-3xl block">💸</span>
-                                <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mt-2">Expenses Logs (Excel)</h4>
+                                <div class="w-12 h-12 bg-emerald-50 text-emerald-700 rounded-full flex items-center justify-center mx-auto">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mt-3">Expenses Logs (Excel)</h4>
                                 <p class="text-[10px] text-gray-400 mt-1">Ledger list of all payouts, recipients, categories, slip amounts, and approval states.</p>
                             </div>
                             <a :href="route('admin.reports.excel.expenses')" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded transition block text-center mt-4">
@@ -86,8 +94,12 @@ const formatCurrency = (val) => {
                         <!-- PDF Audit Report -->
                         <div class="p-6 border rounded-lg space-y-4 hover:border-emerald-500 transition text-center flex flex-col justify-between">
                             <div>
-                                <span class="text-3xl block">📄</span>
-                                <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mt-2">Executive Summary (PDF)</h4>
+                                <div class="w-12 h-12 bg-red-50 text-red-650 rounded-full flex items-center justify-center mx-auto">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mt-3">Executive Summary (PDF)</h4>
                                 <p class="text-[10px] text-gray-400 mt-1">Streamlined executive PDF summary highlighting accommodation vs POS split revenue, profit margins, and audit counters.</p>
                             </div>
                             <a :href="route('admin.reports.pdf')" class="w-full py-2 bg-red-650 hover:bg-red-700 text-white font-bold text-xs rounded transition block text-center mt-4">

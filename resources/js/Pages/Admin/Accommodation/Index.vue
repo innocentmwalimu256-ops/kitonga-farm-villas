@@ -27,6 +27,7 @@ const typeForm = useForm({
     has_interior_kitchen: false,
     minimum_stay: 1,
     description: '',
+    featured_image: '',
 });
 
 const editTypeForm = useForm({
@@ -39,6 +40,7 @@ const editTypeForm = useForm({
     has_interior_kitchen: false,
     minimum_stay: 1,
     description: '',
+    featured_image: '',
     active: true,
 });
 
@@ -60,7 +62,6 @@ const submitType = () => {
         onSuccess: () => {
             typeForm.reset();
             showCreateTypeForm.value = false;
-            alert('Accommodation Type registered.');
         }
     });
 };
@@ -76,6 +77,7 @@ const openEditTypeModal = (type) => {
     editTypeForm.has_interior_kitchen = !!type.has_interior_kitchen;
     editTypeForm.minimum_stay = type.minimum_stay;
     editTypeForm.description = type.description || '';
+    editTypeForm.featured_image = type.featured_image || '';
     editTypeForm.active = !!type.active;
 };
 
@@ -87,7 +89,6 @@ const submitUpdateType = () => {
     editTypeForm.post(route('admin.accommodation.types.update', activeEditType.value.id), {
         onSuccess: () => {
             closeEditTypeModal();
-            alert('Accommodation Type updated.');
         }
     });
 };
@@ -97,7 +98,6 @@ const submitUnit = () => {
         onSuccess: () => {
             unitForm.reset();
             showCreateUnitForm.value = false;
-            alert('Physical unit registered.');
         }
     });
 };
@@ -107,18 +107,13 @@ const submitBlock = () => {
         onSuccess: () => {
             blockForm.reset();
             showCreateBlockForm.value = false;
-            alert('Blackout date range registered.');
         }
     });
 };
 
 const removeBlock = (id) => {
     if (confirm('Are you sure you want to remove this blackout block and unblock the dates?')) {
-        router.delete(route('admin.accommodation.blocks.destroy', id), {
-            onSuccess: () => {
-                alert('Blackout date block removed successfully.');
-            }
-        });
+        router.delete(route('admin.accommodation.blocks.destroy', id));
     }
 };
 
@@ -126,11 +121,18 @@ const toggleUnitStatus = (unit, newStatus) => {
     useForm({
         status: newStatus,
         notes: unit.notes
-    }).post(route('admin.accommodation.units.update', unit.id), {
-        onSuccess: () => {
-            alert(`Physical unit status changed to ${newStatus}`);
-        }
-    });
+    }).post(route('admin.accommodation.units.update', unit.id));
+};
+
+const getVillaThumb = (path, slug) => {
+    if (path) {
+        if (path.startsWith('http') || path.startsWith('/')) return path;
+        return `/${path}`;
+    }
+    if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
+    if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
+    if (slug === 'family-villa') return '/images/family_villa_img.webp';
+    return '/images/luxury_villa_img.webp';
 };
 </script>
 
@@ -144,13 +146,13 @@ const toggleUnitStatus = (unit, newStatus) => {
                     Villas & Accommodation Management
                 </h2>
                 <div class="flex space-x-2">
-                    <button @click="showCreateTypeForm = !showCreateTypeForm" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded shadow-xs transition">
+                    <button @click="showCreateTypeForm = !showCreateTypeForm" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded shadow-xs transition cursor-pointer">
                         New Villa Model
                     </button>
-                    <button @click="showCreateUnitForm = !showCreateUnitForm" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded shadow-xs transition">
+                    <button @click="showCreateUnitForm = !showCreateUnitForm" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded shadow-xs transition cursor-pointer">
                         Register Physical Unit
                     </button>
-                    <button @click="showCreateBlockForm = !showCreateBlockForm" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded shadow-xs transition">
+                    <button @click="showCreateBlockForm = !showCreateBlockForm" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded shadow-xs transition cursor-pointer">
                         Add Blackout Block
                     </button>
                 </div>
@@ -192,6 +194,10 @@ const toggleUnitStatus = (unit, newStatus) => {
                             <label class="text-[10px] font-bold text-gray-400 uppercase">Bathrooms</label>
                             <input v-model="typeForm.bathrooms" type="number" required min="1" class="w-full text-xs rounded border-gray-300 mt-1" />
                         </div>
+                        <div class="md:col-span-4">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase">Featured Cover Photo URL</label>
+                            <input v-model="typeForm.featured_image" type="text" placeholder="/storage/... or URL (You can also upload directly via Media Studio)" class="w-full text-xs rounded border-gray-300 mt-1" />
+                        </div>
                         <div class="md:col-span-4 flex items-center space-x-2">
                             <input v-model="typeForm.has_interior_kitchen" type="checkbox" id="kitchen_check" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
                             <label for="kitchen_check" class="text-xs font-bold text-gray-700">Has Interior Kitchen Setup</label>
@@ -201,7 +207,7 @@ const toggleUnitStatus = (unit, newStatus) => {
                             <textarea v-model="typeForm.description" rows="2" class="w-full text-xs rounded border-gray-300 mt-1"></textarea>
                         </div>
                         <div class="md:col-span-4">
-                            <button type="submit" class="w-full py-2 bg-emerald-600 text-white font-bold rounded text-xs hover:bg-emerald-700 transition">Save Model</button>
+                            <button type="submit" class="w-full py-2 bg-emerald-600 text-white font-bold rounded text-xs hover:bg-emerald-700 transition cursor-pointer">Save Model</button>
                         </div>
                     </form>
                 </div>
@@ -230,7 +236,7 @@ const toggleUnitStatus = (unit, newStatus) => {
                             </select>
                         </div>
                         <div class="md:col-span-3">
-                            <button type="submit" class="w-full py-2 bg-indigo-600 text-white font-bold rounded text-xs hover:bg-indigo-700 transition">Register Unit</button>
+                            <button type="submit" class="w-full py-2 bg-indigo-600 text-white font-bold rounded text-xs hover:bg-indigo-700 transition cursor-pointer">Register Unit</button>
                         </div>
                     </form>
                 </div>
@@ -261,7 +267,7 @@ const toggleUnitStatus = (unit, newStatus) => {
                             <input v-model="blockForm.reason" type="text" required placeholder="e.g. Deep cleaning, painting" class="w-full text-xs rounded border-gray-300 mt-1" />
                         </div>
                         <div class="md:col-span-4">
-                            <button type="submit" class="w-full py-2 bg-red-600 text-white font-bold rounded text-xs hover:bg-red-700 transition">Save Blackout Range</button>
+                            <button type="submit" class="w-full py-2 bg-red-600 text-white font-bold rounded text-xs hover:bg-red-700 transition cursor-pointer">Save Blackout Range</button>
                         </div>
                     </form>
                 </div>
@@ -269,12 +275,15 @@ const toggleUnitStatus = (unit, newStatus) => {
                 <!-- 4. ACCOMMODATION MODELS GRID -->
                 <div v-for="type in types" :key="type.id" class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-gray-900 text-sm uppercase tracking-wider">{{ type.name }}</h3>
-                            <p class="text-xs text-gray-400 mt-1">Base Price: <span class="font-mono font-bold text-emerald-600">{{ formatCurrency(type.base_price) }}/night</span> | Min Stay: {{ type.minimum_stay }} night(s)</p>
+                        <div class="flex items-center gap-4">
+                            <img :src="getVillaThumb(type.featured_image, type.slug)" :alt="type.name" class="w-16 h-12 object-cover rounded-md border border-gray-200" />
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-sm uppercase tracking-wider">{{ type.name }}</h3>
+                                <p class="text-xs text-gray-400 mt-0.5">Base Price: <span class="font-mono font-bold text-emerald-600">{{ formatCurrency(type.base_price) }}/night</span> | Min Stay: {{ type.minimum_stay }} night(s)</p>
+                            </div>
                         </div>
                         <div class="flex space-x-2">
-                            <button @click="openEditTypeModal(type)" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded transition">
+                            <button @click="openEditTypeModal(type)" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded transition cursor-pointer">
                                 Edit Details
                             </button>
                         </div>
@@ -285,11 +294,11 @@ const toggleUnitStatus = (unit, newStatus) => {
                         <div class="space-y-2">
                             <h4 class="text-xs font-bold text-gray-400 uppercase">Villa Specifications</h4>
                             <ul class="text-xs text-gray-600 space-y-1">
-                                <li>🚪 Capacity: {{ type.capacity }} guests max</li>
-                                <li>🛌 Bedrooms: {{ type.bedrooms }} | Beds: {{ type.beds }}</li>
-                                <li>🚿 Bathrooms: {{ type.bathrooms }}</li>
-                                <li>🍳 Kitchen: {{ type.has_interior_kitchen ? 'Yes' : 'No' }}</li>
-                                <li>🟢 Status: {{ type.active ? 'Active (Listed)' : 'Inactive (Hidden)' }}</li>
+                                <li>Capacity: {{ type.capacity }} guests max</li>
+                                <li>Bedrooms: {{ type.bedrooms }} | Beds: {{ type.beds }}</li>
+                                <li>Bathrooms: {{ type.bathrooms }}</li>
+                                <li>Kitchen: {{ type.has_interior_kitchen ? 'Yes' : 'No' }}</li>
+                                <li>Status: <span :class="type.active ? 'text-emerald-700 font-bold' : 'text-gray-400'">{{ type.active ? 'Active (Listed)' : 'Inactive (Hidden)' }}</span></li>
                             </ul>
                             <p class="text-xs text-gray-500 italic mt-2">{{ type.description || 'No description provided.' }}</p>
                         </div>
@@ -311,9 +320,9 @@ const toggleUnitStatus = (unit, newStatus) => {
                                         </div>
                                     </div>
                                     <div class="flex flex-col gap-1">
-                                        <button v-if="unit.status !== 'active'" @click="toggleUnitStatus(unit, 'active')" class="px-2 py-0.5 bg-green-600 hover:bg-green-700 text-white text-[9px] font-bold rounded">Set Active</button>
-                                        <button v-if="unit.status !== 'maintenance'" @click="toggleUnitStatus(unit, 'maintenance')" class="px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white text-[9px] font-bold rounded">Set Maint</button>
-                                        <button v-if="unit.status !== 'blocked'" @click="toggleUnitStatus(unit, 'blocked')" class="px-2 py-0.5 bg-gray-500 hover:bg-gray-600 text-white text-[9px] font-bold rounded">Set Block</button>
+                                        <button v-if="unit.status !== 'active'" @click="toggleUnitStatus(unit, 'active')" class="px-2 py-0.5 bg-green-600 hover:bg-green-700 text-white text-[9px] font-bold rounded cursor-pointer">Set Active</button>
+                                        <button v-if="unit.status !== 'maintenance'" @click="toggleUnitStatus(unit, 'maintenance')" class="px-2 py-0.5 bg-red-600 hover:bg-red-700 text-white text-[9px] font-bold rounded cursor-pointer">Set Maint</button>
+                                        <button v-if="unit.status !== 'blocked'" @click="toggleUnitStatus(unit, 'blocked')" class="px-2 py-0.5 bg-gray-500 hover:bg-gray-600 text-white text-[9px] font-bold rounded cursor-pointer">Set Block</button>
                                     </div>
                                 </div>
                                 <div v-if="type.units.length === 0" class="col-span-full py-4 text-center text-gray-400 italic text-xs">
@@ -414,6 +423,10 @@ const toggleUnitStatus = (unit, newStatus) => {
                                     <option :value="false">Hidden (Inactive)</option>
                                 </select>
                             </div>
+                            <div class="md:col-span-2">
+                                <label class="text-[10px] font-bold text-gray-400 uppercase">Featured Cover Photo URL</label>
+                                <input v-model="editTypeForm.featured_image" type="text" placeholder="/storage/... or URL (You can also upload directly via Media Studio)" class="w-full text-xs rounded border-gray-300 mt-1" />
+                            </div>
                             <div class="md:col-span-2 flex items-center space-x-2">
                                 <input v-model="editTypeForm.has_interior_kitchen" type="checkbox" id="edit_kitchen_check" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
                                 <label for="edit_kitchen_check" class="text-xs font-bold text-gray-700">Has Interior Kitchen Setup</label>
@@ -423,8 +436,8 @@ const toggleUnitStatus = (unit, newStatus) => {
                                 <textarea v-model="editTypeForm.description" rows="2" class="w-full text-xs rounded border-gray-300 mt-1"></textarea>
                             </div>
                             <div class="md:col-span-2 flex space-x-2 pt-2">
-                                <button type="submit" class="flex-1 py-2 bg-emerald-600 text-white text-xs font-bold rounded hover:bg-emerald-700 transition">Save Changes</button>
-                                <button type="button" @click="closeEditTypeModal" class="flex-1 py-2 bg-gray-100 text-gray-700 text-xs font-bold rounded hover:bg-gray-200 transition">Cancel</button>
+                                <button type="submit" class="flex-1 py-2 bg-emerald-600 text-white text-xs font-bold rounded hover:bg-emerald-700 transition cursor-pointer">Save Changes</button>
+                                <button type="button" @click="closeEditTypeModal" class="flex-1 py-2 bg-gray-100 text-gray-700 text-xs font-bold rounded hover:bg-gray-200 transition cursor-pointer">Cancel</button>
                             </div>
                         </form>
                     </div>

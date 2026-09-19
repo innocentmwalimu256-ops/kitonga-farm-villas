@@ -10,22 +10,18 @@ const toggleAccordion = (idx) => {
 const guideItems = [
     {
         title: 'Footwear & Attire for Walking the Farm',
-        icon: '👟',
         content: 'We recommend comfortable closed walking shoes or sneakers, lightweight clothing, and a sun hat for outdoor paths. The trails are natural and gentle.',
     },
     {
         title: 'Swimming Pool & Countryside Lounge',
-        icon: '🏊',
         content: 'Access to our outdoor swimming pool is included with both farm tours. Feel free to bring your swimwear and towel to refresh after the walking tour.',
     },
     {
         title: 'Visiting with Children & Families',
-        icon: '👨‍👩‍👧‍👦',
         content: 'Both the Normal Farm Tour and General Farm Tour are suitable for guests of all ages. Children particularly enjoy seeing our dairy cows, goats, and free-range poultry.',
     },
     {
         title: 'Combining Day Tours with a Villa Stay',
-        icon: '🏡',
         content: 'Day visitors can extend their countryside experience by booking overnight stays in our Luxury, Semi Luxury, or Family Villas with full privacy.',
     },
 ];
@@ -60,7 +56,7 @@ const guideItems = [
                     class="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-medium text-gray-900 hover:text-[#C98A3E] transition cursor-pointer"
                 >
                     <div class="flex items-center gap-3">
-                        <span class="text-lg">{{ item.icon }}</span>
+                        <span class="w-2 h-2 rounded-full bg-[#C98A3E]"></span>
                         <span class="text-sm font-serif font-normal text-[#1B2E22]">{{ item.title }}</span>
                     </div>
                     <span class="text-lg text-[#C98A3E] transform transition duration-300 font-sans" :class="{ 'rotate-180': openIndex === idx }">

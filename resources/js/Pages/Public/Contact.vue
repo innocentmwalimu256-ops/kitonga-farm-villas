@@ -171,7 +171,9 @@ const submitContact = () => {
                         rel="noopener noreferrer"
                         class="flex items-center gap-3.5 p-4 rounded-xl bg-[#25D366] text-white hover:bg-[#20ba59] transition shadow-sm font-sans"
                     >
-                        <span class="text-2xl">💬</span>
+                        <svg class="w-6 h-6 fill-current shrink-0" viewBox="0 0 24 24">
+                            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.698.074-2.128-.517-1.745-.722-2.888-2.518-2.977-2.637-.086-.118-.707-.941-.707-1.796 0-.854.448-1.275.607-1.448.16-.174.348-.218.465-.218.117 0 .234.001.336.006.107.005.251-.041.393.3.144.347.493 1.202.536 1.29.043.087.072.189.014.304-.058.117-.087.19-.174.29-.087.102-.183.228-.261.306-.089.088-.182.184-.078.362.104.178.463.765.994 1.238.683.608 1.259.797 1.438.885.178.087.283.073.388-.048.106-.12.453-.527.575-.708.121-.182.243-.151.408-.09.166.06 1.054.497 1.235.588.182.09.303.136.348.213.044.076.044.444-.1.849z"/>
+                        </svg>
                         <div class="flex-1">
                             <span class="text-xs font-bold block">Chat on WhatsApp</span>
                             <span class="text-[11px] text-white/90">Instant concierge assistance via WhatsApp</span>
@@ -183,7 +185,9 @@ const submitContact = () => {
                     <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-5 text-xs font-sans">
                         
                         <div class="flex items-start gap-3.5">
-                            <span class="text-lg text-[#C98A3E]">📞</span>
+                            <svg class="w-5 h-5 text-[#C98A3E] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
                             <div>
                                 <strong class="text-gray-900 block text-xs">Direct Phone Line</strong>
                                 <a :href="'tel:' + (settings.contact_phone || '+255758774695').replace(/\s+/g, '')" class="text-gray-600 hover:text-[#C98A3E] transition mt-0.5 inline-block">
@@ -193,7 +197,9 @@ const submitContact = () => {
                         </div>
 
                         <div class="flex items-start gap-3.5 pt-3 border-t border-gray-150">
-                            <span class="text-lg text-[#C98A3E]">✉️</span>
+                            <svg class="w-5 h-5 text-[#C98A3E] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
                             <div>
                                 <strong class="text-gray-900 block text-xs">Email Address</strong>
                                 <a :href="'mailto:' + (settings.contact_email || 'kitongafarmvillas@gmail.com')" class="text-gray-600 hover:text-[#C98A3E] transition mt-0.5 inline-block">
@@ -203,7 +209,10 @@ const submitContact = () => {
                         </div>
 
                         <div class="flex items-start gap-3.5 pt-3 border-t border-gray-150">
-                            <span class="text-lg text-[#C98A3E]">📍</span>
+                            <svg class="w-5 h-5 text-[#C98A3E] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
                             <div>
                                 <strong class="text-gray-900 block text-xs">Estate Location</strong>
                                 <span class="text-gray-600 block mt-0.5">Komkonga Village, Tanga Region, Tanzania</span>
@@ -211,7 +220,9 @@ const submitContact = () => {
                         </div>
 
                         <div class="flex items-start gap-3.5 pt-3 border-t border-gray-150">
-                            <span class="text-lg text-[#C98A3E]">🕒</span>
+                            <svg class="w-5 h-5 text-[#C98A3E] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                             <div>
                                 <strong class="text-gray-900 block text-xs">Service Hours</strong>
                                 <span class="text-gray-600 block mt-0.5">Monday – Sunday (24/7 for in-house guests)</span>
@@ -224,7 +235,10 @@ const submitContact = () => {
                     <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-xs font-sans">
                         <div class="px-4 py-2.5 bg-[#14231C] text-white flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <span class="text-xs text-[#C98A3E]">📍</span>
+                                <svg class="w-4 h-4 text-[#C98A3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
                                 <span class="font-serif text-xs font-medium text-[#F5F1E8] uppercase tracking-wider">Komkonga, Tanga Map</span>
                             </div>
                             <a 
@@ -253,13 +267,13 @@ const submitContact = () => {
                         <!-- Micro Travel Badges -->
                         <div class="px-3.5 py-2.5 bg-[#FAF8F5] border-t border-gray-150 flex flex-wrap items-center justify-between gap-2 text-[10px] text-gray-600">
                             <span class="inline-flex items-center gap-1">
-                                <span class="text-[#C98A3E]">🚗</span> Tanga: 45 min
+                                <span class="font-semibold text-gray-800">Tanga:</span> 45 min
                             </span>
                             <span class="inline-flex items-center gap-1">
-                                <span class="text-[#C98A3E]">🚗</span> Segera: 1h 15m
+                                <span class="font-semibold text-gray-800">Segera:</span> 1h 15m
                             </span>
                             <span class="inline-flex items-center gap-1">
-                                <span class="text-[#C98A3E]">✈️</span> Transfer available
+                                <span class="font-semibold text-gray-800">Transfer:</span> available
                             </span>
                         </div>
                     </div>

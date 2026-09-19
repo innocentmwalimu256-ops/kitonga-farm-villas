@@ -21,12 +21,14 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path, slug) => {
+    if (path) {
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
+        return `/${path}`;
+    }
     if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
     if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
     if (slug === 'family-villa') return '/images/family_villa_img.webp';
-    if (!path) return '/images/luxury_villa_img.webp';
-    if (path.startsWith('http://') || path.startsWith('https://')) return path;
-    return `/images/${path}`;
+    return '/images/luxury_villa_img.webp';
 };
 
 const filteredVillas = computed(() => {
@@ -339,9 +341,9 @@ const scrollToResidences = () => {
                 <div class="space-y-4">
                     <h4 class="font-sans font-bold text-white text-xs tracking-widest uppercase">Contact Details</h4>
                     <div class="space-y-2 text-[#F7F3EA]/70">
-                        <p>✉️ <a href="mailto:kitongafarmvillas@gmail.com" class="hover:text-[#C98A3E] transition">kitongafarmvillas@gmail.com</a></p>
-                        <p>📞 <a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
-                        <p>📍 Kitonga Farm, Komkonga, Tanga, Tanzania</p>
+                        <p><a href="mailto:kitongafarmvillas@gmail.com" class="hover:text-[#C98A3E] transition">kitongafarmvillas@gmail.com</a></p>
+                        <p><a href="tel:+255758774695" class="hover:text-[#C98A3E] transition">+255 758 774 695</a></p>
+                        <p>Kitonga Farm, Komkonga, Tanga, Tanzania</p>
                     </div>
                 </div>
             </div>

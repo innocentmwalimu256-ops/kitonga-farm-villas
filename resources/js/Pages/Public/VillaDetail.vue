@@ -14,8 +14,15 @@ const props = defineProps({
     },
 });
 
-// Dynamic Gallery Images per Villa (4 Distinct Photos per Villa)
-const getGallery = (slug) => {
+// Dynamic Gallery Images per Villa (DB gallery with fallback to 4 Distinct Photos per Villa)
+const getGallery = (slug, dbGallery) => {
+    if (Array.isArray(dbGallery) && dbGallery.length > 0) {
+        return dbGallery.map((src, i) => ({
+            category: 'Villa Gallery',
+            src: (src.startsWith('http') || src.startsWith('/')) ? src : `/${src}`,
+            title: `${props.villa.name} View ${i + 1}`
+        }));
+    }
     if (slug === 'luxury-villa') {
         return [
             { category: 'Architecture & Grounds', src: '/images/villas_gallery/IMG_0063.webp', title: 'Private Residence Setting' },
@@ -41,7 +48,7 @@ const getGallery = (slug) => {
     ];
 };
 
-const galleryImages = computed(() => getGallery(props.villa.slug));
+const galleryImages = computed(() => getGallery(props.villa.slug, props.villa.gallery_images));
 
 // Lightbox state
 const activeLightboxIndex = ref(null);
@@ -92,12 +99,14 @@ const formatCurrency = (val) => {
 };
 
 const getImageUrl = (path, slug) => {
+    if (path) {
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) return path;
+        return `/${path}`;
+    }
     if (slug === 'luxury-villa') return '/images/luxury_villa_img.webp';
     if (slug === 'semi-luxury-villa') return '/images/semi_luxury_villa_img.webp';
     if (slug === 'family-villa') return '/images/family_villa_img.webp';
-    if (!path) return '/images/luxury_villa_img.webp';
-    if (path.startsWith('http://') || path.startsWith('https://')) return path;
-    return `/images/${path}`;
+    return '/images/luxury_villa_img.webp';
 };
 </script>
 
