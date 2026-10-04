@@ -26,7 +26,8 @@ class BookController extends Controller
     {
         $checkIn = $request->input('check_in', Carbon::now()->addDay()->format('Y-m-d'));
         $checkOut = $request->input('check_out', Carbon::now()->addDays(3)->format('Y-m-d'));
-        $guests = (int) $request->input('guests', 2);
+        $guests = (int) ($request->input('guests_count') ?? $request->input('guests') ?? 1);
+        $villaId = $request->input('villa_id') ?? $request->input('accommodation_type_id');
 
         $villas = AccommodationType::where('active', true)->get();
         $availability = [];
@@ -48,6 +49,7 @@ class BookController extends Controller
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
                 'guests' => $guests,
+                'villa_id' => $villaId ? (int) $villaId : null,
             ],
             'settings' => [
                 'tax_rate' => Setting::get('tax_rate', '18.00'),

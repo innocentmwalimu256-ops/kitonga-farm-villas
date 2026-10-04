@@ -86,7 +86,7 @@ const tomorrowDate = new Date(Date.now() + 86400000).toISOString().split('T')[0]
 
 const checkIn = ref(today);
 const checkOut = ref(tomorrowDate);
-const guestsCount = ref(Math.min(2, props.villa.capacity || 2));
+const guestsCount = ref(1);
 
 const numberOfNights = computed(() => {
     if (!checkIn.value || !checkOut.value) return 1;
@@ -341,13 +341,13 @@ const getImageUrl = (path, slug) => {
                         </div>
 
                         <div>
-                            <label class="font-bold text-gray-600 uppercase text-[10px] block mb-1">Guests</label>
+                            <label class="font-bold text-gray-600 uppercase text-[10px] block mb-1">Guests (Max {{ villa.capacity || 2 }})</label>
                             <select 
                                 v-model="guestsCount" 
                                 class="w-full text-xs rounded-lg border-gray-300 focus:border-[#1B2E22] focus:ring-1 focus:ring-[#1B2E22] py-2 px-3 bg-white"
                             >
                                 <option v-for="n in (villa.capacity || 2)" :key="n" :value="n">
-                                    {{ n }} {{ n === 1 ? 'Guest' : 'Guests' }}
+                                    {{ n }} {{ n === 1 ? 'Guest (1 Person)' : 'Guests' }}
                                 </option>
                             </select>
                         </div>
@@ -367,7 +367,7 @@ const getImageUrl = (path, slug) => {
 
                     <!-- Primary Booking CTA -->
                     <Link 
-                        :href="route('booking.form', { villa_id: villa.id, check_in: checkIn, check_out: checkOut, guests_count: guestsCount })" 
+                        :href="route('booking.form', { villa_id: villa.id, check_in: checkIn, check_out: checkOut, guests_count: guestsCount, guests: guestsCount })" 
                         prefetch
                         class="w-full py-4 bg-[#1B2E22] hover:bg-[#C98A3E] text-[#F7F3EA] font-bold uppercase tracking-wider text-xs rounded-xl transition font-sans flex items-center justify-center gap-2 cursor-pointer shadow-lg group"
                     >

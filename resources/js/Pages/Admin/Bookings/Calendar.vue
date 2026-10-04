@@ -288,6 +288,7 @@ const changeMonth = (direction) => {
 
                         <div class="text-xs space-y-2">
                             <p><span class="font-bold text-gray-400 uppercase text-[9px] block">Customer / Guest</span> <strong>{{ selectedBooking.customer.name }}</strong></p>
+                            <p><span class="font-bold text-gray-400 uppercase text-[9px] block">Guests Count</span> <strong>{{ selectedBooking.guests_count || 1 }} {{ (selectedBooking.guests_count || 1) === 1 ? 'Guest (1 Person)' : 'Guests' }}</strong></p>
                             <p><span class="font-bold text-gray-400 uppercase text-[9px] block">Dates of Stay</span> {{ selectedBooking.check_in }} to {{ selectedBooking.check_out }}</p>
                             <p><span class="font-bold text-gray-400 uppercase text-[9px] block">Booking Source</span> <span class="uppercase font-mono font-bold">{{ selectedBooking.source }}</span></p>
                             

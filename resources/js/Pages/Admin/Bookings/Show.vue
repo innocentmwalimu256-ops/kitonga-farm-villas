@@ -92,6 +92,10 @@ const submitPayment = () => {
                                     <span class="text-xs text-gray-400 block uppercase font-semibold">Booking Source</span>
                                     <span class="capitalize bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs font-semibold">{{ booking.source }}</span>
                                 </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 block uppercase font-semibold">Number of Guests</span>
+                                    <span class="font-bold text-emerald-800">{{ booking.guests_count || 1 }} {{ (booking.guests_count || 1) === 1 ? 'Guest (1 Person)' : 'Guests' }}</span>
+                                </div>
                             </div>
                         </div>
 

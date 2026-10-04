@@ -14,14 +14,15 @@ const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
 
-const step = ref(1); // 1 = Select Dates/Villa, 2 = Guest Details, 3 = Review
-const selectedVilla = ref(null);
+const preselectedVilla = props.villas?.find(v => v.id == props.search?.villa_id) || null;
+const selectedVilla = ref(preselectedVilla);
+const step = ref(preselectedVilla ? 2 : 1); // 1 = Select Dates/Villa, 2 = Guest Details, 3 = Review
 
 const bookingForm = useForm({
-    accommodation_type_id: '',
+    accommodation_type_id: preselectedVilla ? preselectedVilla.id : '',
     check_in: props.search?.check_in || new Date().toISOString().split('T')[0],
     check_out: props.search?.check_out || new Date(Date.now() + 86400000).toISOString().split('T')[0],
-    guests_count: props.search?.guests || '2',
+    guests_count: props.search?.guests ? String(props.search.guests) : '1',
     customer_name: '',
     customer_phone: '',
     customer_email: '',
@@ -61,6 +62,9 @@ const deposit = () => {
 const selectVillaOption = (villa) => {
     selectedVilla.value = villa;
     bookingForm.accommodation_type_id = villa.id;
+    if (parseInt(bookingForm.guests_count) > villa.capacity) {
+        bookingForm.guests_count = String(villa.capacity);
+    }
     step.value = 2;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -182,10 +186,13 @@ const submitBooking = () => {
                     <div>
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Guests Count</label>
                         <select v-model="bookingForm.guests_count" class="w-full text-xs p-2.5 rounded-xl border border-gray-300 focus:outline-none focus:border-[#C98A3E]">
-                            <option value="1">1 Guest</option>
+                            <option value="1">1 Guest (1 Person)</option>
                             <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
                             <option value="4">4 Guests</option>
+                            <option value="5">5 Guests</option>
                             <option value="6">6 Guests</option>
+                            <option value="8">8 Guests</option>
                         </select>
                     </div>
                     <div>
@@ -211,20 +218,10 @@ const submitBooking = () => {
                                 <span v-if="villa.has_interior_kitchen" class="text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded">Kitchen</span>
                             </div>
                             <p class="text-xs text-gray-600 max-w-md leading-relaxed">{{ villa.description }}</p>
-                            <div class="flex flex-wrap gap-4 text-[11px] text-gray-500 font-semibold pt-1 items-center">
-                                <span class="inline-flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    Max {{ villa.capacity }} Guests
-                                </span>
+                            <div class="flex flex-wrap gap-3 text-[11px] text-gray-500 font-semibold pt-1">
+                                <span>👥 Max {{ villa.capacity }} Guests</span>
                                 <span>•</span>
-                                <span class="inline-flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                    </svg>
-                                    {{ villa.bedrooms }} BR / {{ villa.beds }} Beds
-                                </span>
+                                <span>🛏️ {{ villa.bedrooms }} BR / {{ villa.beds }} Beds</span>
                             </div>
                         </div>
 
@@ -251,9 +248,15 @@ const submitBooking = () => {
 
             <!-- STEP 2: GUEST PROFILE DETAILS -->
             <div v-if="step === 2" class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-xs space-y-6">
-                <div>
-                    <h3 class="font-serif font-bold text-2xl text-gray-900">Guest Profile Details</h3>
-                    <p class="text-xs text-gray-500 mt-1">Please provide the lead guest's contact information for your booking:</p>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-4">
+                    <div>
+                        <h3 class="font-serif font-bold text-2xl text-gray-900">Guest Profile Details</h3>
+                        <p class="text-xs text-gray-500 mt-1">Please provide the lead guest's contact information and party size:</p>
+                    </div>
+                    <div v-if="selectedVilla" class="px-3 py-1.5 bg-[#FAF8F5] rounded-xl border border-gray-200 text-xs font-semibold text-gray-800 flex items-center gap-2">
+                        <span>🏡 {{ selectedVilla.name }}</span>
+                        <span class="text-gray-400 text-[10px]">(Max {{ selectedVilla.capacity }} Guests)</span>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -268,6 +271,16 @@ const submitBooking = () => {
                     <div>
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Email Address *</label>
                         <input type="email" v-model="bookingForm.customer_email" placeholder="david@example.com" class="w-full text-xs p-3 rounded-xl border border-gray-300 focus:outline-none focus:border-[#C98A3E]" required>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                            Number of Guests (1 to {{ selectedVilla?.capacity || 2 }} people) *
+                        </label>
+                        <select v-model="bookingForm.guests_count" class="w-full text-xs p-3 rounded-xl border border-gray-300 focus:outline-none focus:border-[#C98A3E]" required>
+                            <option v-for="n in (selectedVilla?.capacity || 6)" :key="n" :value="String(n)">
+                                {{ n }} {{ n === 1 ? 'Guest (1 Person / Single)' : n + ' Guests' }}
+                            </option>
+                        </select>
                     </div>
                     <div class="sm:col-span-2">
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Special Requests / Dietary Notes</label>
@@ -312,8 +325,7 @@ const submitBooking = () => {
                         <span class="font-bold text-gray-400 uppercase text-[10px] block">Villa Stay</span>
                         <p class="font-bold text-gray-900">{{ selectedVilla?.name }}</p>
                         <p class="text-gray-600">{{ bookingForm.check_in }} to {{ bookingForm.check_out }} ({{ calculateNights() }} Nights)</p>
-                        <p class="text-[11px] text-emerald-800 font-medium">Check-in: 1:00 PM (*Anytime if vacant) | Check-out: Strictly 12:00 PM</p>
-                        <p class="text-gray-600">{{ bookingForm.guests_count }} Guests Occupancy</p>
+                        <p class="text-gray-600">{{ bookingForm.guests_count }} {{ bookingForm.guests_count == '1' || bookingForm.guests_count == 1 ? 'Guest (1 Person)' : 'Guests' }} Occupancy</p>
                     </div>
                 </div>
 
@@ -372,28 +384,15 @@ const submitBooking = () => {
                 <div class="space-y-1.5">
                     <p class="font-bold text-white uppercase tracking-wider text-xs">Direct Concierge Desk</p>
                     <p class="text-gray-400">Phone / WhatsApp: +255 758 774 695</p>
-                    <p class="text-gray-400">Email: kitongafarmvillas@gmail.com</p>
+                    <p class="text-gray-400">Email: info@kitongafarmvillas.com</p>
                 </div>
                 <div class="space-y-1.5">
                     <p class="font-bold text-white uppercase tracking-wider text-xs">Guaranteed Best Rates</p>
                     <p class="text-gray-400">Booking directly ensures complimentary farm breakfast and priority check-in.</p>
                 </div>
             </div>
-            <div class="max-w-6xl mx-auto px-6 mt-8 pt-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-400 text-xs">
-                <p>© 2026 Kitonga Farm Villas. All rights reserved.</p>
-                <div class="flex items-center gap-2 text-[11px]">
-                    <span class="text-gray-400">Created by</span>
-                    <a 
-                        href="https://wa.me/255675315279" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E3326] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
-                        title="Chat on WhatsApp"
-                    >
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>0675 315 279</span>
-                    </a>
-                </div>
+            <div class="max-w-6xl mx-auto px-6 mt-8 pt-5 border-t border-white/10 text-center text-gray-500">
+                © 2026 Kitonga Farm Villas. All rights reserved.
             </div>
         </footer>
 
