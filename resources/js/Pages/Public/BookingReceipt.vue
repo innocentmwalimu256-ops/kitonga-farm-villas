@@ -22,15 +22,15 @@ const printReceipt = () => {
 };
 
 const isFullyPaid = computed(() => {
-    return (Number(props.booking.balance) || 0) <= 0;
+    return (Number(props.booking?.balance) || 0) <= 0;
 });
 
 const isPartiallyPaid = computed(() => {
-    return (Number(props.booking.amount_paid) || 0) > 0 && (Number(props.booking.balance) || 0) > 0;
+    return (Number(props.booking?.amount_paid) || 0) > 0 && (Number(props.booking?.balance) || 0) > 0;
 });
 
 const isVillaBooking = computed(() => {
-    return !!props.booking.accommodation_unit_id;
+    return !!props.booking?.accommodation_unit_id;
 });
 
 const whatsappPhone = computed(() => {
@@ -39,14 +39,22 @@ const whatsappPhone = computed(() => {
 });
 
 const whatsappShareUrl = computed(() => {
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const guest = props.booking?.customer?.name || 'Mteja';
+    const ref = props.booking?.reference || '';
+    const status = (props.booking?.status || 'CONFIRMED').toUpperCase();
+    const total = formatCurrency(props.booking?.total);
+    const paid = formatCurrency(props.booking?.amount_paid);
+    const balance = formatCurrency(props.booking?.balance);
+
     const msg = `*KITONGA FARM VILLAS — OFFICIAL RECEIPT*\n\n` +
-        `Customer: ${props.booking.customer?.name}\n` +
-        `Ref: ${props.booking.reference}\n` +
-        `Status: ${props.booking.status.toUpperCase()}\n` +
-        `Total: ${formatCurrency(props.booking.total)}\n` +
-        `Amount Paid: ${formatCurrency(props.booking.amount_paid)}\n` +
-        `Balance: ${formatCurrency(props.booking.balance)}\n\n` +
-        `View digital receipt online: ${window.location.href}`;
+        `Customer: ${guest}\n` +
+        `Ref: ${ref}\n` +
+        `Status: ${status}\n` +
+        `Total: ${total}\n` +
+        `Amount Paid: ${paid}\n` +
+        `Balance: ${balance}\n\n` +
+        `View digital receipt online: ${currentUrl}`;
     return `https://wa.me/${whatsappPhone.value}?text=${encodeURIComponent(msg)}`;
 });
 </script>
