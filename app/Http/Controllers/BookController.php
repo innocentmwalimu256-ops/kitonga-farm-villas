@@ -129,6 +129,25 @@ class BookController extends Controller
     }
 
     /**
+     * Show digital receipt for a booking (Villa or Tour).
+     */
+    public function receipt($reference)
+    {
+        $booking = \App\Models\Booking::where('reference', $reference)
+            ->with(['customer', 'unit.type', 'items', 'payments.recorder'])
+            ->firstOrFail();
+
+        return Inertia::render('Public/BookingReceipt', [
+            'booking' => $booking,
+            'settings' => [
+                'contact_phone' => Setting::get('contact_phone', '+255 758 774 695'),
+                'contact_email' => Setting::get('contact_email', 'kitongafarmvillas@gmail.com'),
+                'location_coordinates' => Setting::get('location_coordinates', 'Komkonga, Handeni, Tanga'),
+            ]
+        ]);
+    }
+
+    /**
      * Store standalone day tour / experience booking (no villa stay required).
      */
     public function storeExperienceBooking(Request $request)
@@ -162,11 +181,12 @@ class BookController extends Controller
             }
 
             $validated['payment_method'] = $validated['payment_method'] ?? 'manual';
+            $validated['status'] = 'pending';
             $booking = $this->bookingService->createTourBooking($validated);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Your farm experience booking has been successfully confirmed!',
+                'message' => 'Ombi lako la booking limepokelewa. Tafadhali thibitisha na kamilisha malipo kwa WhatsApp.',
                 'booking' => [
                     'reference' => $booking->reference,
                     'tour_name' => $booking->items->first()?->description_snapshot,

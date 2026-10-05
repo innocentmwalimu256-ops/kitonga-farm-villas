@@ -95,14 +95,15 @@ const submitTourBooking = async () => {
 const whatsappLink = computed(() => {
     if (!confirmedBooking.value) return '#';
     const text = encodeURIComponent(
-        `Habari Kitonga Farm! Nimefanya booking ya Day Tour:\n` +
-        `• Ref: ${confirmedBooking.value.reference}\n` +
-        `• Tour: ${props.experience.name}\n` +
-        `• Tarehe: ${confirmedBooking.value.date} (${confirmedBooking.value.time_slot})\n` +
-        `• Wageni: ${confirmedBooking.value.guests} Person(s)\n` +
-        `• Jumla: ${formatCurrency(confirmedBooking.value.total)}\n` +
-        `• Jina: ${confirmedBooking.value.customer_name}\n` +
-        `• Simu: ${confirmedBooking.value.customer_phone}`
+        `Habari Kitonga Farm Villas,\n\n` +
+        `Jina langu ni *${confirmedBooking.value.customer_name}*.\n` +
+        `Ninaomba kufanya booking ya Farm Tour:\n` +
+        `• Namba ya Kumbukumbu: *${confirmedBooking.value.reference}*\n` +
+        `• Aina ya Tour: *${props.experience.name}*\n` +
+        `• Tarehe & Muda: *${confirmedBooking.value.date}* (${confirmedBooking.value.time_slot})\n` +
+        `• Idadi ya Wageni: *${confirmedBooking.value.guests}* Person(s)\n` +
+        `• Makadirio ya Malipo: *${formatCurrency(confirmedBooking.value.total)}*\n\n` +
+        `Naomba maelekezo ya jinsi ya kukamilisha malipo ili kuthibitisha booking yangu. Asante sana!`
     );
     return `https://wa.me/255758774695?text=${text}`;
 });

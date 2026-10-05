@@ -55,6 +55,40 @@ const updateStatus = () => {
     });
 };
 
+const quickApprove = () => {
+    if (confirm('Je, una uhakika unataka kuthibitisha (Confirm) booking hii ya ' + props.booking.reference + '?')) {
+        statusForm.status = 'confirmed';
+        statusForm.notes = 'Uthibitisho wa moja kwa moja baada ya uhakiki wa malipo.';
+        updateStatus();
+    }
+};
+
+const customerPhoneClean = computed(() => {
+    const raw = props.booking.customer?.phone || '';
+    return raw.replace(/[^0-9]/g, '');
+});
+
+const sendWhatsAppReceiptUrl = computed(() => {
+    if (!customerPhoneClean.value) return '#';
+    const guest = props.booking.customer?.name || 'Mteja';
+    const ref = props.booking.reference;
+    const total = formatCurrency(props.booking.total);
+    const paid = formatCurrency(props.booking.amount_paid);
+    const balance = formatCurrency(props.booking.balance);
+    const receiptLink = window.location.origin + '/booking/receipt/' + ref;
+
+    const msg = `Habari ${guest},\n\n` +
+        `Tunapenda kukutaarifu kuwa malipo na booking yako Kitonga Farm Villas imethibitishwa kikamilifu!\n\n` +
+        `• Namba ya Kumbukumbu: *${ref}*\n` +
+        `• Jumla Kuu: *${total}*\n` +
+        `• Kiasi Kilicholipwa: *${paid}*\n` +
+        `• Salio: *${balance}*\n\n` +
+        `Unaweza kutazama na kupakua risiti yako rasmi ya kielektroniki hapa:\n${receiptLink}\n\n` +
+        `Tunakutakia mapumziko mema na karibu sana Kitonga Farm Villas!`;
+
+    return `https://wa.me/${customerPhoneClean.value}?text=${encodeURIComponent(msg)}`;
+});
+
 const submitPayment = () => {
     paymentForm.post(route('admin.bookings.payment', props.booking.id), {
         onSuccess: () => {
@@ -72,12 +106,59 @@ const submitPayment = () => {
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="flex justify-between items-center">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    Reservation Details: {{ booking.reference }}
-                </h2>
-                <div class="flex space-x-2">
-                    <button @click="isPaymentModalOpen = true" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded shadow transition">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                        Reservation Details: {{ booking.reference }}
+                    </h2>
+                    <span 
+                        class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider"
+                        :class="{
+                            'bg-amber-100 text-amber-800 border border-amber-300': booking.status === 'pending',
+                            'bg-emerald-100 text-emerald-800 border border-emerald-300': booking.status === 'confirmed',
+                            'bg-blue-100 text-blue-800 border border-blue-300': booking.status === 'checked_in',
+                            'bg-gray-100 text-gray-800 border border-gray-300': booking.status === 'checked_out',
+                            'bg-red-100 text-red-800 border border-red-300': booking.status === 'cancelled',
+                        }"
+                    >
+                        {{ booking.status }}
+                    </span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Quick Approve Button when pending -->
+                    <button 
+                        v-if="booking.status === 'pending'"
+                        @click="quickApprove"
+                        type="button"
+                        class="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <span>Approve &amp; Confirm Booking</span>
+                    </button>
+
+                    <!-- Send Receipt via WhatsApp to Guest -->
+                    <a 
+                        v-if="customerPhoneClean"
+                        :href="sendWhatsAppReceiptUrl"
+                        target="_blank"
+                        class="px-3.5 py-2 bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-bold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                        title="Tuma risiti kwa mteja WhatsApp"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                        <span>Send WhatsApp Receipt</span>
+                    </a>
+
+                    <!-- View Official Receipt -->
+                    <a 
+                        :href="route('booking.receipt', booking.reference)"
+                        target="_blank"
+                        class="px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-800 text-xs font-bold rounded-lg shadow-sm border border-gray-300 transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                        <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>View / Print Receipt</span>
+                    </a>
+
+                    <button @click="isPaymentModalOpen = true" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
                         Record Payment
                     </button>
                 </div>

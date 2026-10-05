@@ -379,7 +379,7 @@ class BookingService
                 'id_type' => $data['id_type'] ?? ($customer->id_type ?? null),
                 'id_number' => $data['id_number'] ?? ($customer->id_number ?? null),
                 'id_document_path' => $data['id_document_path'] ?? ($customer->id_document_path ?? null),
-                'status' => 'confirmed',
+                'status' => $data['status'] ?? 'pending',
                 'source' => $data['source'] ?? 'online_experience',
                 'subtotal' => $totalPrice,
                 'discount' => 0.00,
@@ -405,8 +405,8 @@ class BookingService
             BookingStatusHistory::create([
                 'booking_id' => $booking->id,
                 'from_status' => 'initial',
-                'to_status' => 'confirmed',
-                'notes' => "Direct Experience Booking created online for {$tour->name} ({$guests} guests).",
+                'to_status' => $booking->status,
+                'notes' => "Direct Experience Booking created online for {$tour->name} ({$guests} guests). Status: {$booking->status}.",
                 'created_at' => Carbon::now(),
             ]);
 

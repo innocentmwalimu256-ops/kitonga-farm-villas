@@ -19,8 +19,23 @@ const whatsappPhone = computed(() => {
 const whatsappLink = computed(() => {
     const ref = props.booking?.reference || 'RES-2026';
     const total = formatCurrency(props.booking?.total);
-    const guest = props.booking?.customer?.name || 'Guest';
-    const message = encodeURIComponent(`Hello Kitonga Farm Villas,\n\nMy name is ${guest}. I submitted a booking request on your website.\n\nBooking Ref: ${ref}\nTotal Amount: ${total}\n\nI would like to confirm my reservation and arrange payment.`);
+    const guest = props.booking?.customer?.name || 'Mteja';
+    const villaName = props.booking?.unit?.type?.name || 'Villa';
+    const checkIn = props.booking?.check_in || '';
+    const checkOut = props.booking?.check_out || '';
+    const guestsCount = props.booking?.guests_count || 1;
+
+    const message = encodeURIComponent(
+        `Habari Kitonga Farm Villas,\n\n` +
+        `Jina langu ni *${guest}*.\n` +
+        `Ninaomba kufanya booking ya malazi:\n` +
+        `• Namba ya Kumbukumbu: *${ref}*\n` +
+        `• Mahali / Chumba: *${villaName}*\n` +
+        `• Tarehe: *${checkIn}* hadi *${checkOut}*\n` +
+        `• Idadi ya Wageni: *${guestsCount}*\n` +
+        `• Makadirio ya Malipo: *${total}*\n\n` +
+        `Naomba maelekezo ya jinsi ya kukamilisha malipo ili kuthibitisha booking yangu. Asante sana!`
+    );
     return `https://wa.me/${whatsappPhone.value}?text=${message}`;
 });
 </script>
@@ -55,45 +70,47 @@ const whatsappLink = computed(() => {
                 <!-- Title & Ref -->
                 <div class="space-y-2">
                     <span class="text-[11px] uppercase tracking-[4px] font-bold text-emerald-800 block">
-                        BOOKING REQUEST RECEIVED
+                        OMBI LA BOOKING LIMEPOKELEWA
                     </span>
                     <h1 class="text-2xl sm:text-3xl font-serif font-light text-[#1F2420]">
-                        Booking Reference: <span class="font-semibold text-[#C98A3E]">{{ booking.reference }}</span>
+                        Kumbukumbu: <span class="font-semibold text-[#C98A3E]">{{ booking.reference }}</span>
                     </h1>
                     <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider mt-1">
                         <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                        <span>Status: PENDING</span>
+                        <span v-if="booking.status === 'pending'">Hali: INASUBIRI MALIPO (PENDING)</span>
+                        <span v-else-if="booking.status === 'confirmed'">Hali: IMETHIBITISHWA (CONFIRMED)</span>
+                        <span v-else>Hali: {{ booking.status.toUpperCase() }}</span>
                     </div>
                 </div>
 
                 <!-- Booking Summary Box -->
                 <div class="bg-[#FAF8F5] rounded-2xl p-6 border border-gray-200 text-left space-y-3 text-xs">
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
-                        <span class="text-gray-500">Lead Guest:</span>
+                        <span class="text-gray-500">Mteja / Lead Guest:</span>
                         <span class="font-bold text-gray-900">{{ booking.customer?.name }}</span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
-                        <span class="text-gray-500">Phone / WhatsApp:</span>
+                        <span class="text-gray-500">Simu / WhatsApp:</span>
                         <span class="font-bold text-gray-900">{{ booking.customer?.phone || '—' }}</span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
-                        <span class="text-gray-500">Reservation Dates:</span>
+                        <span class="text-gray-500">Tarehe za Malazi:</span>
                         <span class="font-bold text-gray-900">{{ booking.check_in }} → {{ booking.check_out }}</span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
-                        <span class="text-gray-500">Check-In Time:</span>
-                        <span class="font-bold text-gray-900">1:00 PM <span class="text-[10px] text-emerald-700 font-normal">(*Anytime if vacant)</span></span>
+                        <span class="text-gray-500">Muda wa Kuingia (Check-In):</span>
+                        <span class="font-bold text-gray-900">1:00 PM <span class="text-[10px] text-emerald-700 font-normal">(*Muda wowote chumba kikiwa wazi)</span></span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
-                        <span class="text-gray-500">Check-Out Time:</span>
-                        <span class="font-bold text-gray-900">12:00 PM <span class="text-[10px] text-gray-500 font-normal">(Strictly)</span></span>
+                        <span class="text-gray-500">Muda wa Kuondoka (Check-Out):</span>
+                        <span class="font-bold text-gray-900">12:00 PM <span class="text-[10px] text-gray-500 font-normal">(Muda rasmi)</span></span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-gray-200/60">
-                        <span class="text-gray-500">Total Guests:</span>
-                        <span class="font-bold text-gray-900">{{ booking.guests_count }} Guests</span>
+                        <span class="text-gray-500">Jumla ya Wageni:</span>
+                        <span class="font-bold text-gray-900">{{ booking.guests_count }} Wageni</span>
                     </div>
                     <div class="flex justify-between py-2 text-sm">
-                        <span class="font-bold text-gray-900">Total Stay Amount:</span>
+                        <span class="font-bold text-gray-900">Makadirio ya Gharama:</span>
                         <span class="font-extrabold text-[#1B2E22] text-base">{{ formatCurrency(booking.total) }}</span>
                     </div>
                 </div>
@@ -101,14 +118,14 @@ const whatsappLink = computed(() => {
                 <!-- Next Steps Instructions -->
                 <div class="space-y-2 text-xs text-gray-600 leading-relaxed max-w-lg mx-auto">
                     <p class="font-semibold text-gray-900">
-                        Next Steps:
+                        Hatua Inayofuata:
                     </p>
                     <p>
-                        We have successfully received your reservation request. Please proceed to WhatsApp to connect directly with our concierge desk to confirm availability and complete your payment.
+                        Ombi lako limehifadhiwa kama <strong>Pending</strong>. Tafadhali bofya kitufe cha WhatsApp hapa chini ili kupata maelekezo ya malipo na kuthibitisha booking yako na kitengo cha mapokezi.
                     </p>
                 </div>
 
-                <!-- WhatsApp CTA Button -->
+                <!-- Action Buttons -->
                 <div class="space-y-3 pt-2">
                     <a 
                         :href="whatsappLink" 
@@ -119,15 +136,24 @@ const whatsappLink = computed(() => {
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.698.074-2.128-.517-1.745-.722-2.888-2.518-2.977-2.637-.086-.118-.707-.941-.707-1.796 0-.854.448-1.275.607-1.448.16-.174.348-.218.465-.218.117 0 .234.001.336.006.107.005.251-.041.393.3.144.347.493 1.202.536 1.29.043.087.072.189.014.304-.058.117-.087.19-.174.29-.087.102-.183.228-.261.306-.089.088-.182.184-.078.362.104.178.463.765.994 1.238.683.608 1.259.797 1.438.885.178.087.283.073.388-.048.106-.12.453-.527.575-.708.121-.182.243-.151.408-.09.166.06 1.054.497 1.235.588.182.09.303.136.348.213.044.076.044.444-.1.849z"/>
                         </svg>
-                        <span>CONTINUE ON WHATSAPP</span>
+                        <span>THIBITISHA KWA WHATSAPP</span>
                     </a>
+
+                    <!-- Digital Receipt Link -->
+                    <Link
+                        :href="route('booking.receipt', booking.reference)"
+                        class="w-full py-3.5 bg-white hover:bg-gray-50 text-[#14301F] text-xs font-bold uppercase tracking-wider rounded-xl transition border border-[#14301F] flex items-center justify-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>TAZAMA / PAKUA RISITI YA MTANDAO</span>
+                    </Link>
 
                     <Link 
                         :href="route('home')" 
                         prefetch
                         class="inline-block text-xs font-semibold text-gray-500 hover:text-gray-800 transition pt-2"
                     >
-                        ← Return to Homepage
+                        ← Rudi Ukurasa Mkuu (Homepage)
                     </Link>
                 </div>
 
@@ -139,17 +165,7 @@ const whatsappLink = computed(() => {
             <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
                 <p>© 2026 Kitonga Farm Villas. All rights reserved.</p>
                 <div class="flex items-center gap-2 text-[11px]">
-                    <span class="text-gray-400">Created by</span>
-                    <a 
-                        href="https://wa.me/255675315279" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E3326] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
-                        title="Chat on WhatsApp"
-                    >
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>0675 315 279</span>
-                    </a>
+                    <span class="text-gray-400">Kitonga Farm Direct Concierge</span>
                 </div>
             </div>
         </footer>

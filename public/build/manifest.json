@@ -99,7 +99,7 @@
     ]
   },
   "resources/js/Pages/Admin/Bookings/Show.vue": {
-    "file": "assets/Show-Bqn4Ftf8.js",
+    "file": "assets/Show-Bi30YXeF.js",
     "name": "Show",
     "src": "resources/js/Pages/Admin/Bookings/Show.vue",
     "isDynamicEntry": true,
@@ -462,8 +462,22 @@
       "_vendor-core-BPe24NqQ.js"
     ]
   },
+  "resources/js/Pages/Public/BookingReceipt.vue": {
+    "file": "assets/BookingReceipt-CxrqNypI.js",
+    "name": "BookingReceipt",
+    "src": "resources/js/Pages/Public/BookingReceipt.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-vue-inertia-FJ8ZFriW.js",
+      "__plugin-vue_export-helper-DlAUqK2U.js",
+      "_vendor-core-BPe24NqQ.js"
+    ],
+    "css": [
+      "assets/BookingReceipt-B-dVGMzk.css"
+    ]
+  },
   "resources/js/Pages/Public/BookingSuccess.vue": {
-    "file": "assets/BookingSuccess-B6dFwhaT.js",
+    "file": "assets/BookingSuccess-TppyhVvE.js",
     "name": "BookingSuccess",
     "src": "resources/js/Pages/Public/BookingSuccess.vue",
     "isDynamicEntry": true,
@@ -483,7 +497,7 @@
     ]
   },
   "resources/js/Pages/Public/ExperienceDetail.vue": {
-    "file": "assets/ExperienceDetail-COfZoWWH.js",
+    "file": "assets/ExperienceDetail-4N8fndqj.js",
     "name": "ExperienceDetail",
     "src": "resources/js/Pages/Public/ExperienceDetail.vue",
     "isDynamicEntry": true,
@@ -529,7 +543,7 @@
     ]
   },
   "resources/js/Pages/Public/Experiences/Components/ExperienceBookingPanel.vue": {
-    "file": "assets/ExperienceBookingPanel-5GTLrRkr.js",
+    "file": "assets/ExperienceBookingPanel-Bu_TQ1N9.js",
     "name": "ExperienceBookingPanel",
     "src": "resources/js/Pages/Public/Experiences/Components/ExperienceBookingPanel.vue",
     "isDynamicEntry": true,
@@ -783,7 +797,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DvBved3D.js",
+    "file": "assets/app-DS-VK-IM.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -829,6 +843,7 @@
       "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue",
       "resources/js/Pages/Public/About.vue",
       "resources/js/Pages/Public/Book.vue",
+      "resources/js/Pages/Public/BookingReceipt.vue",
       "resources/js/Pages/Public/BookingSuccess.vue",
       "resources/js/Pages/Public/Contact.vue",
       "resources/js/Pages/Public/ExperienceDetail.vue",
@@ -862,7 +877,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-7nv1pLKc.css"
+      "assets/app-BoqEeUqg.css"
     ]
   }
 }

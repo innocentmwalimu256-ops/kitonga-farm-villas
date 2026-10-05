@@ -145,6 +145,7 @@ Route::get('/book', [BookController::class, 'showForm'])->name('booking.form');
 Route::post('/book', [BookController::class, 'store'])->name('booking.store');
 Route::post('/experiences/book', [BookController::class, 'storeExperienceBooking'])->name('experiences.book');
 Route::get('/booking/success/{reference}', [BookController::class, 'success'])->name('booking.success');
+Route::get('/booking/receipt/{reference}', [BookController::class, 'receipt'])->name('booking.receipt');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
