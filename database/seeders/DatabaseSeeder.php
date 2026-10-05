@@ -251,7 +251,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Normal Farm Tour',
                 'slug' => 'normal-farm-tour',
-                'description' => 'A relaxed, guided entry into the rhythmic beauty of Kitonga. Wander through central palm pathways, observe seasonal fruit plantations, and understand our farming philosophy before cooling off in our rural farm bar and pool lounge.',
+                'description' => 'A relaxed, guided entry into the rhythmic beauty of Kitonga. Wander through central palm pathways, observe seasonal fruit plantations, and understand our farming philosophy before relaxing in our rural farm bar and open-air lounge.',
                 'price' => 20000.00,
                 'capacity_per_slot' => 30,
                 'category' => 'Nature & Trails',
@@ -268,20 +268,20 @@ class DatabaseSeeder extends Seeder
                 'inclusions' => [
                     'Guided farm path tour',
                     'Fresh coconut refreshments',
-                    'Access to the swimming pool',
-                    'A tour of the central mango orchard'
+                    'Tour of the central mango orchard',
+                    'Seasonal farm fruit tasting'
                 ],
                 'highlights' => [
                     'Vibrant papaya and organic chilli fields',
-                    'Relaxing countryside swimming pool',
+                    'Central mango & coconut palm pathways',
                     'Pure fresh-picked coconut juice straight from our palms'
                 ],
-                'good_to_know' => 'Wear comfortable closed walking shoes, a sun hat, and bring your swimwear and towel.',
+                'good_to_know' => 'Wear comfortable closed walking shoes, lightweight clothing, and a sun hat for outdoor paths.',
                 'featured' => true,
                 'sort_order' => 1,
                 'status' => 'published',
                 'seo_title' => 'Normal Farm Tour - Authentic Guided Tour',
-                'seo_description' => 'Tour the central farm paths, crop areas (mango, papaya, chilli) and finish with a refreshing swim in our pool.',
+                'seo_description' => 'Tour the central farm paths, crop areas (mango, papaya, chilli) and enjoy fresh farm refreshments.',
             ],
             [
                 'name' => 'General Farm Tour',

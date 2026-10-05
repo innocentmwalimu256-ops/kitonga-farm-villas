@@ -91,7 +91,7 @@ const getImageUrl = (path, slug) => {
                                 Farm Walk
                             </span>
                             <span v-if="exp.slug === 'normal-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
-                                Swimming Pool
+                                Fruit Tasting
                             </span>
                             <span v-if="exp.slug === 'general-farm-tour'" class="bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-gray-200">
                                 Dairy Zone

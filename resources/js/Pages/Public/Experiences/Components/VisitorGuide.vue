@@ -14,7 +14,7 @@ const guideItems = [
     },
     {
         title: 'Swimming Pool & Countryside Lounge',
-        content: 'Access to our outdoor swimming pool is included with both farm tours. Feel free to bring your swimwear and towel to refresh after the walking tour.',
+        content: 'Access to our outdoor swimming pool is available with the General Farm Tour and all private Villa stays. Feel free to bring your swimwear and towel to refresh after your tour.',
     },
     {
         title: 'Visiting with Children & Families',
