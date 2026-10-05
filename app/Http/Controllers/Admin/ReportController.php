@@ -270,7 +270,7 @@ class ReportController extends Controller
         $otherRevenue = $posSales->where('category', 'other')->sum('total');
         $totalRevenue = $accRevenue + $tourRev + $posSales->sum('total');
 
-        $expenses = Expense::with(['category', 'creator'])
+        $expenses = Expense::with(['creator'])
             ->where('status', 'approved')
             ->whereBetween('date', [$startDateStr, $endDateStr])
             ->get();
@@ -291,7 +291,7 @@ class ReportController extends Controller
                 return [
                     'id' => $e->id,
                     'date' => Carbon::parse($e->date)->format('d M Y'),
-                    'category' => $e->category?->name ?? 'General',
+                    'category' => $e->category ?: 'General',
                     'description' => $e->description,
                     'amount' => (float) $e->amount,
                     'recipient' => $e->recipient,

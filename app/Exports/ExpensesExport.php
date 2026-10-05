@@ -19,7 +19,7 @@ class ExpensesExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $query = Expense::with('category', 'creator');
+        $query = Expense::with('creator');
 
         if ($this->startDate && $this->endDate) {
             $query->whereBetween('date', [$this->startDate, $this->endDate]);
@@ -30,7 +30,7 @@ class ExpensesExport implements FromCollection, WithHeadings
                 return [
                     'ID' => $e->id,
                     'Date' => $e->date,
-                    'Category' => $e->category ? $e->category->name : 'Unassigned',
+                    'Category' => $e->category ?: 'General',
                     'Description' => $e->description,
                     'Amount' => $e->amount,
                     'Recipient' => $e->recipient,
