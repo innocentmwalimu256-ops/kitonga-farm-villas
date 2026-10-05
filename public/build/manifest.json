@@ -739,7 +739,7 @@
     ]
   },
   "resources/js/Pages/Public/Products.vue": {
-    "file": "assets/Products-CkKZ9I4s.js",
+    "file": "assets/Products-DgxxVBWo.js",
     "name": "Products",
     "src": "resources/js/Pages/Public/Products.vue",
     "isDynamicEntry": true,
@@ -749,7 +749,7 @@
       "_vendor-core-BPe24NqQ.js"
     ],
     "css": [
-      "assets/Products-DBt0KQqf.css"
+      "assets/Products-DzOzAgGR.css"
     ]
   },
   "resources/js/Pages/Public/VillaDetail.vue": {
@@ -783,7 +783,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-kbV4Z9S3.js",
+    "file": "assets/app-DvBved3D.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -862,7 +862,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-7B_qwp5Y.css"
+      "assets/app-7nv1pLKc.css"
     ]
   }
 }
