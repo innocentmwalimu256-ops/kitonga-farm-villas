@@ -205,7 +205,7 @@ class DatabaseSeeder extends Seeder
                 'has_interior_kitchen' => true,
                 'featured_image' => 'family_villa_img.jpg',
                 'amenities' => ['Free Wi-Fi', 'DSTV', 'Azam TV', 'Interior Kitchen', 'Swimming Pool', 'Air Conditioning', 'Private Terrace'],
-                'units' => ['F1 - Family House 1'],
+                'units' => ['F1 - Family House 1', 'F2 - Family House 2'],
             ],
         ];
 
