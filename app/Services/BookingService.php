@@ -90,11 +90,22 @@ class BookingService
             $customer = null;
             if (isset($data['customer_id'])) {
                 $customer = Customer::findOrFail($data['customer_id']);
+                // Update customer ID info if provided
+                $customerUpdate = [];
+                if (!empty($data['id_type'])) $customerUpdate['id_type'] = $data['id_type'];
+                if (!empty($data['id_number'])) $customerUpdate['id_number'] = $data['id_number'];
+                if (!empty($data['id_document_path'])) $customerUpdate['id_document_path'] = $data['id_document_path'];
+                if (!empty($customerUpdate)) {
+                    $customer->update($customerUpdate);
+                }
             } else {
                 $customer = Customer::create([
                     'name' => $data['customer_name'],
                     'phone' => $data['customer_phone'] ?? null,
                     'email' => $data['customer_email'] ?? null,
+                    'id_type' => $data['id_type'] ?? null,
+                    'id_number' => $data['id_number'] ?? null,
+                    'id_document_path' => $data['id_document_path'] ?? null,
                     'notes' => $data['customer_notes'] ?? null,
                 ]);
             }
@@ -161,6 +172,9 @@ class BookingService
                 'check_in' => $checkIn->format('Y-m-d'),
                 'check_out' => $checkOut->format('Y-m-d'),
                 'guests_count' => $data['guests_count'] ?? 1,
+                'id_type' => $data['id_type'] ?? ($customer->id_type ?? null),
+                'id_number' => $data['id_number'] ?? ($customer->id_number ?? null),
+                'id_document_path' => $data['id_document_path'] ?? ($customer->id_document_path ?? null),
                 'status' => $data['status'] ?? 'pending',
                 'source' => $data['source'] ?? 'online',
                 'subtotal' => $subtotal,
@@ -190,6 +204,9 @@ class BookingService
                 'booking_id' => $booking->id,
                 'full_name' => $customer->name,
                 'phone' => $customer->phone,
+                'id_type' => $data['id_type'] ?? ($customer->id_type ?? null),
+                'passport_number' => $data['id_number'] ?? ($customer->id_number ?? null),
+                'id_document_path' => $data['id_document_path'] ?? ($customer->id_document_path ?? null),
                 'is_primary' => true,
             ]);
 
@@ -322,16 +339,23 @@ class BookingService
             }
 
             if ($customer) {
-                $customer->update([
+                $customerUpdate = [
                     'name' => $data['customer_name'],
                     'phone' => $data['customer_phone'] ?? $customer->phone,
                     'email' => $data['customer_email'] ?? $customer->email,
-                ]);
+                ];
+                if (!empty($data['id_type'])) $customerUpdate['id_type'] = $data['id_type'];
+                if (!empty($data['id_number'])) $customerUpdate['id_number'] = $data['id_number'];
+                if (!empty($data['id_document_path'])) $customerUpdate['id_document_path'] = $data['id_document_path'];
+                $customer->update($customerUpdate);
             } else {
                 $customer = Customer::create([
                     'name' => $data['customer_name'],
                     'phone' => $data['customer_phone'] ?? null,
                     'email' => $data['customer_email'] ?? null,
+                    'id_type' => $data['id_type'] ?? null,
+                    'id_number' => $data['id_number'] ?? null,
+                    'id_document_path' => $data['id_document_path'] ?? null,
                 ]);
             }
 
@@ -352,6 +376,9 @@ class BookingService
                 'check_in' => $date,
                 'check_out' => $date,
                 'guests_count' => $guests,
+                'id_type' => $data['id_type'] ?? ($customer->id_type ?? null),
+                'id_number' => $data['id_number'] ?? ($customer->id_number ?? null),
+                'id_document_path' => $data['id_document_path'] ?? ($customer->id_document_path ?? null),
                 'status' => 'confirmed',
                 'source' => $data['source'] ?? 'online_experience',
                 'subtotal' => $totalPrice,

@@ -30,6 +30,9 @@ const form = useForm({
     customer_name: '',
     customer_phone: '',
     customer_email: '',
+    id_type: 'nida',
+    id_number: '',
+    id_document: null,
     
     // Villa fields
     accommodation_type_id: props.villas[0]?.id || '',
@@ -52,6 +55,44 @@ const form = useForm({
     payment_reference: '',
     notes: '',
 });
+
+const fileInputRef = ref(null);
+const idPreview = ref(null);
+const isPdfFile = ref(false);
+const fileName = ref('');
+
+const handleIdFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size exceeds 10MB limit.');
+            return;
+        }
+        form.id_document = file;
+        fileName.value = file.name;
+        if (file.type === 'application/pdf') {
+            isPdfFile.value = true;
+            idPreview.value = null;
+        } else if (file.type.startsWith('image/')) {
+            isPdfFile.value = false;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                idPreview.value = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+};
+
+const removeIdDocument = () => {
+    form.id_document = null;
+    idPreview.value = null;
+    isPdfFile.value = false;
+    fileName.value = '';
+    if (fileInputRef.value) {
+        fileInputRef.value.value = '';
+    }
+};
 
 // Watch bookingType and update form.booking_type
 watch(bookingType, (newType) => {
@@ -491,6 +532,62 @@ const submitBooking = () => {
                             <div>
                                 <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Email Address</label>
                                 <input type="email" v-model="form.customer_email" placeholder="client@example.com" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
+                            </div>
+                        </div>
+
+                        <!-- Digital ID & Verification Attachment -->
+                        <div class="pt-3 border-t border-gray-100 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                                    <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                    </svg>
+                                    <span>Guest Identification Document (Digital Copy)</span>
+                                </span>
+                                <span class="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded font-semibold">Optional at creation</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">ID Type / Aina ya Kitambulisho</label>
+                                    <select v-model="form.id_type" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
+                                        <option value="nida">NIDA / Kitambulisho cha Taifa</option>
+                                        <option value="passport">Passport / Pasi ya Kusafiria</option>
+                                        <option value="driving_license">Driving License / Leseni</option>
+                                        <option value="voter_id">Voter ID / Mpiga Kura</option>
+                                        <option value="other">Other Official Document</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">ID Number / Namba ya Kitambulisho</label>
+                                    <input type="text" v-model="form.id_number" placeholder="e.g. 19900101-XXXXX-XXXXX" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Attach ID Photo / Document (Scan or Photo)</label>
+                                <div v-if="!form.id_document" class="border-2 border-dashed border-gray-200 hover:border-emerald-600 bg-gray-50 rounded-xl p-3.5 text-center cursor-pointer transition" @click="fileInputRef.click()">
+                                    <input ref="fileInputRef" type="file" accept="image/*,application/pdf" @change="handleIdFileUpload" class="hidden" />
+                                    <div class="flex items-center justify-center gap-2 text-xs text-gray-600 font-semibold">
+                                        <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <span>Click to attach guest ID snapshot / scan file</span>
+                                    </div>
+                                    <p class="text-[10px] text-gray-400 mt-0.5">Supports JPG, PNG, WEBP, or PDF (Max 10MB)</p>
+                                </div>
+                                <div v-else class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div v-if="idPreview" class="w-12 h-10 rounded border overflow-hidden bg-white shrink-0">
+                                            <img :src="idPreview" class="w-full h-full object-cover" alt="ID preview" />
+                                        </div>
+                                        <div v-else class="w-12 h-10 rounded border bg-red-100 text-red-800 flex items-center justify-center font-bold text-xs shrink-0">
+                                            PDF
+                                        </div>
+                                        <span class="text-xs font-bold text-emerald-950">{{ fileName || 'Document attached' }}</span>
+                                    </div>
+                                    <button type="button" @click="removeIdDocument" class="text-xs font-bold text-red-600 hover:text-red-800 transition">Remove</button>
+                                </div>
                             </div>
                         </div>
                     </div>

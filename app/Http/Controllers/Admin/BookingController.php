@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\BookingStatusHistory;
 use App\Services\BookingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -160,6 +161,9 @@ class BookingController extends Controller
                 'status' => 'required|string',
                 'source' => 'required|string',
                 'notes' => 'nullable|string',
+                'id_type' => 'nullable|string|max:50',
+                'id_number' => 'nullable|string|max:100',
+                'id_document' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
                 'rate_override' => 'nullable|numeric|min:0',
                 'discount' => 'nullable|numeric|min:0',
                 'amount_paid' => 'nullable|numeric|min:0',
@@ -178,6 +182,17 @@ class BookingController extends Controller
             $validated['user_id'] = auth()->id();
 
             try {
+                if ($request->hasFile('id_document')) {
+                    $file = $request->file('id_document');
+                    $destinationPath = public_path('uploads/id_documents');
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0755, true);
+                    }
+                    $filename = 'id_adm_tour_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                    $file->move($destinationPath, $filename);
+                    $validated['id_document_path'] = 'uploads/id_documents/' . $filename;
+                }
+
                 if ($request->input('customer_mode') === 'existing') {
                     $customer = Customer::findOrFail($validated['customer_id']);
                     $validated['customer_name'] = $customer->name;
@@ -242,6 +257,9 @@ class BookingController extends Controller
             'status' => 'required|string',
             'source' => 'required|string',
             'notes' => 'nullable|string',
+            'id_type' => 'nullable|string|max:50',
+            'id_number' => 'nullable|string|max:100',
+            'id_document' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
             'rate_override' => 'nullable|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
             'amount_paid' => 'nullable|numeric|min:0',
@@ -261,6 +279,17 @@ class BookingController extends Controller
         $validated['user_id'] = auth()->id();
 
         try {
+            if ($request->hasFile('id_document')) {
+                $file = $request->file('id_document');
+                $destinationPath = public_path('uploads/id_documents');
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+                $filename = 'id_adm_villa_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $validated['id_document_path'] = 'uploads/id_documents/' . $filename;
+            }
+
             $booking = $this->bookingService->createBooking($validated);
 
             // Record immediate payment if cashier entered amount_paid

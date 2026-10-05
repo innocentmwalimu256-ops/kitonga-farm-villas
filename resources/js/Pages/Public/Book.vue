@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     villas: Array,
@@ -18,6 +18,19 @@ const preselectedVilla = props.villas?.find(v => v.id == props.search?.villa_id)
 const selectedVilla = ref(preselectedVilla);
 const step = ref(preselectedVilla ? 2 : 1); // 1 = Select Dates/Villa, 2 = Guest Details, 3 = Review
 
+const fileInputRef = ref(null);
+const idPreview = ref(null);
+const isPdfFile = ref(false);
+const fileName = ref('');
+
+const idTypeLabels = {
+    nida: 'National ID (NIDA) / Kitambulisho cha Taifa',
+    passport: 'International Passport / Pasi ya Kusafiria',
+    driving_license: 'Driving License / Leseni ya Udereva',
+    voter_id: 'Voter ID / Kitambulisho cha Mpiga Kura',
+    other: 'Other Official ID / Kitambulisho Kingine',
+};
+
 const bookingForm = useForm({
     accommodation_type_id: preselectedVilla ? preselectedVilla.id : '',
     check_in: props.search?.check_in || new Date().toISOString().split('T')[0],
@@ -26,8 +39,44 @@ const bookingForm = useForm({
     customer_name: '',
     customer_phone: '',
     customer_email: '',
+    id_type: 'nida',
+    id_number: '',
+    id_document: null,
     notes: '',
 });
+
+const handleIdFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size exceeds 10MB limit. Please choose a smaller photo.');
+            return;
+        }
+        bookingForm.id_document = file;
+        fileName.value = file.name;
+        if (file.type === 'application/pdf') {
+            isPdfFile.value = true;
+            idPreview.value = null;
+        } else if (file.type.startsWith('image/')) {
+            isPdfFile.value = false;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                idPreview.value = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+};
+
+const removeIdDocument = () => {
+    bookingForm.id_document = null;
+    idPreview.value = null;
+    isPdfFile.value = false;
+    fileName.value = '';
+    if (fileInputRef.value) {
+        fileInputRef.value.value = '';
+    }
+};
 
 const calculateNights = () => {
     const start = new Date(bookingForm.check_in);
@@ -317,6 +366,101 @@ const submitBooking = () => {
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Email Address *</label>
                         <input type="email" v-model="bookingForm.customer_email" placeholder="david@example.com" class="w-full text-xs p-3 rounded-xl border border-gray-300 focus:outline-none focus:border-[#C98A3E]" required>
                     </div>
+                    
+                    <!-- DIGITAL GUEST ID & VERIFICATION SECTION -->
+                    <div class="sm:col-span-2 bg-[#FAF8F5] p-4 sm:p-5 rounded-2xl border border-gray-200 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-lg bg-[#14231C] text-[#E6C387] flex items-center justify-center text-xs font-bold">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Digital ID / Express Check-In</h4>
+                                    <p class="text-[11px] text-gray-500">Picha ya Kitambulisho kwa ajili ya usajili wa kidijitali</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">Contactless Check-in</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Aina ya Kitambulisho / ID Type</label>
+                                <select v-model="bookingForm.id_type" class="w-full text-xs p-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:border-[#C98A3E]">
+                                    <option value="nida">Kitambulisho cha Taifa (NIDA)</option>
+                                    <option value="passport">Passport / Pasi ya Kusafiria</option>
+                                    <option value="driving_license">Leseni ya Udereva (Driver's License)</option>
+                                    <option value="voter_id">Kitambulisho cha Mpiga Kura (Voter's Card)</option>
+                                    <option value="other">Kinginecho (Other Official ID)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Namba ya Kitambulisho / ID Number</label>
+                                <input type="text" v-model="bookingForm.id_number" placeholder="Mf. 19900101-XXXXX-XXXXX" class="w-full text-xs p-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:border-[#C98A3E]">
+                            </div>
+                        </div>
+
+                        <!-- ID Document Photo Upload -->
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                                Picha ya Kitambulisho / Upload ID Photo or Document
+                            </label>
+                            
+                            <!-- File input trigger container -->
+                            <div v-if="!bookingForm.id_document" class="border-2 border-dashed border-gray-300 hover:border-[#C98A3E] bg-white rounded-xl p-5 text-center transition cursor-pointer" @click="fileInputRef.click()">
+                                <input 
+                                    ref="fileInputRef"
+                                    type="file" 
+                                    accept="image/*,application/pdf" 
+                                    @change="handleIdFileUpload" 
+                                    class="hidden"
+                                />
+                                <div class="flex flex-col items-center justify-center space-y-2">
+                                    <div class="w-10 h-10 rounded-full bg-amber-50 text-[#C98A3E] flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <div class="text-xs font-semibold text-gray-800">
+                                        <span class="text-[#C98A3E] underline">Bofya hapa kupakia</span> au piga picha ya kitambulisho
+                                    </div>
+                                    <p class="text-[10px] text-gray-400">Inasaidia JPG, PNG, WEBP, au PDF (Max 10MB)</p>
+                                </div>
+                            </div>
+
+                            <!-- Preview of uploaded ID -->
+                            <div v-else class="bg-white p-3 sm:p-4 rounded-xl border border-gray-200 flex items-center justify-between gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div v-if="idPreview" class="w-16 h-12 rounded-lg border border-gray-200 overflow-hidden bg-gray-100 shrink-0">
+                                        <img :src="idPreview" alt="ID Document Preview" class="w-full h-full object-cover">
+                                    </div>
+                                    <div v-else class="w-16 h-12 rounded-lg border border-gray-200 bg-red-50 text-red-700 flex items-center justify-center font-bold text-xs shrink-0">
+                                        PDF
+                                    </div>
+                                    <div class="space-y-0.5">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="text-xs font-bold text-gray-900">{{ fileName || 'Uploaded Document' }}</span>
+                                            <span class="text-[9px] px-1.5 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded">Attached</span>
+                                        </div>
+                                        <p class="text-[10px] text-gray-500">Kitambulisho kimehifadhiwa tayari kwa usajili</p>
+                                    </div>
+                                </div>
+                                <button 
+                                    type="button" 
+                                    @click="removeIdDocument" 
+                                    class="px-3 py-1.5 text-xs font-bold text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                                >
+                                    Ondoa / Change
+                                </button>
+                            </div>
+
+                            <p class="text-[10px] text-gray-400 italic">
+                                * Picha ya kitambulisho itakuepusha na usumbufu wa kutoa copy ukiwasili reception.
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="sm:col-span-2 space-y-1">
                         <div class="flex justify-between items-center">
                             <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
@@ -396,12 +540,21 @@ const submitBooking = () => {
                     <p class="text-xs text-gray-500 mt-1">Please confirm your reservation itinerary before submitting:</p>
                 </div>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs">
                     <div class="space-y-1">
                         <span class="font-bold text-gray-400 uppercase text-[10px] block">Lead Guest</span>
                         <p class="font-bold text-gray-900">{{ bookingForm.customer_name }}</p>
                         <p class="text-gray-600">{{ bookingForm.customer_phone }}</p>
                         <p class="text-gray-600">{{ bookingForm.customer_email }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-bold text-gray-400 uppercase text-[10px] block">Digital ID Profile</span>
+                        <p class="font-bold text-gray-900">{{ idTypeLabels[bookingForm.id_type] || bookingForm.id_type }}</p>
+                        <p class="text-gray-600 font-mono">{{ bookingForm.id_number || 'Number not provided' }}</p>
+                        <p v-if="bookingForm.id_document" class="text-emerald-700 font-bold text-[11px] flex items-center gap-1">
+                            <span>✓</span> Document Attached
+                        </p>
+                        <p v-else class="text-gray-400 text-[11px]">No Photo Attached</p>
                     </div>
                     <div class="space-y-1">
                         <span class="font-bold text-gray-400 uppercase text-[10px] block">Villa Stay</span>

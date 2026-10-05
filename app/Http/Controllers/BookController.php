@@ -6,6 +6,7 @@ use App\Models\AccommodationType;
 use App\Models\Setting;
 use App\Services\BookingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use Exception;
@@ -74,10 +75,25 @@ class BookController extends Controller
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'nullable|string|max:30',
             'customer_email' => 'nullable|email|max:255',
+            'id_type' => 'nullable|string|max:50',
+            'id_number' => 'nullable|string|max:100',
+            'id_document' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
             'notes' => 'nullable|string',
         ]);
 
         try {
+            // Handle ID document upload if attached
+            if ($request->hasFile('id_document')) {
+                $file = $request->file('id_document');
+                $destinationPath = public_path('uploads/id_documents');
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+                $filename = 'id_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $validated['id_document_path'] = 'uploads/id_documents/' . $filename;
+            }
+
             // Set default status to pending for online bookings
             $validated['status'] = 'pending';
             $validated['source'] = 'online';
@@ -125,12 +141,26 @@ class BookController extends Controller
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:30',
             'customer_email' => 'nullable|email|max:255',
+            'id_type' => 'nullable|string|max:50',
+            'id_number' => 'nullable|string|max:100',
+            'id_document' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
             'payment_method' => 'nullable|string|max:50',
             'mobile_network' => 'nullable|string|max:30',
             'notes' => 'nullable|string|max:500',
         ]);
 
         try {
+            if ($request->hasFile('id_document')) {
+                $file = $request->file('id_document');
+                $destinationPath = public_path('uploads/id_documents');
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+                $filename = 'id_tour_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $file->move($destinationPath, $filename);
+                $validated['id_document_path'] = 'uploads/id_documents/' . $filename;
+            }
+
             $validated['payment_method'] = $validated['payment_method'] ?? 'manual';
             $booking = $this->bookingService->createTourBooking($validated);
 
