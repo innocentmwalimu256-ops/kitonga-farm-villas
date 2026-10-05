@@ -33,6 +33,13 @@ const clearFilters = () => {
 const formatCurrency = (val) => {
     return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val);
 };
+
+const formatDate = (dateStr) => {
+    if (!dateStr) return 'N/A';
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+};
 </script>
 
 <template>
@@ -119,8 +126,8 @@ const formatCurrency = (val) => {
                                         <span class="font-semibold text-gray-800">{{ booking.unit?.name || 'TBD' }}</span>
                                         <div class="text-[10px] text-gray-400">{{ booking.unit?.type?.name }}</div>
                                     </td>
-                                    <td class="p-4 text-xs font-semibold">
-                                        {{ booking.check_in }} to {{ booking.check_out }}
+                                    <td class="p-4 text-xs font-semibold whitespace-nowrap">
+                                        {{ formatDate(booking.check_in) }} - {{ formatDate(booking.check_out) }}
                                     </td>
                                     <td class="p-4 text-center font-bold text-xs text-gray-500">
                                         {{ Math.round((new Date(booking.check_out) - new Date(booking.check_in)) / (1000 * 60 * 60 * 24)) }}

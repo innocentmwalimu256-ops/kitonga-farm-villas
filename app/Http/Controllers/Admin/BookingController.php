@@ -320,6 +320,10 @@ class BookingController extends Controller
         $validated = $request->validate([
             'status' => 'required|string|in:pending,confirmed,checked_in,checked_out,cancelled,no_show',
             'notes' => 'nullable|string',
+            'record_payment' => 'nullable|boolean',
+            'payment_amount' => 'nullable|numeric|min:0.01',
+            'payment_method' => 'nullable|string',
+            'payment_reference' => 'nullable|string',
         ]);
 
         $booking = Booking::findOrFail($id);
@@ -331,9 +335,36 @@ class BookingController extends Controller
         }
 
         try {
-            $this->bookingService->transitionStatus($booking, $validated['status'], auth()->id(), $validated['notes']);
+            DB::transaction(function () use ($booking, $validated) {
+                $this->bookingService->transitionStatus($booking, $validated['status'], auth()->id(), $validated['notes'] ?? null);
+
+                // If payment recording is requested with status update
+                if (!empty($validated['record_payment'])) {
+                    $amount = !empty($validated['payment_amount']) ? (float) $validated['payment_amount'] : (float) $booking->balance;
+                    if ($amount > 0) {
+                        \App\Models\Payment::create([
+                            'booking_id' => $booking->id,
+                            'amount' => $amount,
+                            'method' => $validated['payment_method'] ?? 'mobile_money',
+                            'reference' => $validated['payment_reference'] ?? 'Status Confirmation Auto-Payment',
+                            'status' => 'completed',
+                            'recorded_by' => auth()->id(),
+                            'paid_at' => Carbon::now(),
+                        ]);
+
+                        $newPaid = (float)$booking->amount_paid + $amount;
+                        $newBalance = max(0.00, (float)$booking->total - $newPaid);
+
+                        $booking->update([
+                            'amount_paid' => $newPaid,
+                            'balance' => $newBalance,
+                        ]);
+                    }
+                }
+            });
+
             return back()->with('success', "Booking status updated to {$validated['status']}.");
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return back()->withErrors(['booking' => $e->getMessage()]);
         }
     }

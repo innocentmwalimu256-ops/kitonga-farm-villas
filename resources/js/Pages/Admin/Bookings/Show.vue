@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     booking: Object,
@@ -12,6 +12,10 @@ const props = defineProps({
 const statusForm = useForm({
     status: props.booking.status,
     notes: '',
+    record_payment: false,
+    payment_amount: props.booking.balance,
+    payment_method: 'mobile_money',
+    payment_reference: '',
 });
 
 const paymentForm = useForm({
@@ -50,15 +54,25 @@ const updateStatus = () => {
     statusForm.post(route('admin.bookings.status', props.booking.id), {
         onSuccess: () => {
             statusForm.notes = '';
-            alert("Booking status updated successfully.");
+            statusForm.record_payment = false;
+            alert("Booking status and payment details updated successfully.");
         }
     });
 };
 
 const quickApprove = () => {
-    if (confirm('Je, una uhakika unataka kuthibitisha (Confirm) booking hii ya ' + props.booking.reference + '?')) {
+    const bal = Number(props.booking.balance) || 0;
+    const msg = bal > 0 
+        ? `Je, unathibitisha booking ya ${props.booking.reference} na kuweka malipo ya salio (${formatCurrency(bal)}) kuwa yamelipwa (Paid)?`
+        : `Je, unathibitisha booking hii ya ${props.booking.reference}?`;
+        
+    if (confirm(msg)) {
         statusForm.status = 'confirmed';
         statusForm.notes = 'Uthibitisho wa moja kwa moja baada ya uhakiki wa malipo.';
+        statusForm.record_payment = bal > 0;
+        statusForm.payment_amount = bal;
+        statusForm.payment_method = 'mobile_money';
+        statusForm.payment_reference = 'Quick Confirmation Approval';
         updateStatus();
     }
 };
@@ -371,10 +385,32 @@ const submitPayment = () => {
                                 </div>
                                 <div>
                                     <label class="text-[10px] font-bold text-gray-400 uppercase">Internal Comment / Notes</label>
-                                    <textarea v-model="statusForm.notes" rows="3" placeholder="Reason for change..." class="w-full text-xs rounded border-gray-300 mt-1"></textarea>
+                                    <textarea v-model="statusForm.notes" rows="2" placeholder="Reason for change..." class="w-full text-xs rounded border-gray-300 mt-1"></textarea>
                                 </div>
+
+                                <!-- Optional Payment Recording on Status Change -->
+                                <div v-if="['confirmed', 'checked_in'].includes(statusForm.status) && Number(booking.balance) > 0" class="p-3 bg-emerald-50 rounded-lg border border-emerald-200 space-y-2.5">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" v-model="statusForm.record_payment" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                                        <span class="text-xs font-bold text-emerald-900">Mark Full Balance Paid ({{ formatCurrency(booking.balance) }})</span>
+                                    </label>
+                                    
+                                    <div v-if="statusForm.record_payment" class="space-y-2 pt-1">
+                                        <div>
+                                            <label class="text-[9px] font-bold text-gray-500 uppercase">Payment Method</label>
+                                            <select v-model="statusForm.payment_method" class="w-full text-xs rounded border-gray-300 mt-0.5">
+                                                <option v-for="m in payment_methods" :key="m" :value="m" class="capitalize">{{ m }}</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="text-[9px] font-bold text-gray-500 uppercase">Ref / Code (Optional)</label>
+                                            <input type="text" v-model="statusForm.payment_reference" placeholder="e.g. MPESA TXN / Cash" class="w-full text-xs rounded border-gray-300 mt-0.5">
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <button type="submit" class="w-full py-2 bg-emerald-600 text-white font-bold text-xs rounded hover:bg-emerald-700 shadow-xs transition">
-                                    Update Status
+                                    Update Status &amp; Save
                                 </button>
                             </form>
                         </div>
