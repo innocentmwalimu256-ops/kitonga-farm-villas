@@ -77,7 +77,7 @@
     ]
   },
   "resources/js/Pages/Admin/Bookings/Create.vue": {
-    "file": "assets/Create-DnCezO0q.js",
+    "file": "assets/Create-CCbqMBnR.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/Bookings/Create.vue",
     "isDynamicEntry": true,
@@ -453,7 +453,7 @@
     ]
   },
   "resources/js/Pages/Public/Book.vue": {
-    "file": "assets/Book-Dd2iaAKv.js",
+    "file": "assets/Book-Buqdymna.js",
     "name": "Book",
     "src": "resources/js/Pages/Public/Book.vue",
     "isDynamicEntry": true,
@@ -749,7 +749,7 @@
     ]
   },
   "resources/js/Pages/Public/VillaDetail.vue": {
-    "file": "assets/VillaDetail-VtPbKntb.js",
+    "file": "assets/VillaDetail-DizKiNAA.js",
     "name": "VillaDetail",
     "src": "resources/js/Pages/Public/VillaDetail.vue",
     "isDynamicEntry": true,
@@ -779,7 +779,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CxYCz5Ui.js",
+    "file": "assets/app-B5Xmn3Ku.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -858,7 +858,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-CWSvdsIe.css"
+      "assets/app-P8c0WG6T.css"
     ]
   }
 }

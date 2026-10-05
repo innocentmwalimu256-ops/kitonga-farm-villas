@@ -59,12 +59,57 @@ const deposit = () => {
     return total() * (pct / 100);
 };
 
+const guestError = ref('');
+const maxBookingCapacity = computed(() => {
+    return selectedVilla.value ? Number(selectedVilla.value.capacity) || 2 : 10;
+});
+
+const validateBookingGuests = () => {
+    if (bookingForm.guests_count === '' || bookingForm.guests_count === null) {
+        return;
+    }
+    const val = parseInt(bookingForm.guests_count, 10);
+    const max = maxBookingCapacity.value;
+    if (isNaN(val) || val < 1) {
+        guestError.value = 'Minimum 1 guest required';
+        bookingForm.guests_count = '1';
+    } else if (val > max) {
+        guestError.value = `Maximum ${max} guests allowed for ${selectedVilla.value?.name || 'this villa'}`;
+        bookingForm.guests_count = String(max);
+    } else {
+        guestError.value = '';
+        bookingForm.guests_count = String(val);
+    }
+};
+
+const incrementBookingGuests = () => {
+    const val = parseInt(bookingForm.guests_count || '1', 10);
+    const max = maxBookingCapacity.value;
+    if (val < max) {
+        bookingForm.guests_count = String(val + 1);
+        guestError.value = '';
+    } else {
+        guestError.value = `Maximum ${max} guests allowed for ${selectedVilla.value?.name || 'this villa'}`;
+    }
+};
+
+const decrementBookingGuests = () => {
+    const val = parseInt(bookingForm.guests_count || '1', 10);
+    if (val > 1) {
+        bookingForm.guests_count = String(val - 1);
+        guestError.value = '';
+    } else {
+        guestError.value = 'Minimum 1 guest required';
+    }
+};
+
 const selectVillaOption = (villa) => {
     selectedVilla.value = villa;
     bookingForm.accommodation_type_id = villa.id;
     if (parseInt(bookingForm.guests_count) > villa.capacity) {
         bookingForm.guests_count = String(villa.capacity);
     }
+    guestError.value = '';
     step.value = 2;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -272,15 +317,52 @@ const submitBooking = () => {
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Email Address *</label>
                         <input type="email" v-model="bookingForm.customer_email" placeholder="david@example.com" class="w-full text-xs p-3 rounded-xl border border-gray-300 focus:outline-none focus:border-[#C98A3E]" required>
                     </div>
-                    <div class="sm:col-span-2">
-                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                            Number of Guests (1 to {{ selectedVilla?.capacity || 2 }} people) *
-                        </label>
-                        <select v-model="bookingForm.guests_count" class="w-full text-xs p-3 rounded-xl border border-gray-300 focus:outline-none focus:border-[#C98A3E]" required>
-                            <option v-for="n in (selectedVilla?.capacity || 6)" :key="n" :value="String(n)">
-                                {{ n }} {{ n === 1 ? 'Guest (1 Person / Single)' : n + ' Guests' }}
-                            </option>
-                        </select>
+                    <div class="sm:col-span-2 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                                Number of Guests (1 to {{ maxBookingCapacity }} people) *
+                            </label>
+                            <span v-if="guestError" class="text-[10px] text-red-600 font-bold">
+                                {{ guestError }}
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center rounded-xl border border-gray-300 overflow-hidden bg-white shadow-xs focus-within:border-[#C98A3E] focus-within:ring-1 focus-within:ring-[#C98A3E]">
+                            <button 
+                                type="button" 
+                                @click="decrementBookingGuests" 
+                                :disabled="parseInt(bookingForm.guests_count || '1') <= 1"
+                                class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-r border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                title="Punguza wageni"
+                            >
+                                −
+                            </button>
+                            
+                            <input 
+                                type="number" 
+                                v-model="bookingForm.guests_count" 
+                                @input="validateBookingGuests"
+                                @blur="validateBookingGuests"
+                                min="1" 
+                                :max="maxBookingCapacity"
+                                class="w-full text-center text-xs font-bold text-gray-900 border-0 focus:ring-0 py-2.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                placeholder="1"
+                                required
+                            />
+                            
+                            <button 
+                                type="button" 
+                                @click="incrementBookingGuests" 
+                                :disabled="parseInt(bookingForm.guests_count || '1') >= maxBookingCapacity"
+                                class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-l border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                title="Ongeza wageni"
+                            >
+                                +
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-gray-400">
+                            {{ bookingForm.guests_count == '1' || bookingForm.guests_count == 1 ? '1 Guest (Single Occupancy)' : bookingForm.guests_count + ' Guests (Max ' + maxBookingCapacity + ' for ' + (selectedVilla?.name || 'this room') + ')' }}
+                        </p>
                     </div>
                     <div class="sm:col-span-2">
                         <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Special Requests / Dietary Notes</label>

@@ -86,7 +86,44 @@ const tomorrowDate = new Date(Date.now() + 86400000).toISOString().split('T')[0]
 
 const checkIn = ref(today);
 const checkOut = ref(tomorrowDate);
+const maxCapacity = computed(() => Number(props.villa?.capacity) || 2);
 const guestsCount = ref(1);
+const guestError = ref('');
+
+const validateGuests = () => {
+    if (guestsCount.value === '' || guestsCount.value === null) {
+        return;
+    }
+    const val = parseInt(guestsCount.value, 10);
+    if (isNaN(val) || val < 1) {
+        guestError.value = 'Minimum 1 guest required';
+        guestsCount.value = 1;
+    } else if (val > maxCapacity.value) {
+        guestError.value = `Maximum ${maxCapacity.value} guests allowed for this room`;
+        guestsCount.value = maxCapacity.value;
+    } else {
+        guestError.value = '';
+        guestsCount.value = val;
+    }
+};
+
+const incrementGuests = () => {
+    if (guestsCount.value < maxCapacity.value) {
+        guestsCount.value++;
+        guestError.value = '';
+    } else {
+        guestError.value = `Maximum ${maxCapacity.value} guests allowed for this room`;
+    }
+};
+
+const decrementGuests = () => {
+    if (guestsCount.value > 1) {
+        guestsCount.value--;
+        guestError.value = '';
+    } else {
+        guestError.value = 'Minimum 1 guest required';
+    }
+};
 
 const numberOfNights = computed(() => {
     if (!checkIn.value || !checkOut.value) return 1;
@@ -340,16 +377,53 @@ const getImageUrl = (path, slug) => {
                             </div>
                         </div>
 
-                        <div>
-                            <label class="font-bold text-gray-600 uppercase text-[10px] block mb-1">Guests (Max {{ villa.capacity || 2 }})</label>
-                            <select 
-                                v-model="guestsCount" 
-                                class="w-full text-xs rounded-lg border-gray-300 focus:border-[#1B2E22] focus:ring-1 focus:ring-[#1B2E22] py-2 px-3 bg-white"
-                            >
-                                <option v-for="n in (villa.capacity || 2)" :key="n" :value="n">
-                                    {{ n }} {{ n === 1 ? 'Guest (1 Person)' : 'Guests' }}
-                                </option>
-                            </select>
+                        <!-- Interactive Number of Guests Input -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center">
+                                <label class="font-bold text-gray-700 uppercase text-[10px]">
+                                    Guests (1 to {{ maxCapacity }})
+                                </label>
+                                <span v-if="guestError" class="text-[10px] text-red-600 font-bold">
+                                    {{ guestError }}
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center rounded-lg border border-gray-300 overflow-hidden bg-white shadow-xs focus-within:border-[#1B2E22] focus-within:ring-1 focus-within:ring-[#1B2E22]">
+                                <button 
+                                    type="button" 
+                                    @click="decrementGuests" 
+                                    :disabled="guestsCount <= 1"
+                                    class="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-r border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                    title="Punguza wageni"
+                                >
+                                    −
+                                </button>
+                                
+                                <input 
+                                    type="number" 
+                                    v-model.number="guestsCount" 
+                                    @input="validateGuests"
+                                    @blur="validateGuests"
+                                    min="1" 
+                                    :max="maxCapacity"
+                                    class="w-full text-center text-xs font-bold text-gray-900 border-0 focus:ring-0 py-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    placeholder="1"
+                                />
+                                
+                                <button 
+                                    type="button" 
+                                    @click="incrementGuests" 
+                                    :disabled="guestsCount >= maxCapacity"
+                                    class="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-l border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                    title="Ongeza wageni"
+                                >
+                                    +
+                                </button>
+                            </div>
+                            
+                            <p class="text-[10px] text-gray-400">
+                                {{ guestsCount === 1 ? '1 Guest (Single Occupancy)' : guestsCount + ' Guests (Max ' + maxCapacity + ' for this room)' }}
+                            </p>
                         </div>
                     </div>
 

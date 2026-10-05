@@ -41,11 +41,56 @@ const selectedVilla = computed(() => {
     return props.villas.find(v => v.id == form.accommodation_type_id) || null;
 });
 
+const guestError = ref('');
+const maxAdminCapacity = computed(() => {
+    return selectedVilla.value ? Number(selectedVilla.value.capacity) || 2 : 10;
+});
+
+const validateAdminGuests = () => {
+    if (form.guests_count === '' || form.guests_count === null) {
+        return;
+    }
+    const val = parseInt(form.guests_count, 10);
+    const max = maxAdminCapacity.value;
+    if (isNaN(val) || val < 1) {
+        guestError.value = 'Minimum 1 guest required';
+        form.guests_count = 1;
+    } else if (val > max) {
+        guestError.value = `Maximum ${max} guests allowed for ${selectedVilla.value?.name || 'this room'}`;
+        form.guests_count = max;
+    } else {
+        guestError.value = '';
+        form.guests_count = val;
+    }
+};
+
+const incrementAdminGuests = () => {
+    const val = parseInt(form.guests_count || 1, 10);
+    const max = maxAdminCapacity.value;
+    if (val < max) {
+        form.guests_count = val + 1;
+        guestError.value = '';
+    } else {
+        guestError.value = `Maximum ${max} guests allowed for ${selectedVilla.value?.name || 'this room'}`;
+    }
+};
+
+const decrementAdminGuests = () => {
+    const val = parseInt(form.guests_count || 1, 10);
+    if (val > 1) {
+        form.guests_count = val - 1;
+        guestError.value = '';
+    } else {
+        guestError.value = 'Minimum 1 guest required';
+    }
+};
+
 const onVillaChange = () => {
     if (selectedVilla.value) {
         if (form.guests_count > selectedVilla.value.capacity) {
             form.guests_count = selectedVilla.value.capacity;
         }
+        guestError.value = '';
         if (!form.rate_override) {
             form.rate_override = '';
         }
@@ -153,26 +198,53 @@ const submitBooking = () => {
                             </div>
 
                             <!-- Number of Guests (1 to Villa Capacity or Custom) -->
-                            <div class="sm:col-span-2">
-                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                                    Number of Guests (Allowed: 1 to {{ selectedVilla?.capacity || 2 }}) *
-                                </label>
-                                <div class="flex items-center gap-2">
-                                    <select v-model.number="form.guests_count" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5" required>
-                                        <option v-for="n in (selectedVilla?.capacity || 6)" :key="n" :value="n">
-                                            {{ n }} {{ n === 1 ? 'Guest (1 Person / Single)' : n + ' Guests' }}
-                                        </option>
-                                    </select>
+                            <div class="sm:col-span-2 space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                                        Number of Guests (1 to {{ maxAdminCapacity }}) *
+                                    </label>
+                                    <span v-if="guestError" class="text-[10px] text-red-600 font-bold">
+                                        {{ guestError }}
+                                    </span>
+                                </div>
+                                
+                                <div class="flex items-center rounded-xl border border-gray-300 overflow-hidden bg-white shadow-xs focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600">
+                                    <button 
+                                        type="button" 
+                                        @click="decrementAdminGuests" 
+                                        :disabled="parseInt(form.guests_count || 1) <= 1"
+                                        class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-r border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                        title="Punguza wageni"
+                                    >
+                                        −
+                                    </button>
+                                    
                                     <input 
                                         type="number" 
                                         v-model.number="form.guests_count" 
+                                        @input="validateAdminGuests"
+                                        @blur="validateAdminGuests"
                                         min="1" 
-                                        :max="selectedVilla?.capacity || 10" 
-                                        placeholder="Qty" 
-                                        class="w-20 text-xs text-center rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5 font-bold"
-                                        title="Directly type guest count"
+                                        :max="maxAdminCapacity" 
+                                        placeholder="1" 
+                                        class="w-full text-xs text-center font-bold text-gray-900 border-0 focus:ring-0 py-2.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        required
                                     />
+                                    
+                                    <button 
+                                        type="button" 
+                                        @click="incrementAdminGuests" 
+                                        :disabled="parseInt(form.guests_count || 1) >= maxAdminCapacity"
+                                        class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-l border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                        title="Ongeza wageni"
+                                    >
+                                        +
+                                    </button>
                                 </div>
+                                
+                                <p class="text-[10px] text-gray-400">
+                                    {{ form.guests_count == 1 ? '1 Guest (Single Occupancy)' : form.guests_count + ' Guests (Max ' + maxAdminCapacity + ' for ' + (selectedVilla?.name || 'this room') + ')' }}
+                                </p>
                             </div>
 
                             <!-- Check-in Date -->
