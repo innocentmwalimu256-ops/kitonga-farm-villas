@@ -188,17 +188,13 @@ const handleLogoClick = (e) => {
 
         <!-- 1. CINEMATIC HERO VIDEO SECTION (CLEAN FULL-VIEW VIDEO) -->
         <section 
-            @click="togglePlay"
-            class="relative min-h-[75vh] md:min-h-[85vh] lg:min-h-[90vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
-            title="Click anywhere to Play / Pause video"
+            class="relative min-h-[75vh] md:min-h-[85vh] lg:min-h-[90vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center select-none group"
         >
-            <!-- Hero Video (Direct Zero-Latency High-Quality Static & Dynamic Stream) -->
+            <!-- Hero Video (Direct Zero-Latency High-Quality Static Video) -->
             <video 
                 ref="videoPlayer"
-                :key="hero_video_url || 'default-hero-video'"
                 poster="/images/hero_poster.webp"
-                class="absolute inset-0 w-full h-full object-cover object-center"
-                style="transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); backface-visibility: hidden; will-change: transform;"
+                class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
                 autoplay 
                 loop 
                 muted
@@ -209,15 +205,13 @@ const handleLogoClick = (e) => {
                 disableRemotePlayback
                 preload="auto"
             >
-                <!-- Priority 1: Custom Uploaded Hero Video from CMS / Media Library -->
-                <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
-                <!-- Priority 2: Original Kitonga Farm Sanctuary Video (Direct Static File) -->
+                <!-- Priority 1: Original Kitonga Farm Sanctuary Video (Direct Static File) -->
                 <source src="/videos/IMG_2249.mp4" type="video/mp4">
-                <!-- Priority 3: WebM & Static Fallbacks -->
+                <!-- Priority 2: Custom Uploaded Hero Video from CMS if available -->
+                <source v-if="hero_video_url && hero_video_url !== '/videos/IMG_2249.mp4'" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
+                <!-- Priority 3: Fallbacks -->
                 <source src="/videos/hero_cinematic.webm" type="video/webm">
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
-                <!-- Priority 4: Dynamic Fast Stream Fallback -->
-                <source src="/stream/hero-video" type="video/mp4">
             </video>
 
             <!-- Subtle Gradient for Top Navbar Contrast (Maintains full video brightness and crisp clarity) -->

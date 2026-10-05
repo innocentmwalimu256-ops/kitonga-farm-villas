@@ -115,18 +115,9 @@ class PublicController extends Controller
                         ->where(function ($q) {
                             $q->where('custom_properties->section', 'hero_video')
                               ->orWhereJsonContains('custom_properties->section', 'hero_video')
-                              ->orWhere(function ($sq) {
-                                  $sq->where(function ($ssq) {
-                                      $ssq->where('custom_properties->page', 'home')
-                                          ->orWhereJsonContains('custom_properties->page', 'home');
-                                  })->where(function ($ssq2) {
-                                      $ssq2->where('custom_properties->is_hero', true)
-                                           ->orWhere('custom_properties->is_hero', '1')
-                                           ->orWhereJsonContains('custom_properties->is_hero', true);
-                                  });
-                              })
-                              ->orWhere('custom_properties->page', 'home')
-                              ->orWhereJsonContains('custom_properties->page', 'home');
+                              ->orWhere('custom_properties->is_hero', true)
+                              ->orWhere('custom_properties->is_hero', '1')
+                              ->orWhereJsonContains('custom_properties->is_hero', true);
                         })
                         ->orderBy('created_at', 'desc')
                         ->get()
