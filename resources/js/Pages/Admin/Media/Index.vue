@@ -140,11 +140,40 @@ const closeUploadModal = () => {
 
 const submitUpload = () => {
     uploadForm.clearErrors();
+
+    if (uploadForm.file && uploadForm.file.size > 500 * 1024 * 1024) {
+        uploadForm.setError('file', 'Faili ni kubwa kuliko 500MB. Tafadhali punguza ukubwa wa video kwanza.');
+        return;
+    }
+
+    // Catch non-validation server failures so they are never silent
+    const offInvalid = router.on('invalid', (event) => {
+        event.preventDefault();
+        const status = event.detail.response?.status;
+        const messages = {
+            413: 'Server imekataa faili: ni kubwa kuliko kikomo cha web server (client_max_body_size / LimitRequestBody).',
+            419: 'Session imeisha (CSRF). Refresh ukurasa kisha jaribu tena.',
+            403: 'Huna ruhusa ya kupakia media.',
+            500: 'Hitilafu ya server (500). Angalia storage/logs/laravel.log.',
+            502: 'Server ilikatika wakati wa kupakia (502). Jaribu tena.',
+            504: 'Muda wa server umeisha (504 timeout). Jaribu tena au punguza ukubwa wa faili.',
+        };
+        uploadForm.setError('file', messages[status] || `Upload imeshindikana (HTTP ${status}).`);
+    });
+    const offException = router.on('exception', (event) => {
+        event.preventDefault();
+        uploadForm.setError('file', 'Muunganisho wa mtandao umekatika wakati wa kupakia. Jaribu tena.');
+    });
+
     uploadForm.post(route('admin.media.store'), {
         forceFormData: true,
         preserveScroll: true,
         onSuccess: () => {
             closeUploadModal();
+        },
+        onFinish: () => {
+            offInvalid();
+            offException();
         },
     });
 };
@@ -763,7 +792,7 @@ const pageTabs = [
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            <span>{{ uploadForm.processing ? 'Optimizing & Publishing...' : 'Publish Media Asset' }}</span>
+                            <span>{{ uploadForm.processing ? 'Uploading & Publishing...' : 'Publish Media Asset' }}</span>
                         </button>
                         <button 
                             type="button" 

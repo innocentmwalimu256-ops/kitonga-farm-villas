@@ -210,21 +210,20 @@ class MediaController extends Controller
                         ->toMediaCollection('cms_media');
                 }
             } elseif ($isVideo) {
-                // Attempt high-definition FastStart Web Video optimization
-                $optVideoPath = $this->optimizeWebVideo($file);
-                if ($optVideoPath && file_exists($optVideoPath)) {
-                    $cleanBaseName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-                    $media = $user->addMedia($optVideoPath)
-                        ->usingFileName($cleanBaseName . '.mp4')
-                        ->withCustomProperties($customProps)
-                        ->toMediaCollection('cms_media');
-                    @unlink($optVideoPath);
-                    $formatMsg = ' (FastStart Web Video Optimized)';
-                } else {
-                    $media = $user->addMedia($file)
-                        ->withCustomProperties($customProps)
-                        ->toMediaCollection('cms_media');
-                }
+                // Save & publish the original immediately (no blocking re-encode during the request).
+                $media = $user->addMedia($file)
+                    ->withCustomProperties($customProps)
+                    ->toMediaCollection('cms_media');
+
+                // Optimize for smooth web streaming AFTER the response is sent to the admin.
+                $mediaId = $media->id;
+                app()->terminating(function () use ($mediaId) {
+                    $m = Media::find($mediaId);
+                    if ($m) {
+                        \App\Support\VideoOptimizer::optimize($m);
+                    }
+                });
+                $formatMsg = ' (Video is live; web optimization runs in the background)';
             } else {
                 $media = $user->addMedia($file)
                     ->withCustomProperties($customProps)
@@ -284,7 +283,8 @@ class MediaController extends Controller
             Cache::flush();
 
             return back()->with('success', "Media asset '{$media->name}' published successfully{$formatMsg}.");
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            \Log::error('Media upload failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return back()->withErrors(['file' => 'Upload failed: ' . $e->getMessage()]);
         }
     }

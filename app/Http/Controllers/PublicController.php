@@ -117,7 +117,9 @@ class PublicController extends Controller
                               ->orWhereJsonContains('custom_properties->section', 'hero_video')
                               ->orWhere('custom_properties->is_hero', true)
                               ->orWhere('custom_properties->is_hero', '1')
-                              ->orWhereJsonContains('custom_properties->is_hero', true);
+                              ->orWhereJsonContains('custom_properties->is_hero', true)
+                              ->orWhere('custom_properties->page', 'home')
+                              ->orWhereJsonContains('custom_properties->page', 'home');
                         })
                         ->orderBy('created_at', 'desc')
                         ->get()

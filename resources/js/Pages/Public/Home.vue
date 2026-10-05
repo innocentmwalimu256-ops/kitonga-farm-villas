@@ -193,6 +193,7 @@ const handleLogoClick = (e) => {
             <!-- Hero Video (Direct Zero-Latency High-Quality Static Video) -->
             <video 
                 ref="videoPlayer"
+                :key="hero_video_url || 'default-hero-video'"
                 poster="/images/hero_poster.webp"
                 class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
                 autoplay 
@@ -205,13 +206,11 @@ const handleLogoClick = (e) => {
                 disableRemotePlayback
                 preload="auto"
             >
-                <!-- Priority 1: Original Kitonga Farm Sanctuary Video (Direct Static File) -->
+                <!-- Priority 1: Hero video published from the Admin Media Studio -->
+                <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
+                <!-- Priority 2: Bundled Kitonga Farm video (fallback only) -->
                 <source src="/videos/IMG_2249.mp4" type="video/mp4">
-                <!-- Priority 2: Custom Uploaded Hero Video from CMS if available -->
-                <source v-if="hero_video_url && hero_video_url !== '/videos/IMG_2249.mp4'" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
-                <!-- Priority 3: Fallbacks -->
                 <source src="/videos/hero_cinematic.webm" type="video/webm">
-                <source src="/videos/hero_cinematic.mp4" type="video/mp4">
             </video>
 
             <!-- Subtle Gradient for Top Navbar Contrast (Maintains full video brightness and crisp clarity) -->
