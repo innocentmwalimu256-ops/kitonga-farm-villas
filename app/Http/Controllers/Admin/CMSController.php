@@ -31,14 +31,15 @@ class CMSController extends Controller
 
         $validated = $request->validate([
             'value' => 'nullable|string',
-            'action' => 'required|string|in:draft,publish',
+            'action' => 'nullable|string|in:draft,publish',
         ]);
 
+        $action = $validated['action'] ?? 'publish';
         $oldValue = $section->value;
         $metadata = $section->metadata ?? [];
         $actionWord = 'saved as draft';
 
-        if ($validated['action'] === 'draft') {
+        if ($action === 'draft') {
             $metadata['draft_value'] = $validated['value'];
             $section->update([
                 'metadata' => $metadata,
@@ -59,13 +60,15 @@ class CMSController extends Controller
             'entity_type' => 'CmsSection',
             'entity_id' => $section->id,
             'old_values' => ['value' => $oldValue],
-            'new_values' => ['value' => $validated['value'], 'status' => $validated['action']],
+            'new_values' => ['value' => $validated['value'], 'status' => $action],
             'metadata' => [
                 'key' => $section->key,
                 'page' => $section->page ? $section->page->title : 'Global',
             ],
             'created_at' => Carbon::now(),
         ]);
+
+        \Illuminate\Support\Facades\Cache::flush();
 
         return back()->with('success', "CMS content section {$actionWord} successfully.");
     }
@@ -98,6 +101,8 @@ class CMSController extends Controller
                 'created_at' => Carbon::now(),
             ]);
         });
+
+        \Illuminate\Support\Facades\Cache::flush();
 
         return back()->with('success', "CMS page '{$page->title}' drafts published successfully.");
     }

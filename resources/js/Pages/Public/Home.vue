@@ -220,16 +220,17 @@ const handleLogoClick = (e) => {
                 webkit-playsinline="true"
                 disablePictureInPicture
                 disableRemotePlayback
-                preload="auto"
+                preload="metadata"
             >
-                <!-- Priority 1: Direct High-Speed Static MP4 (Zero PHP latency, instant hardware decode) -->
-                <source src="/videos/hero_cinematic.mp4" type="video/mp4">
-                <!-- Priority 2: Direct Static WebM (For Chrome/Android optimized VP9) -->
-                <source src="/videos/hero_cinematic.webm" type="video/webm">
-                <!-- Priority 3: Dynamic Uploaded Hero Video from CMS if custom -->
+                <!-- Priority 1: Custom Uploaded Hero Video from CMS / Media Library -->
                 <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
-                <!-- Priority 4: Dynamic Fast Stream Fallback -->
+                <!-- Priority 2: Dynamic Fast Stream Fallback -->
                 <source src="/stream/hero-video" type="video/mp4">
+                <!-- Priority 3: Original Kitonga Farm Sanctuary Video -->
+                <source src="/videos/IMG_2249.mp4" type="video/mp4">
+                <!-- Priority 4: High-Speed Static MP4 & WebM Fallbacks -->
+                <source src="/videos/hero_cinematic.mp4" type="video/mp4">
+                <source src="/videos/hero_cinematic.webm" type="video/webm">
             </video>
 
             <!-- Subtle Gradient for Top Navbar Contrast (Maintains full video brightness and crisp clarity) -->

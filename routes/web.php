@@ -48,15 +48,15 @@ Route::get('/stream/hero-video', function () {
     }
 
     if (!$path) {
-        if (file_exists(public_path('videos/hero_cinematic.mp4'))) {
+        if (file_exists(public_path('videos/IMG_2249.mp4'))) {
+            $path = public_path('videos/IMG_2249.mp4');
+            $mimeType = 'video/mp4';
+        } elseif (file_exists(public_path('videos/hero_cinematic.mp4'))) {
             $path = public_path('videos/hero_cinematic.mp4');
             $mimeType = 'video/mp4';
         } elseif (file_exists(public_path('videos/hero_cinematic.webm'))) {
             $path = public_path('videos/hero_cinematic.webm');
             $mimeType = 'video/webm';
-        } elseif (file_exists(public_path('videos/IMG_2249.mp4'))) {
-            $path = public_path('videos/IMG_2249.mp4');
-            $mimeType = 'video/mp4';
         }
     }
 
