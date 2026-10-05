@@ -137,16 +137,103 @@ class BookingController extends Controller
 
         return Inertia::render('Admin/Bookings/Create', [
             'villas' => AccommodationType::where('active', true)->get(),
+            'experiences' => \App\Models\FarmTour::where('status', 'published')->orWhere('status', 'preview')->orderBy('sort_order')->get(),
             'customers' => Customer::all(),
         ]);
     }
 
     /**
-     * Store new manual booking.
+     * Store new manual booking (Villa or Farm Tour).
      */
     public function store(Request $request)
     {
         abort_if(!auth()->user()->hasPermissionTo('create_bookings'), 403, 'Unauthorized access to store a booking.');
+        
+        $bookingType = $request->input('booking_type', 'villa');
+
+        if ($bookingType === 'tour') {
+            $rules = [
+                'farm_tour_id' => 'required|exists:farm_tours,id',
+                'tour_date' => 'required|date',
+                'time_slot' => 'required|string',
+                'guests_count' => 'required|integer|min:1',
+                'status' => 'required|string',
+                'source' => 'required|string',
+                'notes' => 'nullable|string',
+                'rate_override' => 'nullable|numeric|min:0',
+                'discount' => 'nullable|numeric|min:0',
+                'amount_paid' => 'nullable|numeric|min:0',
+                'payment_method' => 'nullable|string|required_if:amount_paid,>0',
+            ];
+
+            if ($request->input('customer_mode') === 'new') {
+                $rules['customer_name'] = 'required|string|max:255';
+                $rules['customer_phone'] = 'nullable|string';
+                $rules['customer_email'] = 'nullable|email';
+            } else {
+                $rules['customer_id'] = 'required|exists:customers,id';
+            }
+
+            $validated = $request->validate($rules);
+            $validated['user_id'] = auth()->id();
+
+            try {
+                if ($request->input('customer_mode') === 'existing') {
+                    $customer = Customer::findOrFail($validated['customer_id']);
+                    $validated['customer_name'] = $customer->name;
+                    $validated['customer_phone'] = $customer->phone;
+                    $validated['customer_email'] = $customer->email;
+                }
+
+                $booking = $this->bookingService->createTourBooking($validated);
+
+                // Update custom status, discounts or rate overrides if supplied
+                if ($request->filled('rate_override') || $request->filled('discount') || $request->filled('status') || $request->filled('source')) {
+                    $tour = \App\Models\FarmTour::findOrFail($validated['farm_tour_id']);
+                    $unitPrice = (float) ($validated['rate_override'] ?? $tour->price);
+                    $subtotal = $unitPrice * $validated['guests_count'];
+                    $discount = (float) ($validated['discount'] ?? 0);
+                    $total = max(0, $subtotal - $discount);
+                    $amountPaid = (float) ($validated['amount_paid'] ?? 0);
+                    $balance = max(0, $total - $amountPaid);
+
+                    $booking->update([
+                        'status' => $validated['status'] ?? $booking->status,
+                        'source' => $validated['source'] ?? $booking->source,
+                        'subtotal' => $subtotal,
+                        'discount' => $discount,
+                        'total' => $total,
+                        'amount_paid' => $amountPaid,
+                        'balance' => $balance,
+                    ]);
+
+                    $booking->items()->where('item_type', 'tour')->update([
+                        'unit_price_snapshot' => $unitPrice,
+                        'total' => $subtotal,
+                    ]);
+                }
+
+                // Record immediate payment if amount_paid > 0
+                if ($booking->amount_paid > 0) {
+                    Payment::create([
+                        'booking_id' => $booking->id,
+                        'method' => $validated['payment_method'] ?? 'cash',
+                        'reference' => $request->input('payment_reference'),
+                        'amount' => $booking->amount_paid,
+                        'status' => 'completed',
+                        'paid_at' => Carbon::now(),
+                        'recorded_by' => auth()->id(),
+                    ]);
+                }
+
+                return redirect()->route('admin.bookings.show', $booking->id)
+                    ->with('success', 'Farm Tour booking created successfully.');
+            } catch (Exception $e) {
+                return back()->withErrors(['booking' => $e->getMessage()])->withInput();
+            }
+        }
+
+        // Villa Stay Booking Flow
         $rules = [
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
@@ -190,7 +277,7 @@ class BookingController extends Controller
             }
 
             return redirect()->route('admin.bookings.show', $booking->id)
-                ->with('success', 'Booking created successfully.');
+                ->with('success', 'Villa booking created successfully.');
         } catch (Exception $e) {
             return back()->withErrors(['booking' => $e->getMessage()])->withInput();
         }
