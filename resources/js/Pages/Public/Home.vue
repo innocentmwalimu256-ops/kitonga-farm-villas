@@ -34,28 +34,15 @@ onMounted(() => {
                     p.then(() => {
                         isPaused.value = false;
                     }).catch(() => {
-                        // Handled on first user gesture
+                        // Handled on first user interaction
                     });
                 }
             }
         };
 
-        // Ensure seamless looping without stalling
-        vid.addEventListener('ended', () => {
-            vid.currentTime = 0;
-            vid.play().catch(() => {});
-        });
-
-        // Resume if stalled
-        vid.addEventListener('stalled', () => {
-            if (!vid.paused) {
-                vid.play().catch(() => {});
-            }
-        });
-
         startPlayback();
 
-        // Fallback on first user interaction
+        // Fallback on first user interaction if browser autoplay policy was restricted
         const triggerPlay = () => {
             if (vid && vid.paused) {
                 startPlayback();
@@ -220,17 +207,17 @@ const handleLogoClick = (e) => {
                 webkit-playsinline="true"
                 disablePictureInPicture
                 disableRemotePlayback
-                preload="metadata"
+                preload="auto"
             >
                 <!-- Priority 1: Custom Uploaded Hero Video from CMS / Media Library -->
                 <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
-                <!-- Priority 2: Dynamic Fast Stream Fallback -->
-                <source src="/stream/hero-video" type="video/mp4">
-                <!-- Priority 3: Original Kitonga Farm Sanctuary Video -->
+                <!-- Priority 2: Original Kitonga Farm Sanctuary Video (Direct Static File) -->
                 <source src="/videos/IMG_2249.mp4" type="video/mp4">
-                <!-- Priority 4: High-Speed Static MP4 & WebM Fallbacks -->
-                <source src="/videos/hero_cinematic.mp4" type="video/mp4">
+                <!-- Priority 3: WebM & Static Fallbacks -->
                 <source src="/videos/hero_cinematic.webm" type="video/webm">
+                <source src="/videos/hero_cinematic.mp4" type="video/mp4">
+                <!-- Priority 4: Dynamic Fast Stream Fallback -->
+                <source src="/stream/hero-video" type="video/mp4">
             </video>
 
             <!-- Subtle Gradient for Top Navbar Contrast (Maintains full video brightness and crisp clarity) -->
