@@ -88,7 +88,7 @@
     ]
   },
   "resources/js/Pages/Admin/Bookings/Index.vue": {
-    "file": "assets/Index-CpM4ROX2.js",
+    "file": "assets/Index-DqvJ3PCD.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Bookings/Index.vue",
     "isDynamicEntry": true,
@@ -797,7 +797,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CC-GQuj5.js",
+    "file": "assets/app-Cl4w8fng.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

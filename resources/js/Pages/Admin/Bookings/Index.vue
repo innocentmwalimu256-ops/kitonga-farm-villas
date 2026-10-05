@@ -119,18 +119,18 @@ const formatDate = (dateStr) => {
                                         <Link :href="route('admin.bookings.show', booking.id)" class="hover:underline text-emerald-700 font-mono">{{ booking.reference }}</Link>
                                     </td>
                                     <td class="p-4">
-                                        <div>{{ booking.customer.name }}</div>
-                                        <span class="text-[10px] text-gray-400 font-mono">{{ booking.customer.phone }}</span>
+                                        <div class="font-semibold text-gray-800">{{ booking.customer?.name || 'Guest' }}</div>
+                                        <span class="text-[10px] text-gray-400 font-mono">{{ booking.customer?.phone || 'N/A' }}</span>
                                     </td>
                                     <td class="p-4">
                                         <span class="font-semibold text-gray-800">{{ booking.unit?.name || 'TBD' }}</span>
-                                        <div class="text-[10px] text-gray-400">{{ booking.unit?.type?.name }}</div>
+                                        <div class="text-[10px] text-gray-400">{{ booking.unit?.type?.name || 'Accommodation' }}</div>
                                     </td>
                                     <td class="p-4 text-xs font-semibold whitespace-nowrap">
                                         {{ formatDate(booking.check_in) }} - {{ formatDate(booking.check_out) }}
                                     </td>
                                     <td class="p-4 text-center font-bold text-xs text-gray-500">
-                                        {{ Math.round((new Date(booking.check_out) - new Date(booking.check_in)) / (1000 * 60 * 60 * 24)) }}
+                                        {{ Math.max(1, Math.round((new Date(booking.check_out) - new Date(booking.check_in)) / (1000 * 60 * 60 * 24))) }}
                                     </td>
                                     <td class="p-4 font-bold text-gray-800">{{ formatCurrency(booking.total) }}</td>
                                     <td class="p-4 text-emerald-700 font-semibold">{{ formatCurrency(booking.amount_paid) }}</td>
