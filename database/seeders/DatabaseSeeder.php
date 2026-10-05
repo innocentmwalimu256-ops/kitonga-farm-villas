@@ -368,16 +368,6 @@ class DatabaseSeeder extends Seeder
                 'stock' => 60,
             ],
             [
-                'product_category_id' => 'farm_produce',
-                'sku' => 'KFV-P-HONEY',
-                'name' => 'Organic Farm Honey',
-                'description' => 'Raw, pure forest honey harvested from our bee farm.',
-                'unit' => 'bottle (500ml)',
-                'selling_price' => 12000.00,
-                'cost_price' => 5000.00,
-                'stock' => 20,
-            ],
-            [
                 'product_category_id' => 'mini_bar',
                 'sku' => 'KFV-MB-COFFEE',
                 'name' => 'Kitonga Blend Coffee',

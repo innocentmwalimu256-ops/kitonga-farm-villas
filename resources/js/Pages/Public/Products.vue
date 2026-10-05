@@ -92,17 +92,6 @@ const defaultProducts = [
         image: '/images/IMG_0389.webp',
     },
     {
-        id: 8,
-        sku: 'KFV-ASALI-1KG',
-        name: 'Raw Wild Forest Honey (1kg)',
-        category: 'Honey',
-        selling_price: 10000,
-        unit: '1 kg',
-        badge: 'Best Seller',
-        description: '100% pure unfiltered raw honey harvested from natural top-bar apiaries in Komkonga forest.',
-        image: '/images/raw_forest_honey.webp',
-    },
-    {
         id: 9,
         sku: 'KFV-MANGO-1KG',
         name: 'Sweet Highland Orchard Mangoes',
@@ -198,7 +187,18 @@ const activeCategory = ref('All');
 const searchQuery = ref('');
 const sortOrder = ref('popular');
 const visibleCount = ref(12);
-const categoriesList = ['All', 'Eggs', 'Dairy', 'Honey', 'Fruits', 'Vegetables'];
+
+const categoriesList = computed(() => {
+    const list = ['All', 'Eggs', 'Dairy'];
+    const hasHoney = allProducts.value.some(p => {
+        const cat = getCategoryName(p).toLowerCase();
+        const name = (p.name || '').toLowerCase();
+        return cat.includes('honey') || name.includes('honey') || name.includes('asali');
+    });
+    if (hasHoney) list.push('Honey');
+    list.push('Fruits', 'Vegetables');
+    return list;
+});
 
 const filteredProducts = computed(() => {
     let list = allProducts.value.filter(p => {
@@ -1065,11 +1065,9 @@ const scrollToProducts = () => {
                     <div>
                         <h4 class="text-xs font-bold uppercase tracking-widest mb-4" style="color: #D98A3D;">Produce</h4>
                         <ul class="space-y-2.5 text-xs text-white/70">
-                            <li><button @click="activeCategory = 'Eggs'; scrollToProducts()" class="hover:text-white transition-colors cursor-pointer text-left">Eggs</button></li>
-                            <li><button @click="activeCategory = 'Dairy'; scrollToProducts()" class="hover:text-white transition-colors cursor-pointer text-left">Dairy</button></li>
-                            <li><button @click="activeCategory = 'Honey'; scrollToProducts()" class="hover:text-white transition-colors cursor-pointer text-left">Honey</button></li>
-                            <li><button @click="activeCategory = 'Fruits'; scrollToProducts()" class="hover:text-white transition-colors cursor-pointer text-left">Fruits</button></li>
-                            <li><button @click="activeCategory = 'Vegetables'; scrollToProducts()" class="hover:text-white transition-colors cursor-pointer text-left">Vegetables</button></li>
+                            <li v-for="cat in categoriesList.filter(c => c !== 'All')" :key="cat">
+                                <button @click="activeCategory = cat; scrollToProducts()" class="hover:text-white transition-colors cursor-pointer text-left">{{ cat }}</button>
+                            </li>
                         </ul>
                     </div>
 
