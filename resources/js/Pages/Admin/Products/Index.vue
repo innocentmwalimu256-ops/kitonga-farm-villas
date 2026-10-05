@@ -616,16 +616,16 @@ const clearFilters = () => {
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Quantity ({{ activeAdjustProduct.unit }}) <span class="text-red-500">*</span></label>
-                        <input v-model="adjustStockForm.quantity" type="number" required min="1" class="w-full text-xs rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 shadow-2xs" />
+                        <input v-model="adjustStockForm.quantity" type="number" required min="1" placeholder="Enter quantity" class="w-full text-xs rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 shadow-2xs" />
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Reason / Reference <span class="text-red-500">*</span></label>
-                        <input v-model="adjustStockForm.reason" type="text" required placeholder="e.g. Harvest from Field B, spoilage" class="w-full text-xs rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 shadow-2xs" />
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Reason / Reference <span class="text-gray-400 font-normal text-[10px] lowercase">(optional)</span></label>
+                        <input v-model="adjustStockForm.reason" type="text" placeholder="e.g. Morning harvest, restock, spoilage" class="w-full text-xs rounded-lg border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 shadow-2xs" />
                     </div>
                     <div class="flex space-x-2 pt-2">
                         <button type="button" @click="closeAdjustModal" class="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition">Cancel</button>
                         <button type="submit" :disabled="adjustStockForm.processing" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-lg shadow-sm transition">
-                            {{ adjustStockForm.processing ? 'Applying...' : 'Apply' }}
+                            {{ adjustStockForm.processing ? 'Applying...' : 'Apply Stock Change' }}
                         </button>
                     </div>
                 </form>

@@ -252,7 +252,7 @@
     ]
   },
   "resources/js/Pages/Admin/Products/Index.vue": {
-    "file": "assets/Index-CB4Y1odR.js",
+    "file": "assets/Index-uj43VDIG.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Products/Index.vue",
     "isDynamicEntry": true,
@@ -783,7 +783,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DHGRfa4g.js",
+    "file": "assets/app-DNl_k9xW.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -862,7 +862,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-BX12mwi5.css"
+      "assets/app-DxnKOPsv.css"
     ]
   }
 }

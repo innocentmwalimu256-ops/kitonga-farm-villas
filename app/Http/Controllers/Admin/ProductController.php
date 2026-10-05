@@ -161,21 +161,34 @@ class ProductController extends Controller
         abort_if(!auth()->user()->hasPermissionTo('adjust_inventory'), 403, 'Unauthorized to adjust inventory levels.');
 
         $validated = $request->validate([
-            'quantity' => 'required|integer', // positive for add, negative for remove
-            'type' => 'required|string|in:stock_in,return,wastage,adjustment',
-            'reason' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:1',
+            'type' => 'required|string|in:add,subtract,stock_in,wastage,adjustment,return',
+            'reason' => 'nullable|string|max:255',
         ]);
+
+        $rawType = $validated['type'];
+        $qty = abs((int) $validated['quantity']);
+
+        if ($rawType === 'subtract' || $rawType === 'wastage') {
+            $movementType = 'wastage';
+            $defaultReason = 'Stock reduction';
+        } else {
+            $movementType = 'stock_in';
+            $defaultReason = 'Stock addition (Harvest / Purchase)';
+        }
+
+        $reason = !empty($validated['reason']) ? $validated['reason'] : $defaultReason;
 
         try {
             $this->inventoryService->adjustStock(
                 $id,
-                $validated['quantity'],
-                $validated['type'],
-                $validated['reason'],
+                $qty,
+                $movementType,
+                $reason,
                 auth()->id()
             );
 
-            return back()->with('success', 'Stock adjusted successfully.');
+            return back()->with('success', 'Stock updated successfully.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
