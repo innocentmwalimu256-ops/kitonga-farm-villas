@@ -1,12 +1,20 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     kpis: Object,
     charts: Object,
     recent_bookings: Array,
+    live_rooms: {
+        type: Array,
+        default: () => [],
+    },
+    room_summary: {
+        type: Object,
+        default: () => ({ total: 0, occupied: 0, vacant: 0, arriving_today: 0, maintenance: 0 }),
+    },
     filters: Object,
 });
 
@@ -32,6 +40,29 @@ const showCustomRange = ref(props.filters.active === 'custom');
 const applyCustomDates = () => {
     customDateForm.get(route('admin.dashboard'));
 };
+
+// ─── LIVE ROOM OCCUPANCY FILTERING ──────────────────────────────────────────
+const roomStatusFilter = ref('all'); // 'all', 'occupied', 'vacant', 'arriving_today', 'maintenance'
+const roomSearchQuery = ref('');
+
+const filteredRooms = computed(() => {
+    return (props.live_rooms || []).filter(room => {
+        // Status filter
+        if (roomStatusFilter.value !== 'all' && room.occupancy_status !== roomStatusFilter.value) {
+            return false;
+        }
+        // Text search
+        if (roomSearchQuery.value.trim()) {
+            const query = roomSearchQuery.value.toLowerCase();
+            const matchName = (room.name || '').toLowerCase().includes(query);
+            const matchType = (room.villa_type || '').toLowerCase().includes(query);
+            const matchGuest = (room.guest_info?.guest_name || '').toLowerCase().includes(query);
+            const matchRef = (room.guest_info?.reference || '').toLowerCase().includes(query);
+            return matchName || matchType || matchGuest || matchRef;
+        }
+        return true;
+    });
+});
 </script>
 
 <template>
@@ -213,6 +244,302 @@ const applyCustomDates = () => {
                             <span class="text-amber-700 font-bold" v-if="kpis.outstanding_balance > 0">Unpaid: {{ formatCurrency(kpis.outstanding_balance) }}</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- ════════════════════════════════════════════════════════════════ -->
+                <!-- REAL-TIME ROOM & VILLA OCCUPANCY STATUS GRID (HALI YA VYUMBA)    -->
+                <!-- ════════════════════════════════════════════════════════════════ -->
+                <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 space-y-5">
+                    
+                    <!-- Header with Title & Quick Counts -->
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                                <h3 class="text-sm sm:text-base font-bold text-gray-900 uppercase tracking-wider flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                    <span>Hali ya Vyumba &amp; Villas (Live Room Occupancy)</span>
+                                </h3>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                Ufuatiliaji wa vyumba vilivyo wazi, vilivyojaa, wageni waliopo ndani, na wanaowasili leo kwa muda halisi.
+                            </p>
+                        </div>
+
+                        <!-- Room Summary Badges -->
+                        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
+                            <button 
+                                type="button" 
+                                @click="roomStatusFilter = 'all'"
+                                class="px-2.5 py-1 rounded-lg border font-bold transition flex items-center gap-1.5 cursor-pointer"
+                                :class="roomStatusFilter === 'all' ? 'bg-[#14231C] text-white border-[#14231C]' : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200'"
+                            >
+                                <span>Vyumba Vyote</span>
+                                <span class="px-1.5 py-0.2 rounded-full text-[10px]" :class="roomStatusFilter === 'all' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-800'">{{ room_summary.total }}</span>
+                            </button>
+
+                            <button 
+                                type="button" 
+                                @click="roomStatusFilter = 'occupied'"
+                                class="px-2.5 py-1 rounded-lg border font-bold transition flex items-center gap-1.5 cursor-pointer"
+                                :class="roomStatusFilter === 'occupied' ? 'bg-rose-700 text-white border-rose-700' : 'bg-rose-50 hover:bg-rose-100 text-rose-800 border-rose-200'"
+                            >
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500" :class="{ 'animate-pulse': room_summary.occupied > 0 }"></span>
+                                <span>Vimejaa (Occupied)</span>
+                                <span class="px-1.5 py-0.2 rounded-full text-[10px]" :class="roomStatusFilter === 'occupied' ? 'bg-white/20 text-white' : 'bg-rose-200 text-rose-900'">{{ room_summary.occupied }}</span>
+                            </button>
+
+                            <button 
+                                type="button" 
+                                @click="roomStatusFilter = 'vacant'"
+                                class="px-2.5 py-1 rounded-lg border font-bold transition flex items-center gap-1.5 cursor-cursor"
+                                :class="roomStatusFilter === 'vacant' ? 'bg-emerald-700 text-white border-emerald-700' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'"
+                            >
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span>Viko Wazi (Vacant)</span>
+                                <span class="px-1.5 py-0.2 rounded-full text-[10px]" :class="roomStatusFilter === 'vacant' ? 'bg-white/20 text-white' : 'bg-emerald-200 text-emerald-900'">{{ room_summary.vacant }}</span>
+                            </button>
+
+                            <button 
+                                type="button" 
+                                @click="roomStatusFilter = 'arriving_today'"
+                                class="px-2.5 py-1 rounded-lg border font-bold transition flex items-center gap-1.5 cursor-pointer"
+                                :class="roomStatusFilter === 'arriving_today' ? 'bg-amber-600 text-white border-amber-600' : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200'"
+                            >
+                                <span>Wanawasili Leo</span>
+                                <span class="px-1.5 py-0.2 rounded-full text-[10px]" :class="roomStatusFilter === 'arriving_today' ? 'bg-white/20 text-white' : 'bg-amber-200 text-amber-900'">{{ room_summary.arriving_today }}</span>
+                            </button>
+
+                            <button 
+                                v-if="room_summary.maintenance > 0"
+                                type="button" 
+                                @click="roomStatusFilter = 'maintenance'"
+                                class="px-2.5 py-1 rounded-lg border font-bold transition flex items-center gap-1.5 cursor-pointer"
+                                :class="roomStatusFilter === 'maintenance' ? 'bg-gray-700 text-white border-gray-700' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200'"
+                            >
+                                <span>Marekebisho</span>
+                                <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-gray-200 text-gray-800">{{ room_summary.maintenance }}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search Input Bar -->
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="relative flex-1 max-w-md">
+                            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input 
+                                v-model="roomSearchQuery" 
+                                type="text" 
+                                placeholder="Tafuta chumba, jina la villa, au jina la mgeni..." 
+                                class="w-full text-xs pl-9 pr-8 py-2 rounded-xl border border-gray-300 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
+                            />
+                            <button 
+                                v-if="roomSearchQuery" 
+                                @click="roomSearchQuery = ''" 
+                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <Link 
+                                :href="route('admin.bookings.calendar')" 
+                                class="text-xs font-bold text-emerald-800 hover:text-emerald-950 flex items-center gap-1"
+                            >
+                                <span>Calendar Grid ➔</span>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <!-- ROOM CARDS GRID -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div 
+                            v-for="room in filteredRooms" 
+                            :key="room.id" 
+                            class="rounded-2xl border p-4.5 flex flex-col justify-between transition-all duration-200 shadow-2xs hover:shadow-xs"
+                            :class="{
+                                'border-rose-300 bg-rose-50/20': room.occupancy_status === 'occupied',
+                                'border-emerald-300 bg-emerald-50/20': room.occupancy_status === 'vacant',
+                                'border-amber-300 bg-amber-50/30': room.occupancy_status === 'arriving_today',
+                                'border-gray-300 bg-gray-50/60': room.occupancy_status === 'maintenance',
+                            }"
+                        >
+                            <!-- Top: Room Name & Status Badge -->
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-start gap-2">
+                                    <div>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full"
+                                                :class="{
+                                                    'bg-rose-500 animate-pulse': room.occupancy_status === 'occupied',
+                                                    'bg-emerald-500': room.occupancy_status === 'vacant',
+                                                    'bg-amber-500 animate-pulse': room.occupancy_status === 'arriving_today',
+                                                    'bg-gray-400': room.occupancy_status === 'maintenance',
+                                                }"
+                                            ></span>
+                                            <h4 class="font-serif font-bold text-base text-gray-900">{{ room.name }}</h4>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-0.5">{{ room.villa_type }}</p>
+                                    </div>
+
+                                    <!-- Status Pill -->
+                                    <span 
+                                        class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider"
+                                        :class="{
+                                            'bg-rose-100 text-rose-800 border border-rose-200': room.occupancy_status === 'occupied',
+                                            'bg-emerald-100 text-emerald-800 border border-emerald-200': room.occupancy_status === 'vacant',
+                                            'bg-amber-100 text-amber-800 border border-amber-200': room.occupancy_status === 'arriving_today',
+                                            'bg-gray-200 text-gray-700 border border-gray-300': room.occupancy_status === 'maintenance',
+                                        }"
+                                    >
+                                        {{ room.occupancy_status === 'occupied' ? 'IMEJAA (Occupied)' : (room.occupancy_status === 'vacant' ? 'IPO WAZI (Vacant)' : (room.occupancy_status === 'arriving_today' ? 'ANAWASILI LEO' : 'MAREKEBISHO')) }}
+                                    </span>
+                                </div>
+
+                                <!-- Middle Content Depends on Status -->
+                                <!-- 1. OCCUPIED DETAILS -->
+                                <div v-if="room.occupancy_status === 'occupied' && room.guest_info" class="bg-white/90 p-3 rounded-xl border border-rose-100 space-y-2 text-xs">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <span class="text-[10px] uppercase font-bold text-gray-400 block">Mgeni Aliyepo Ndani</span>
+                                            <span class="font-bold text-gray-900 text-sm">{{ room.guest_info.guest_name }}</span>
+                                            <span v-if="room.guest_info.guest_phone" class="text-gray-500 font-mono text-[11px] block">{{ room.guest_info.guest_phone }}</span>
+                                        </div>
+                                        <span class="font-mono text-[10px] text-gray-500 font-bold bg-gray-100 px-1.5 py-0.5 rounded">
+                                            {{ room.guest_info.reference }}
+                                        </span>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-2 pt-1 border-t border-gray-100 text-[11px]">
+                                        <div>
+                                            <span class="text-gray-400 block text-[10px]">Check-In:</span>
+                                            <span class="font-semibold text-gray-800">{{ room.guest_info.check_in }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-gray-400 block text-[10px]">Check-Out:</span>
+                                            <span class="font-semibold text-rose-700 font-bold">{{ room.guest_info.check_out }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-between items-center pt-1 border-t border-gray-100 text-[11px]">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="text-gray-500">Wageni: <strong>{{ room.guest_info.guests_count }}</strong></span>
+                                            <span v-if="room.guest_info.has_id_document" class="text-[9px] px-1.5 py-0.2 bg-emerald-100 text-emerald-800 font-bold rounded">
+                                                ID Verified
+                                            </span>
+                                        </div>
+                                        <div v-if="room.guest_info.balance > 0" class="text-red-600 font-bold text-[10px] font-mono">
+                                            Baki: {{ formatCurrency(room.guest_info.balance) }}
+                                        </div>
+                                        <div v-else class="text-emerald-700 font-bold text-[10px]">
+                                            Paid in Full
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 2. ARRIVING TODAY DETAILS -->
+                                <div v-else-if="room.occupancy_status === 'arriving_today' && room.guest_info" class="bg-white/90 p-3 rounded-xl border border-amber-100 space-y-2 text-xs">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <span class="text-[10px] uppercase font-bold text-amber-700 block">Mgeni Anawasili Leo</span>
+                                            <span class="font-bold text-gray-900 text-sm">{{ room.guest_info.guest_name }}</span>
+                                            <span v-if="room.guest_info.guest_phone" class="text-gray-500 font-mono text-[11px] block">{{ room.guest_info.guest_phone }}</span>
+                                        </div>
+                                        <span class="font-mono text-[10px] text-gray-500 font-bold bg-gray-100 px-1.5 py-0.5 rounded">
+                                            {{ room.guest_info.reference }}
+                                        </span>
+                                    </div>
+
+                                    <div class="flex justify-between items-center pt-1 border-t border-gray-100 text-[11px]">
+                                        <span class="text-gray-600">Kuondoka: <strong>{{ room.guest_info.check_out }}</strong></span>
+                                        <span v-if="room.guest_info.has_id_document" class="text-[9px] px-1.5 py-0.2 bg-emerald-100 text-emerald-800 font-bold rounded">
+                                            Digital ID Ready
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- 3. VACANT & READY DETAILS -->
+                                <div v-else-if="room.occupancy_status === 'vacant'" class="bg-white/80 p-3 rounded-xl border border-emerald-100 space-y-2 text-xs">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-xs">
+                                            <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                            </svg>
+                                            <span>Chumba Kiko Wazi &amp; Safi</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono font-bold text-gray-700">{{ formatCurrency(room.base_price) }}/usiku</span>
+                                    </div>
+                                    <p class="text-[11px] text-gray-500 leading-relaxed">
+                                        Tayari kupokea mgeni mpya au kuthibitisha reservation ya leo.
+                                    </p>
+                                </div>
+
+                                <!-- 4. MAINTENANCE DETAILS -->
+                                <div v-else class="bg-white/80 p-3 rounded-xl border border-gray-200 space-y-1.5 text-xs text-gray-600">
+                                    <span class="text-[10px] uppercase font-bold text-gray-400 block">Sababu ya Kufungwa</span>
+                                    <p class="text-xs font-semibold text-gray-800">{{ room.block_reason || 'Matengenezo na Usafi Maalum' }}</p>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Action Button -->
+                            <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+                                <div class="text-[10px] text-gray-400">
+                                    Max {{ room.capacity }} Guests
+                                </div>
+
+                                <div v-if="room.occupancy_status === 'occupied' && room.guest_info">
+                                    <Link 
+                                        :href="route('admin.bookings.show', room.guest_info.booking_id)" 
+                                        class="px-3 py-1.5 bg-rose-700 hover:bg-rose-800 text-white rounded-lg font-bold text-[11px] transition inline-flex items-center gap-1 shadow-2xs"
+                                    >
+                                        <span>Tazama Booking</span>
+                                        <span>➔</span>
+                                    </Link>
+                                </div>
+
+                                <div v-else-if="room.occupancy_status === 'arriving_today' && room.guest_info">
+                                    <Link 
+                                        :href="route('admin.bookings.show', room.guest_info.booking_id)" 
+                                        class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-[11px] transition inline-flex items-center gap-1 shadow-2xs"
+                                    >
+                                        <span>Check-In Desk</span>
+                                        <span>➔</span>
+                                    </Link>
+                                </div>
+
+                                <div v-else-if="room.occupancy_status === 'vacant'">
+                                    <Link 
+                                        :href="route('admin.bookings.create')" 
+                                        class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-[11px] transition inline-flex items-center gap-1 shadow-2xs"
+                                    >
+                                        <span>Sajili Mgeni</span>
+                                        <span>+</span>
+                                    </Link>
+                                </div>
+
+                                <div v-else>
+                                    <Link 
+                                        :href="route('admin.accommodation.index')" 
+                                        class="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-bold text-[11px] transition"
+                                    >
+                                        Fungua Chumba
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div v-if="filteredRooms.length === 0" class="py-10 text-center text-gray-400 space-y-2">
+                        <p class="font-bold text-sm text-gray-600">Hakuna vyumba vinavyolingana na kigezo ulichochagua.</p>
+                        <button @click="roomStatusFilter = 'all'; roomSearchQuery = ''" class="text-xs text-emerald-700 underline font-bold">Onyesha vyumba vyote</button>
+                    </div>
+
                 </div>
 
                 <!-- CHARTS ROW (REVENUE TREND & REVENUE BY CATEGORY) -->

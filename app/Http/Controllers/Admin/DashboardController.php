@@ -254,6 +254,107 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 13. Real-Time Room & Villa Occupancy Grid (Live status: Occupied, Vacant, Arriving Today, Maintenance)
+        $todayStr = Carbon::today()->format('Y-m-d');
+        $liveRooms = AccommodationUnit::with([
+            'type',
+            'bookings' => function ($q) use ($todayStr) {
+                $q->whereIn('status', ['confirmed', 'checked_in', 'pending'])
+                  ->where('check_in', '<=', $todayStr)
+                  ->where('check_out', '>=', $todayStr)
+                  ->with('customer');
+            },
+            'blocks' => function ($q) use ($todayStr) {
+                $q->where('start_date', '<=', $todayStr)
+                  ->where('end_date', '>=', $todayStr);
+            }
+        ])->orderBy('name')->get()->map(function ($unit) use ($todayStr) {
+            // Check if active in-house stay
+            $activeStay = $unit->bookings->first(function ($b) use ($todayStr) {
+                $checkIn = Carbon::parse($b->getRawOriginal('check_in'))->format('Y-m-d');
+                $checkOut = Carbon::parse($b->getRawOriginal('check_out'))->format('Y-m-d');
+                return $checkIn <= $todayStr && $checkOut > $todayStr;
+            });
+
+            // Check if arriving today
+            $arrivingToday = null;
+            if (!$activeStay) {
+                $arrivingToday = $unit->bookings->first(function ($b) use ($todayStr) {
+                    $checkIn = Carbon::parse($b->getRawOriginal('check_in'))->format('Y-m-d');
+                    return $checkIn === $todayStr;
+                });
+            }
+
+            // Check if blocked
+            $activeBlock = $unit->blocks->first();
+
+            $occupancyStatus = 'vacant';
+            $statusLabel = 'Ipo Wazi (Vacant & Ready)';
+            $guestInfo = null;
+
+            if ($unit->status === 'maintenance' || $activeBlock) {
+                $occupancyStatus = 'maintenance';
+                $statusLabel = 'Marekebisho (Maintenance / Blocked)';
+            } elseif ($activeStay) {
+                $occupancyStatus = 'occupied';
+                $statusLabel = $activeStay->status === 'checked_in' ? 'Ina Mgeni (Checked In)' : 'Imejaa (Occupied / Confirmed)';
+                $guestInfo = [
+                    'booking_id' => $activeStay->id,
+                    'reference' => $activeStay->reference,
+                    'guest_name' => $activeStay->customer?->name ?? 'Guest',
+                    'guest_phone' => $activeStay->customer?->phone,
+                    'check_in' => Carbon::parse($activeStay->getRawOriginal('check_in'))->format('d M Y'),
+                    'check_out' => Carbon::parse($activeStay->getRawOriginal('check_out'))->format('d M Y'),
+                    'nights_total' => $activeStay->duration_in_nights,
+                    'guests_count' => $activeStay->guests_count,
+                    'status' => $activeStay->status,
+                    'balance' => (float) $activeStay->balance,
+                    'id_type' => $activeStay->id_type ?? $activeStay->customer?->id_type,
+                    'id_number' => $activeStay->id_number ?? $activeStay->customer?->id_number,
+                    'has_id_document' => !empty($activeStay->id_document_path || $activeStay->customer?->id_document_path),
+                ];
+            } elseif ($arrivingToday) {
+                $occupancyStatus = 'arriving_today';
+                $statusLabel = 'Mgeni Anawasili Leo (Arriving Today)';
+                $guestInfo = [
+                    'booking_id' => $arrivingToday->id,
+                    'reference' => $arrivingToday->reference,
+                    'guest_name' => $arrivingToday->customer?->name ?? 'Guest',
+                    'guest_phone' => $arrivingToday->customer?->phone,
+                    'check_in' => Carbon::parse($arrivingToday->getRawOriginal('check_in'))->format('d M Y'),
+                    'check_out' => Carbon::parse($arrivingToday->getRawOriginal('check_out'))->format('d M Y'),
+                    'guests_count' => $arrivingToday->guests_count,
+                    'status' => $arrivingToday->status,
+                    'balance' => (float) $arrivingToday->balance,
+                    'id_type' => $arrivingToday->id_type ?? $arrivingToday->customer?->id_type,
+                    'id_number' => $arrivingToday->id_number ?? $arrivingToday->customer?->id_number,
+                    'has_id_document' => !empty($arrivingToday->id_document_path || $arrivingToday->customer?->id_document_path),
+                ];
+            }
+
+            return [
+                'id' => $unit->id,
+                'name' => $unit->name,
+                'villa_type' => $unit->type?->name ?? 'Villa',
+                'villa_type_id' => $unit->accommodation_type_id,
+                'capacity' => $unit->type?->capacity ?? 2,
+                'base_price' => (float) ($unit->type?->base_price ?? 0),
+                'housekeeping_status' => $unit->housekeeping_status ?? 'clean',
+                'occupancy_status' => $occupancyStatus,
+                'status_label' => $statusLabel,
+                'guest_info' => $guestInfo,
+                'block_reason' => $activeBlock?->reason,
+            ];
+        });
+
+        $roomSummary = [
+            'total' => $liveRooms->count(),
+            'occupied' => $liveRooms->where('occupancy_status', 'occupied')->count(),
+            'vacant' => $liveRooms->where('occupancy_status', 'vacant')->count(),
+            'arriving_today' => $liveRooms->where('occupancy_status', 'arriving_today')->count(),
+            'maintenance' => $liveRooms->where('occupancy_status', 'maintenance')->count(),
+        ];
+
         return Inertia::render('Admin/Dashboard', [
             'kpis' => [
                 'today_revenue' => $todayRevenue,
@@ -286,6 +387,8 @@ class DashboardController extends Controller
                 'payment_methods' => $paymentMethods,
             ],
             'recent_bookings' => $recentBookings,
+            'live_rooms' => $liveRooms,
+            'room_summary' => $roomSummary,
             'filters' => [
                 'active' => $filter,
                 'start_date' => $startDate->format('Y-m-d'),
