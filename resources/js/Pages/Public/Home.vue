@@ -20,38 +20,53 @@ const videoPlayer = ref(null);
 
 onMounted(() => {
     if (videoPlayer.value) {
-        videoPlayer.value.muted = true;
-        videoPlayer.value.defaultMuted = true;
+        const vid = videoPlayer.value;
+        vid.muted = true;
+        vid.defaultMuted = true;
+        vid.playsInline = true;
         isMuted.value = true;
 
         const startPlayback = () => {
-            if (videoPlayer.value) {
-                videoPlayer.value.muted = true;
-                const p = videoPlayer.value.play();
+            if (vid) {
+                vid.muted = true;
+                const p = vid.play();
                 if (p !== undefined) {
                     p.then(() => {
                         isPaused.value = false;
-                    }).catch(err => {
-                        console.log("Autoplay waiting for touch:", err);
+                    }).catch(() => {
+                        // Handled on first user gesture
                     });
                 }
             }
         };
 
+        // Ensure seamless looping without stalling
+        vid.addEventListener('ended', () => {
+            vid.currentTime = 0;
+            vid.play().catch(() => {});
+        });
+
+        // Resume if stalled
+        vid.addEventListener('stalled', () => {
+            if (!vid.paused) {
+                vid.play().catch(() => {});
+            }
+        });
+
         startPlayback();
 
-        // Fallback on first user touch/click/scroll
+        // Fallback on first user interaction
         const triggerPlay = () => {
-            if (videoPlayer.value && videoPlayer.value.paused) {
+            if (vid && vid.paused) {
                 startPlayback();
             }
             window.removeEventListener('click', triggerPlay);
             window.removeEventListener('touchstart', triggerPlay);
             window.removeEventListener('scroll', triggerPlay);
         };
-        window.addEventListener('click', triggerPlay, { passive: true });
-        window.addEventListener('touchstart', triggerPlay, { passive: true });
-        window.addEventListener('scroll', triggerPlay, { passive: true });
+        window.addEventListener('click', triggerPlay, { passive: true, once: true });
+        window.addEventListener('touchstart', triggerPlay, { passive: true, once: true });
+        window.addEventListener('scroll', triggerPlay, { passive: true, once: true });
     }
 });
 
@@ -190,28 +205,31 @@ const handleLogoClick = (e) => {
             class="relative min-h-[75vh] md:min-h-[85vh] lg:min-h-[90vh] w-full overflow-hidden bg-[#0A120E] flex items-center justify-center cursor-pointer select-none group"
             title="Click anywhere to Play / Pause video"
         >
-            <!-- Hero Video (Dynamic uploaded video with high quality static fallbacks) -->
+            <!-- Hero Video (Direct Zero-Latency High-Quality Static & Dynamic Stream) -->
             <video 
                 ref="videoPlayer"
                 :key="hero_video_url || 'default-hero-video'"
                 poster="/images/hero_poster.webp"
                 class="absolute inset-0 w-full h-full object-cover object-center"
-                style="transform: translateZ(0); -webkit-transform: translateZ(0); backface-visibility: hidden; will-change: transform;"
+                style="transform: translate3d(0,0,0); -webkit-transform: translate3d(0,0,0); backface-visibility: hidden; will-change: transform;"
                 autoplay 
                 loop 
                 muted
                 :muted="true"
                 playsinline
                 webkit-playsinline="true"
+                disablePictureInPicture
+                disableRemotePlayback
                 preload="auto"
             >
-                <!-- Priority 1: Uploaded Hero Video from Admin Media -->
-                <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
-                <!-- Priority 2: Ultra-Fast HTTP 206 Streamer -->
-                <source src="/stream/hero-video" type="video/mp4">
-                <!-- Priority 3: Local Static Files -->
+                <!-- Priority 1: Direct High-Speed Static MP4 (Zero PHP latency, instant hardware decode) -->
                 <source src="/videos/hero_cinematic.mp4" type="video/mp4">
+                <!-- Priority 2: Direct Static WebM (For Chrome/Android optimized VP9) -->
                 <source src="/videos/hero_cinematic.webm" type="video/webm">
+                <!-- Priority 3: Dynamic Uploaded Hero Video from CMS if custom -->
+                <source v-if="hero_video_url" :src="hero_video_url" :type="hero_video_mime || 'video/mp4'">
+                <!-- Priority 4: Dynamic Fast Stream Fallback -->
+                <source src="/stream/hero-video" type="video/mp4">
             </video>
 
             <!-- Subtle Gradient for Top Navbar Contrast (Maintains full video brightness and crisp clarity) -->

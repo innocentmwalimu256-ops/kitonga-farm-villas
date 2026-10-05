@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\AccommodationController as AdminAccommodationCont
 use App\Http\Controllers\Admin\ExperienceController as AdminExperienceController;
 use Illuminate\Support\Facades\Route;
 
-// --- Ultra-Fast HTTP 206 Partial Content Web Video Streamer ---
+// --- Ultra-Fast Web Video Streamer with Native Byte-Range & Kernel Sendfile ---
 Route::get('/stream/hero-video', function () {
     $path = null;
     $mimeType = 'video/mp4';
@@ -64,65 +64,11 @@ Route::get('/stream/hero-video', function () {
         abort(404);
     }
 
-    $size = filesize($path);
-    $file = fopen($path, 'rb');
-
-    $start = 0;
-    $length = $size;
-    $status = 200;
-    $headers = [
+    return response()->file($path, [
         'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=31536000, immutable',
         'Accept-Ranges' => 'bytes',
-        'Cache-Control' => 'public, max-age=31536000',
-    ];
-
-    if (isset($_SERVER['HTTP_RANGE'])) {
-        $c_start = $start;
-        $c_end = $size - 1;
-
-        list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
-        if (strpos($range, ',') !== false) {
-            header('HTTP/1.1 416 Requested Range Not Satisfiable');
-            header("Content-Range: bytes $start-$c_end/$size");
-            exit;
-        }
-
-        if ($range == '-') {
-            $c_start = $size - substr($range, 1);
-        } else {
-            $range = explode('-', $range);
-            $c_start = intval($range[0]);
-            $c_end = (isset($range[1]) && is_numeric($range[1])) ? intval($range[1]) : $size - 1;
-        }
-
-        $c_end = ($c_end > $size - 1) ? $size - 1 : $c_end;
-        if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
-            header('HTTP/1.1 416 Requested Range Not Satisfiable');
-            header("Content-Range: bytes $start-$c_end/$size");
-            exit;
-        }
-
-        $start = $c_start;
-        $length = $c_end - $start + 1;
-        fseek($file, $start);
-        $status = 206;
-        $headers['Content-Range'] = "bytes $start-$c_end/$size";
-        $headers['Content-Length'] = $length;
-    } else {
-        $headers['Content-Length'] = $size;
-    }
-
-    return response()->stream(function () use ($file, $length) {
-        $chunkSize = 1024 * 256;
-        $bytesSent = 0;
-        while (!feof($file) && $bytesSent < $length && connection_status() == 0) {
-            $readSize = min($chunkSize, $length - $bytesSent);
-            echo fread($file, $readSize);
-            flush();
-            $bytesSent += $readSize;
-        }
-        fclose($file);
-    }, $status, $headers);
+    ]);
 })->name('stream.hero.video');
 
 // --- Public Website ---
