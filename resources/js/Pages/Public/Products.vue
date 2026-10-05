@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
     products: { type: Array, default: () => [] },
@@ -22,7 +22,8 @@ const defaultProducts = [
         selling_price: 8000,
         unit: 'Tray (30 Eggs)',
         badge: 'Best Seller',
-        description: 'Organic free-range eggs with rich golden yolks, gathered every morning from pasture-fed hens.',
+        origin: 'Komkonga Poultry Pastures',
+        description: 'Organic free-range eggs with rich golden yolks, gathered at dawn every morning from hens roaming freely on green highland clover.',
         image: '/images/farm_egg_trays.webp',
     },
     {
@@ -31,9 +32,10 @@ const defaultProducts = [
         name: 'Kitonga Cultured Sour Milk / Mtindi (5L)',
         category: 'Dairy',
         selling_price: 17000,
-        unit: '5 Liters',
-        badge: 'Fresh Today',
-        description: 'Traditional thick and creamy cultured sour milk made from 100% pure highland pasture milk.',
+        unit: '5 Liters Container',
+        badge: 'Fresh Daily',
+        origin: 'Highland Dairy Barns',
+        description: 'Traditional thick and velvety cultured sour milk made from 100% pure whole pasture milk, naturally fermented with wholesome probiotics.',
         image: '/images/kitonga_mtindi_5l.webp',
     },
     {
@@ -42,9 +44,10 @@ const defaultProducts = [
         name: 'Kitonga Cultured Sour Milk / Mtindi (3L)',
         category: 'Dairy',
         selling_price: 13000,
-        unit: '3 Liters',
-        badge: '',
-        description: 'Authentic fermented pasture sour milk packed with natural probiotics in a 3L container.',
+        unit: '3 Liters Container',
+        badge: 'Artisanal',
+        origin: 'Highland Dairy Barns',
+        description: 'Authentic fermented pasture sour milk rich in natural nutrients and probiotic cultures, sealed fresh in an artisanal 3-liter container.',
         image: '/images/kitonga_mtindi_3l.webp',
     },
     {
@@ -53,9 +56,10 @@ const defaultProducts = [
         name: 'Fresh Pasture Whole Milk (5 Liters)',
         category: 'Dairy',
         selling_price: 13000,
-        unit: '5 Liters',
-        badge: 'Fresh Today',
-        description: 'Pure whole farm milk rich in golden natural cream, drawn daily from grass-fed dairy cows.',
+        unit: '5 Liters Can',
+        badge: 'Dawn Milking',
+        origin: 'Pasture Dairy Herd',
+        description: 'Pure, unhomogenized whole milk with natural golden cream layer, drawn fresh from pedigree dairy cows grazing on pesticide-free grasses.',
         image: '/images/IMG_0404.webp',
     },
     {
@@ -64,9 +68,10 @@ const defaultProducts = [
         name: 'Fresh Pasture Whole Milk (3 Liters)',
         category: 'Dairy',
         selling_price: 9000,
-        unit: '3 Liters',
-        badge: '',
-        description: 'Unhomogenized wholesome whole milk, fresh from morning milking in a 3L container.',
+        unit: '3 Liters Container',
+        badge: 'Raw Purity',
+        origin: 'Pasture Dairy Herd',
+        description: 'Wholesome fresh milk delivered straight from our morning milking, retaining all natural bioactive enzymes, vitamins, and natural sweetness.',
         image: '/images/fresh_milk_3l.webp',
     },
     {
@@ -75,9 +80,10 @@ const defaultProducts = [
         name: 'Probiotic Artisanal Drinking Yogurt (1L)',
         category: 'Dairy',
         selling_price: 6000,
-        unit: '1 Liter',
+        unit: '1 Liter Bottle',
         badge: 'Best Seller',
-        description: 'Velvety smooth probiotic drinking yogurt handcrafted from fresh milk and natural culture.',
+        origin: 'Artisanal Dairy Kitchen',
+        description: 'Silk-smooth probiotic drinking yogurt handcrafted with pure milk and live active cultures for gentle digestion and wholesome vitality.',
         image: '/images/yogurt_1l.webp',
     },
     {
@@ -86,9 +92,10 @@ const defaultProducts = [
         name: 'Probiotic Artisanal Yogurt (500ml)',
         category: 'Dairy',
         selling_price: 3000,
-        unit: '500 ml',
-        badge: '',
-        description: 'Convenient on-the-go probiotic yogurt crafted with pure wholesome farm ingredients.',
+        unit: '500ml Bottle',
+        badge: 'Daily Favorite',
+        origin: 'Artisanal Dairy Kitchen',
+        description: 'Convenient single-serve artisanal drinking yogurt packed with probiotic goodness, crafted fresh daily without artificial additives.',
         image: '/images/IMG_0389.webp',
     },
     {
@@ -97,9 +104,10 @@ const defaultProducts = [
         name: 'Sweet Highland Orchard Mangoes',
         category: 'Fruits',
         selling_price: 3000,
-        unit: '1 kg',
-        badge: 'Fresh Today',
-        description: 'Fragrant sun-ripened organic mangoes handpicked directly from our mature estate trees.',
+        unit: 'per Kilogram',
+        badge: 'Sun-Ripened',
+        origin: 'Estate Fruit Orchard',
+        description: 'Fragrant sun-ripened organic mangoes handpicked directly from our mature estate trees at peak sweetness and succulence.',
         image: '/images/mango_wallpaper.webp',
     },
     {
@@ -109,8 +117,9 @@ const defaultProducts = [
         category: 'Fruits',
         selling_price: 4000,
         unit: 'per Piece',
-        badge: '',
-        description: 'Vibrant sweet papaya cultivated in rich organic soil and harvested at peak ripeness.',
+        badge: 'Harvested Today',
+        origin: 'Estate Fruit Orchard',
+        description: 'Deep orange, honey-sweet papayas grown in rich composted soil and harvested fully tree-ripened for maximum flavor and nutrition.',
         image: '/images/pawpaw_fresh.webp',
     },
     {
@@ -120,8 +129,9 @@ const defaultProducts = [
         category: 'Fruits',
         selling_price: 4500,
         unit: 'per Piece',
-        badge: '',
-        description: 'Naturally juicy tropical pineapples grown with pure rainfall and highland sunshine.',
+        badge: 'Organic',
+        origin: 'Komkonga Valley Fields',
+        description: 'Luscious, low-acidity tropical pineapples naturally hydrated by mountain rainfall and bright highland sun.',
         image: '/images/pineapple_fresh.webp',
     },
     {
@@ -131,8 +141,9 @@ const defaultProducts = [
         category: 'Vegetables',
         selling_price: 6000,
         unit: 'per Bundle',
-        badge: 'Fresh Today',
-        description: 'Crisp pesticide-free garden spinach, tender greens, lettuce and herbs picked at dawn.',
+        badge: 'Picked at Dawn',
+        origin: 'Permaculture Gardens',
+        description: 'Crisp pesticide-free garden spinach, seasonal greens, tender lettuce and fresh culinary herbs picked fresh upon morning request.',
         image: '/images/fresh_vegetables_garden.webp',
     },
 ];
@@ -144,10 +155,9 @@ const getCategoryName = (prod) => {
     const cat = String(rawCat).toLowerCase();
     if (name.includes('egg') || name.includes('mayai') || cat.includes('egg')) return 'Eggs';
     if (name.includes('milk') || name.includes('mtindi') || name.includes('yogurt') || name.includes('yoghurt') || name.includes('maziwa') || cat.includes('dairy')) return 'Dairy';
-    if (name.includes('honey') || name.includes('asali') || cat.includes('honey')) return 'Honey';
     if (name.includes('mango') || name.includes('papaw') || name.includes('pineapple') || name.includes('fruit') || cat.includes('fruit')) return 'Fruits';
     if (name.includes('veg') || name.includes('green') || name.includes('mboga') || cat.includes('veg')) return 'Vegetables';
-    return rawCat || 'Produce';
+    return rawCat || 'Farm Produce';
 };
 
 const resolveProductImage = (prod) => {
@@ -169,7 +179,6 @@ const resolveProductImage = (prod) => {
     if (name.includes('yoghurt') || name.includes('yogurt')) return '/images/yogurt_1l.webp';
     if (name.includes('mtindi') || name.includes('sour milk')) return '/images/kitonga_mtindi_5l.webp';
     if (name.includes('milk') || name.includes('maziwa')) return '/images/IMG_0404.webp';
-    if (name.includes('honey') || name.includes('asali')) return '/images/raw_forest_honey.webp';
     if (name.includes('mango') || name.includes('embe')) return '/images/mango_wallpaper.webp';
     if (name.includes('papaw') || name.includes('papaya')) return '/images/pawpaw_fresh.webp';
     if (name.includes('pine') || name.includes('nanasi')) return '/images/pineapple_fresh.webp';
@@ -184,1206 +193,643 @@ const allProducts = computed(() => {
 });
 
 const activeCategory = ref('All');
-const searchQuery = ref('');
-const sortOrder = ref('popular');
-const visibleCount = ref(12);
-
-const categoriesList = computed(() => {
-    const list = ['All', 'Eggs', 'Dairy'];
-    const hasHoney = allProducts.value.some(p => {
-        const cat = getCategoryName(p).toLowerCase();
-        const name = (p.name || '').toLowerCase();
-        return cat.includes('honey') || name.includes('honey') || name.includes('asali');
-    });
-    if (hasHoney) list.push('Honey');
-    list.push('Fruits', 'Vegetables');
-    return list;
-});
+const categoriesList = ['All', 'Eggs', 'Dairy', 'Fruits', 'Vegetables'];
 
 const filteredProducts = computed(() => {
-    let list = allProducts.value.filter(p => {
-        const catName = getCategoryName(p).toLowerCase();
+    if (activeCategory.value === 'All') return allProducts.value;
+    return allProducts.value.filter(p => {
+        const cat = getCategoryName(p).toLowerCase();
         const name = (p.name || '').toLowerCase();
-        const matchesCat = activeCategory.value === 'All'
-            || (activeCategory.value === 'Eggs' && (catName.includes('egg') || name.includes('egg') || name.includes('mayai')))
-            || (activeCategory.value === 'Dairy' && (catName.includes('dairy') || name.includes('milk') || name.includes('mtindi') || name.includes('yogurt') || name.includes('yoghurt') || name.includes('maziwa')))
-            || (activeCategory.value === 'Honey' && (catName.includes('honey') || name.includes('honey') || name.includes('asali')))
-            || (activeCategory.value === 'Fruits' && (catName.includes('fruit') || name.includes('mango') || name.includes('papaw') || name.includes('pineapple')))
-            || (activeCategory.value === 'Vegetables' && (catName.includes('veg') || name.includes('veg') || name.includes('mboga') || name.includes('green')));
-        const q = searchQuery.value.toLowerCase().trim();
-        const matchesSearch = !q || name.includes(q) || (p.description || '').toLowerCase().includes(q);
-        return matchesCat && matchesSearch;
+        if (activeCategory.value === 'Eggs') return cat.includes('egg') || name.includes('egg') || name.includes('mayai');
+        if (activeCategory.value === 'Dairy') return cat.includes('dairy') || name.includes('milk') || name.includes('mtindi') || name.includes('yogurt') || name.includes('yoghurt') || name.includes('maziwa');
+        if (activeCategory.value === 'Fruits') return cat.includes('fruit') || name.includes('mango') || name.includes('papaw') || name.includes('pineapple');
+        if (activeCategory.value === 'Vegetables') return cat.includes('veg') || name.includes('veg') || name.includes('mboga') || name.includes('green');
+        return true;
     });
-
-    if (sortOrder.value === 'price_asc') {
-        list = [...list].sort((a, b) => (a.selling_price || a.price || 0) - (b.selling_price || b.price || 0));
-    } else if (sortOrder.value === 'price_desc') {
-        list = [...list].sort((a, b) => (b.selling_price || b.price || 0) - (a.selling_price || a.price || 0));
-    }
-
-    return list;
 });
 
-const visibleProducts = computed(() => filteredProducts.value.slice(0, visibleCount.value));
-const hasMore = computed(() => visibleCount.value < filteredProducts.value.length);
-
-watch([activeCategory, searchQuery], () => {
-    visibleCount.value = 12;
-});
-
-const loadMore = () => {
-    visibleCount.value += 8;
+const formatCurrency = (val) => {
+    const num = Number(val) || 0;
+    return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(num);
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-const formatCurrency = (val) => 'TSh ' + (Number(val) || 0).toLocaleString('en-US');
-const getPrice = (p) => Number(p?.selling_price || p?.price || 0);
+const getPrice = (prod) => {
+    return Number(prod?.selling_price || prod?.price || 0);
+};
 
-// ─── Cart & Basket Management ────────────────────────────────────────────────
-const cart = ref({});
-const cartDrawerOpen = ref(false);
-const deliveryNotes = ref('');
-const mobileMenuOpen = ref(false);
-const toastMessage = ref('');
-const toastVisible = ref(false);
-let toastTimer = null;
+// ─── Cenizaro-Style Fullscreen Gallery Lightbox ──────────────────────────────
+const lightboxIndex = ref(null);
+const isLightboxOpen = computed(() => lightboxIndex.value !== null);
+const currentLightboxProduct = computed(() => {
+    if (lightboxIndex.value === null) return null;
+    return filteredProducts.value[lightboxIndex.value] || null;
+});
+
+const openLightbox = (index) => {
+    lightboxIndex.value = index;
+    if (typeof document !== 'undefined') {
+        document.body.style.overflow = 'hidden';
+    }
+};
+
+const closeLightbox = () => {
+    lightboxIndex.value = null;
+    if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
+    }
+};
+
+const prevLightbox = () => {
+    if (lightboxIndex.value === null) return;
+    const total = filteredProducts.value.length;
+    lightboxIndex.value = (lightboxIndex.value - 1 + total) % total;
+};
+
+const nextLightbox = () => {
+    if (lightboxIndex.value === null) return;
+    const total = filteredProducts.value.length;
+    lightboxIndex.value = (lightboxIndex.value + 1) % total;
+};
+
+const handleKeydown = (e) => {
+    if (!isLightboxOpen.value) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') prevLightbox();
+    if (e.key === 'ArrowRight') nextLightbox();
+};
 
 onMounted(() => {
-    try {
-        const saved = localStorage.getItem('kitonga_cart_v3');
-        if (saved) cart.value = JSON.parse(saved);
-    } catch (e) {}
+    window.addEventListener('keydown', handleKeydown);
 });
 
-const saveCart = () => {
-    try {
-        localStorage.setItem('kitonga_cart_v3', JSON.stringify(cart.value));
-    } catch (e) {}
-};
-
-const showToast = (msg) => {
-    toastMessage.value = msg;
-    toastVisible.value = true;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-        toastVisible.value = false;
-    }, 2500);
-};
-
-const addToCart = (prod) => {
-    if (!prod) return;
-    if (cart.value[prod.id]) {
-        cart.value[prod.id].qty += 1;
-    } else {
-        cart.value[prod.id] = {
-            id: prod.id,
-            name: prod.name,
-            price: getPrice(prod),
-            unit: prod.unit || 'unit',
-            image: resolveProductImage(prod),
-            qty: 1,
-        };
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeydown);
+    if (typeof document !== 'undefined') {
+        document.body.style.overflow = '';
     }
-    saveCart();
-    showToast('Added to basket');
-};
-
-const decrementCart = (prodId) => {
-    if (cart.value[prodId]) {
-        if (cart.value[prodId].qty > 1) {
-            cart.value[prodId].qty -= 1;
-        } else {
-            delete cart.value[prodId];
-        }
-        saveCart();
-    }
-};
-
-const removeFromCart = (prodId) => {
-    delete cart.value[prodId];
-    saveCart();
-};
-
-const cartList = computed(() => Object.values(cart.value));
-const totalCartItems = computed(() => cartList.value.reduce((acc, item) => acc + item.qty, 0));
-const totalCartPrice = computed(() => cartList.value.reduce((acc, item) => acc + item.price * item.qty, 0));
-
-// ─── WhatsApp Communication ───────────────────────────────────────────────────
-const whatsappPhone = computed(() => (props.settings?.contact_phone || '+255758774695').replace(/[^0-9]/g, ''));
-
-const whatsappUrl = computed(() => {
-    if (cartList.value.length === 0) {
-        return `https://wa.me/${whatsappPhone.value}?text=${encodeURIComponent('Hello Kitonga Farm, I would like to inquire about fresh farm produce.')}`;
-    }
-    let msg = '*KITONGA FARM — FRESH PRODUCE ORDER*\n\n';
-    msg += 'Hello, I would like to place an order for the following fresh harvest:\n\n';
-    cartList.value.forEach((item, i) => {
-        msg += `${i + 1}. *${item.name}*\n   Quantity: ${item.qty} (${item.unit})\n   Subtotal: ${formatCurrency(item.price * item.qty)}\n\n`;
-    });
-    msg += `*ESTIMATED TOTAL: ${formatCurrency(totalCartPrice.value)}*\n\n`;
-    if (deliveryNotes.value.trim()) {
-        msg += `*Delivery / Notes:* ${deliveryNotes.value.trim()}\n\n`;
-    }
-    msg += 'Please confirm stock and arrange delivery or pickup. Thank you!';
-    return `https://wa.me/${whatsappPhone.value}?text=${encodeURIComponent(msg)}`;
 });
 
-const directWhatsapp = computed(() =>
-    `https://wa.me/${whatsappPhone.value}?text=${encodeURIComponent('Hello Kitonga Farm, I would like to order fresh farm produce.')}`
-);
-
-const bulkWhatsappUrl = computed(() =>
-    `https://wa.me/${whatsappPhone.value}?text=${encodeURIComponent('Hello Kitonga Farm, I am inquiring about a bulk produce order for my hotel, restaurant, or business.')}`
-);
-
-// ─── Quick View Modal ─────────────────────────────────────────────────────────
-const quickViewProduct = ref(null);
-const quickViewQty = ref(1);
-
-const openQuickView = (prod) => {
-    quickViewProduct.value = prod;
-    quickViewQty.value = cart.value[prod.id]?.qty || 1;
+// ─── WhatsApp Inquiry URL ───────────────────────────────────────────────────
+const getProductWhatsappUrl = (prod) => {
+    const phone = (props.settings?.contact_phone || '+255758774695').replace(/[^0-9]/g, '');
+    const name = prod?.name || 'Farm Produce';
+    const price = formatCurrency(getPrice(prod));
+    const unit = prod?.unit ? ` (${prod.unit})` : '';
+    const text = `Habari Kitonga Farm Villas,\n\nNingependa kupata taarifa zaidi au kuagiza bidhaa hii ya shambani:\n• *${name}*\n• Bei: *${price}${unit}*\n\nNaomba msaada wa upatikanaji na utaratibu wa kuletewa. Asante!`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 };
 
-const closeQuickView = () => {
-    quickViewProduct.value = null;
-};
+const generalWhatsappUrl = computed(() => {
+    const phone = (props.settings?.contact_phone || '+255758774695').replace(/[^0-9]/g, '');
+    const text = `Habari Kitonga Farm Villas, ningependa kuwasiliana nanyi kuhusu bidhaa zenu za shambani (Farm Produce & Dairy).`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+});
 
-const addQuickViewToCart = () => {
-    if (!quickViewProduct.value) return;
-    const prod = quickViewProduct.value;
-    cart.value[prod.id] = {
-        id: prod.id,
-        name: prod.name,
-        price: getPrice(prod),
-        unit: prod.unit || 'unit',
-        image: resolveProductImage(prod),
-        qty: quickViewQty.value,
-    };
-    saveCart();
-    showToast('Added to basket');
-    closeQuickView();
-};
-
-const scrollToProducts = () => {
-    document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' });
+const scrollToGallery = () => {
+    const el = document.getElementById('produce-gallery-grid');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
 };
 </script>
 
 <template>
-    <Head>
-        <title>Fresh &amp; Authentic Produce | Kitonga Farm</title>
-        <meta name="description" content="Order fresh free-range eggs, pasture milk, artisanal yogurt, wild forest honey, sweet mangoes and farm vegetables directly from Kitonga Farm in Komkonga, Handeni." />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    </Head>
+    <Head title="Organic Farm Produce Gallery | Kitonga Farm Villas" />
 
-    <div class="min-h-screen antialiased selection:bg-[#D98A3D] selection:text-white" style="font-family: 'Figtree', sans-serif; background-color: #FFFBF5; color: #1A1A1A;">
+    <div class="min-h-screen bg-[#FAF8F5] text-[#2C3530] font-sans antialiased selection:bg-[#C98A3E] selection:text-white">
 
-        <!-- ── TOAST NOTIFICATION ─────────────────────────────────────── -->
-        <Transition name="toast">
-            <div
-                v-if="toastVisible"
-                class="fixed top-6 right-6 z-[200] flex items-center gap-3 px-5 py-3.5 rounded-full text-white text-sm font-semibold shadow-2xl border"
-                style="background-color: #14301F; border-color: rgba(217, 138, 61, 0.4);"
-            >
-                <div class="w-5 h-5 rounded-full flex items-center justify-center bg-[#D98A3D] text-white">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                </div>
-                <span>{{ toastMessage }}</span>
-            </div>
-        </Transition>
-
-        <!-- ── TOP INFORMATION BAR ────────────────────────────────────── -->
-        <div class="text-white text-xs py-2 px-4 sm:px-6 border-b" style="background-color: #0E2216; border-color: rgba(255,255,255,0.06);">
-            <div class="max-w-[1240px] mx-auto flex items-center justify-between">
-                <!-- Location & Hours (Hidden on Mobile) -->
-                <div class="hidden md:flex items-center gap-6 text-white/80">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-3.5 h-3.5 text-[#D98A3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        Komkonga, Handeni, Tanga
-                    </span>
-                    <span class="flex items-center gap-2">
-                        <svg class="w-3.5 h-3.5 text-[#D98A3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Mon – Sat: 7:00 AM – 6:00 PM
-                    </span>
-                </div>
-
-                <!-- Phone (Visible everywhere) -->
-                <div class="flex items-center justify-between w-full md:w-auto gap-5">
-                    <a :href="`tel:${whatsappPhone}`" class="flex items-center gap-2 font-medium hover:text-[#D98A3D] transition-colors">
-                        <svg class="w-3.5 h-3.5 text-[#D98A3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                        +255 758 774 695
-                    </a>
-
-                    <!-- Socials -->
-                    <div class="flex items-center gap-3">
-                        <a href="https://instagram.com" target="_blank" class="text-white/70 hover:text-white transition-colors" aria-label="Instagram">
-                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                        </a>
-                        <a href="https://facebook.com" target="_blank" class="text-white/70 hover:text-white transition-colors" aria-label="Facebook">
-                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                        </a>
+        <!-- ══════════════════════════════════════════════════════════════════════
+             1. REFINED LUXURY TOP NAVIGATION (Cenizaro Style)
+        ══════════════════════════════════════════════════════════════════════ -->
+        <header class="sticky top-0 z-50 bg-[#14231C]/95 backdrop-blur-md border-b border-white/10 text-white transition-all">
+            <div class="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
+                
+                <!-- Left: Logo & Crest -->
+                <Link :href="route('home')" class="flex items-center gap-3.5 group">
+                    <div class="w-10 h-10 rounded-full border border-[#C98A3E]/60 flex items-center justify-center p-1.5 bg-[#1B2E24] shadow-sm group-hover:border-[#E6C387] transition">
+                        <img src="/images/logo_gold.webp" alt="Kitonga Logo" class="w-full h-full object-contain" />
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ── MAIN STICKY NAVIGATION ─────────────────────────────────── -->
-        <header class="sticky top-0 z-50 w-full backdrop-blur-md transition-shadow duration-300" style="background-color: #FFFFFF; border-bottom: 1px solid #E8E2D6; box-shadow: 0 2px 12px rgba(20,48,31,0.04);">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8 h-[74px] flex items-center justify-between">
-
-                <!-- Logo -->
-                <Link href="/" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow-sm text-xl transition-transform group-hover:scale-105" style="background-color: #14301F; font-family: 'Playfair Display', serif;">
-                        K
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-bold tracking-[2.5px] leading-none text-base text-[#14301F]" style="font-family: 'Playfair Display', serif;">KITONGA</span>
-                        <span class="text-[9px] tracking-[3px] font-semibold mt-1" style="color: #D98A3D;">FARM VILLAS</span>
+                    <div>
+                        <span class="block text-sm sm:text-base font-serif font-bold tracking-[0.25em] text-[#E6C387] uppercase leading-none">
+                            KITONGA
+                        </span>
+                        <span class="block text-[9px] tracking-[0.3em] text-white/60 uppercase font-light mt-0.5">
+                            FARM VILLAS SANCTUARY
+                        </span>
                     </div>
                 </Link>
 
-                <!-- Center Nav (Desktop) -->
-                <nav class="hidden lg:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]">
-                    <Link :href="route('home')" prefetch class="py-2 hover:text-[#14301F] transition-colors">Home</Link>
-                    <Link :href="route('farm')" prefetch class="py-2 hover:text-[#14301F] transition-colors">Farm</Link>
-                    <Link :href="route('products')" prefetch class="py-2 text-[#14301F] relative font-bold">
-                        Produce
-                        <span class="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-full bg-[#D98A3D]"></span>
-                    </Link>
-                    <Link :href="route('gallery')" prefetch class="py-2 hover:text-[#14301F] transition-colors">Gallery</Link>
-                    <Link :href="route('villas')" prefetch class="py-2 hover:text-[#14301F] transition-colors">Stay</Link>
-                    <Link :href="route('experiences')" prefetch class="py-2 hover:text-[#14301F] transition-colors">Experiences</Link>
-                    <Link :href="route('contact')" prefetch class="py-2 hover:text-[#14301F] transition-colors">Contact</Link>
+                <!-- Center: Luxury Navigation Links -->
+                <nav class="hidden lg:flex items-center gap-8 text-[11px] font-medium tracking-[0.2em] uppercase text-white/80">
+                    <Link :href="route('home')" class="hover:text-[#E6C387] transition-colors">Home</Link>
+                    <Link :href="route('villas')" class="hover:text-[#E6C387] transition-colors">Villas</Link>
+                    <Link :href="route('experiences')" class="hover:text-[#E6C387] transition-colors">Experiences</Link>
+                    <Link :href="route('farm')" class="hover:text-[#E6C387] transition-colors">Farm</Link>
+                    <Link :href="route('products')" class="text-[#E6C387] font-bold border-b border-[#E6C387] pb-1">Produce</Link>
+                    <Link :href="route('gallery')" class="hover:text-[#E6C387] transition-colors">Gallery</Link>
+                    <Link :href="route('about')" class="hover:text-[#E6C387] transition-colors">About</Link>
+                    <Link :href="route('contact')" class="hover:text-[#E6C387] transition-colors">Contact</Link>
                 </nav>
 
-                <!-- Actions: Book Stay + Basket -->
+                <!-- Right: Direct Concierge Action -->
                 <div class="flex items-center gap-3">
-                    <!-- Basket Button -->
-                    <button
-                        @click="cartDrawerOpen = true"
-                        class="flex items-center gap-2.5 px-4 py-2 rounded-full border text-xs font-bold tracking-wide transition-all cursor-pointer shadow-sm hover:border-[#14301F]"
-                        style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;"
-                        aria-label="View Basket"
+                    <a
+                        :href="generalWhatsappUrl"
+                        target="_blank"
+                        class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-semibold tracking-widest uppercase border border-[#C98A3E]/70 text-[#E6C387] hover:bg-[#C98A3E] hover:text-white transition duration-300"
                     >
-                        <svg class="w-4 h-4 text-[#D98A3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                        <span class="hidden sm:inline font-semibold">Basket</span>
-                        <span
-                            class="min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center text-[10px] font-bold text-white transition-transform"
-                            :style="totalCartItems > 0 ? 'background-color: #D98A3D;' : 'background-color: #5F6B63;'"
-                        >
-                            {{ totalCartItems }}
-                        </span>
-                    </button>
-
-                    <!-- Book Stay -->
+                        <span>Farm Concierge</span>
+                    </a>
                     <Link
                         :href="route('booking.form')"
-                        prefetch
-                        class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5"
-                        style="background-color: #14301F;"
+                        class="px-5 py-2 rounded-full text-[11px] font-bold tracking-widest uppercase bg-[#C98A3E] hover:bg-[#b57a34] text-white shadow-md transition duration-300"
                     >
                         Book Stay
                     </Link>
-
-                    <!-- Hamburger Mobile -->
-                    <button
-                        type="button"
-                        @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="p-2 lg:hidden rounded-lg text-[#14301F] hover:bg-black/5"
-                        aria-label="Toggle navigation menu"
-                    >
-                        <svg v-if="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                        <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
                 </div>
-            </div>
 
-            <!-- Mobile Navigation Drawer -->
-            <div v-if="mobileMenuOpen" class="lg:hidden px-6 py-5 border-t space-y-3 text-xs uppercase tracking-widest bg-white" style="border-color: #E8E2D6;">
-                <Link :href="route('home')" prefetch class="block py-2 text-[#1A1A1A] font-semibold">Home</Link>
-                <Link :href="route('farm')" prefetch class="block py-2 text-[#1A1A1A] font-semibold">Farm</Link>
-                <Link :href="route('products')" prefetch class="block py-2 font-bold text-[#14301F]">Produce</Link>
-                <Link :href="route('gallery')" prefetch class="block py-2 text-[#1A1A1A] font-semibold">Gallery</Link>
-                <Link :href="route('villas')" prefetch class="block py-2 text-[#1A1A1A] font-semibold">Stay</Link>
-                <Link :href="route('experiences')" prefetch class="block py-2 text-[#1A1A1A] font-semibold">Experiences</Link>
-                <Link :href="route('contact')" prefetch class="block py-2 text-[#1A1A1A] font-semibold">Contact</Link>
-                <div class="pt-3 border-t" style="border-color: #E8E2D6;">
-                    <Link :href="route('booking.form')" prefetch class="block w-full py-3 text-center rounded-full font-bold text-white text-xs" style="background-color: #14301F;">
-                        Book Stay
-                    </Link>
-                </div>
             </div>
         </header>
 
-        <!-- ── HERO SECTION ───────────────────────────────────────────── -->
-        <section class="relative overflow-hidden" style="background-color: #FFFBF5; padding: clamp(40px, 6vw, 76px) 0;">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8">
-                <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
-                    <!-- Mobile: Image First / Desktop: Left Text -->
-                    <div class="order-2 lg:order-1 flex flex-col items-start">
-                        <!-- Pill Badge -->
-                        <div
-                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.16em] mb-5 border shadow-sm"
-                            style="background-color: #FFFFFF; border-color: #E8E2D6; color: #D98A3D;"
-                        >
-                            <span class="w-2 h-2 rounded-full bg-[#D98A3D] inline-block animate-pulse"></span>
-                            ESTATE HARVEST &amp; FRESH PRODUCE
-                        </div>
+        <!-- ══════════════════════════════════════════════════════════════════════
+             2. MASTHEAD HERO SECTION (Cenizaro Editorial Inspiration)
+        ══════════════════════════════════════════════════════════════════════ -->
+        <section class="relative bg-[#14231C] text-white pt-20 pb-24 sm:pt-24 sm:pb-28 px-4 sm:px-8 overflow-hidden">
+            <!-- Ambient Background Glow & Vignette -->
+            <div class="absolute inset-0 bg-radial from-transparent via-[#14231C]/60 to-[#0C1712] pointer-events-none"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-[#C98A3E]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                        <!-- Main Heading -->
-                        <h1 class="font-bold leading-[1.12] mb-5 tracking-tight" style="font-family: 'Playfair Display', serif; font-size: clamp(34px, 4.8vw, 54px);">
-                            <span style="color: #14301F;">Fresh &amp; Authentic</span><br>
-                            <span style="color: #1A1A1A;">Harvest From<br>Kitonga Farm</span>
-                        </h1>
+            <div class="relative max-w-4xl mx-auto text-center space-y-5">
+                <!-- Breadcrumbs -->
+                <div class="flex items-center justify-center gap-2 text-[10px] tracking-[0.25em] uppercase text-white/50 font-light">
+                    <Link :href="route('home')" class="hover:text-[#E6C387] transition">Home</Link>
+                    <span>/</span>
+                    <Link :href="route('farm')" class="hover:text-[#E6C387] transition">Farm</Link>
+                    <span>/</span>
+                    <span class="text-[#E6C387]">Produce Gallery</span>
+                </div>
 
-                        <!-- Description (approx 2 lines) -->
-                        <p class="leading-relaxed mb-8 max-w-lg text-[15px] sm:text-[16px]" style="color: #5F6B63;">
-                            Free-range eggs, pasture milk, wild forest honey and tree-ripened fruits, harvested daily in Komkonga, Handeni.
-                        </p>
+                <!-- Subtitle Pill -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1F352A] border border-[#C98A3E]/40 text-[#E6C387] text-[10px] tracking-[0.25em] uppercase font-semibold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#E6C387] animate-pulse"></span>
+                    <span>Agro-Ecological Sanctuary</span>
+                </div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
-                            <button
-                                @click="scrollToProducts"
-                                class="flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-white text-sm transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
-                                style="background-color: #14301F; min-height: 48px;"
-                            >
-                                <span>Shop Now</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                            </button>
+                <!-- Main Editorial Title -->
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-white tracking-wide leading-tight">
+                    Organic Farm Produce
+                </h1>
 
-                            <a
-                                :href="directWhatsapp"
-                                target="_blank"
-                                class="flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-white text-sm transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                                style="background-color: #25D366; min-height: 48px;"
-                            >
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                <span>Order on WhatsApp</span>
-                            </a>
-                        </div>
-                    </div>
+                <!-- Elegant Divider -->
+                <div class="flex items-center justify-center gap-3 pt-2">
+                    <span class="w-12 h-px bg-gradient-to-r from-transparent to-[#C98A3E]"></span>
+                    <span class="text-xs text-[#C98A3E]">✦</span>
+                    <span class="w-12 h-px bg-gradient-to-l from-transparent to-[#C98A3E]"></span>
+                </div>
 
-                    <!-- Right Column: Premium Hero Image with 24px Radius -->
-                    <div class="order-1 lg:order-2">
-                        <div class="relative overflow-hidden shadow-2xl border" style="border-radius: 24px; aspect-ratio: 4/3; border-color: #E8E2D6;">
-                            <img
-                                src="/images/produce_hero_fruit_bg.webp"
-                                alt="Fresh free-range eggs, milk, honey and orchard fruits from Kitonga Farm"
-                                class="w-full h-full object-cover"
-                                loading="eager"
-                            />
-                            <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(20,48,31,0.06) 0%, rgba(20,48,31,0.3) 100%);"></div>
+                <!-- Narrative Description -->
+                <p class="text-xs sm:text-sm text-white/80 font-light max-w-2xl mx-auto leading-relaxed pt-1">
+                    Nurtured by highland spring water and rich organic compost in Komkonga, Handeni.
+                    Explore our daily dawn-milked pasture dairy, farm-fresh eggs, and sun-ripened orchard fruits cultivated with unhurried care.
+                </p>
 
-                            <!-- Floating Authenticity Badge -->
-                            <div class="absolute bottom-5 left-5 sm:bottom-6 sm:left-6 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border backdrop-blur-md" style="background-color: rgba(255,251,245,0.95); border-color: rgba(20,48,31,0.12);">
-                                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white shrink-0" style="background-color: #14301F;">
-                                    <svg class="w-5 h-5 text-[#D98A3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                                </div>
-                                <div>
-                                    <div class="text-xs font-bold leading-tight" style="color: #14301F;">100% Farm Fresh</div>
-                                    <div class="text-[11px] font-medium mt-0.5" style="color: #5F6B63;">Harvested Daily in Handeni</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                <!-- Quick Scroll Prompt -->
+                <div class="pt-4">
+                    <button 
+                        @click="scrollToGallery"
+                        class="text-[10px] tracking-[0.25em] uppercase text-white/60 hover:text-[#E6C387] transition inline-flex items-center gap-2 cursor-pointer"
+                    >
+                        <span>View Harvest Showcase</span>
+                        <svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- ── TRUST STRIP ────────────────────────────────────────────── -->
-        <section class="border-y" style="background-color: #FFFFFF; border-color: #E8E2D6; padding: 28px 0;">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-0 lg:divide-x" style="border-color: #E8E2D6;">
 
-                    <!-- 1. Free-Range -->
-                    <div class="flex items-center gap-3.5 px-3 lg:px-6 py-2">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border" style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;">
-                            <svg class="w-5 h-5 text-[#14301F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <div>
-                            <div class="font-bold text-sm" style="color: #14301F;">Free-Range</div>
-                            <div class="text-xs mt-0.5" style="color: #5F6B63;">Animals roam freely.</div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Pasture-Fed -->
-                    <div class="flex items-center gap-3.5 px-3 lg:px-6 py-2">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border" style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;">
-                            <svg class="w-5 h-5 text-[#14301F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        </div>
-                        <div>
-                            <div class="font-bold text-sm" style="color: #14301F;">Pasture-Fed</div>
-                            <div class="text-xs mt-0.5" style="color: #5F6B63;">Rich natural feed.</div>
-                        </div>
-                    </div>
-
-                    <!-- 3. Raw & Natural -->
-                    <div class="flex items-center gap-3.5 px-3 lg:px-6 py-2">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border" style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;">
-                            <svg class="w-5 h-5 text-[#14301F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        </div>
-                        <div>
-                            <div class="font-bold text-sm" style="color: #14301F;">Raw &amp; Natural</div>
-                            <div class="text-xs mt-0.5" style="color: #5F6B63;">Minimally processed.</div>
-                        </div>
-                    </div>
-
-                    <!-- 4. Harvested Daily -->
-                    <div class="flex items-center gap-3.5 px-3 lg:px-6 py-2">
-                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border" style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;">
-                            <svg class="w-5 h-5 text-[#14301F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <div>
-                            <div class="font-bold text-sm" style="color: #14301F;">Harvested Daily</div>
-                            <div class="text-xs mt-0.5" style="color: #5F6B63;">Fresh to your table.</div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ── DARK-GREEN PRODUCT FILTER AREA ─────────────────────────── -->
-        <section class="sticky z-40 shadow-md py-4" style="top: 74px; background-color: #14301F;">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5">
-
-                <!-- Categories Horizontal Scrolling Pills -->
-                <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none flex-1">
+        <!-- ══════════════════════════════════════════════════════════════════════
+             3. CENIZARO-STYLE MINIMAL CATEGORY FILTER TABS
+        ══════════════════════════════════════════════════════════════════════ -->
+        <section class="sticky top-[69px] z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-[#E8E2D6] py-4 shadow-2xs">
+            <div class="max-w-7xl mx-auto px-4 sm:px-8">
+                <div class="flex items-center justify-center gap-2 sm:gap-6 overflow-x-auto scrollbar-none py-1">
                     <button
                         v-for="cat in categoriesList"
                         :key="cat"
                         @click="activeCategory = cat"
-                        class="whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer border"
-                        :style="activeCategory === cat
-                            ? 'background-color: #D98A3D; color: #FFFFFF; border-color: #D98A3D; box-shadow: 0 2px 8px rgba(217,138,61,0.3);'
-                            : 'background-color: #FFFBF5; color: #14301F; border-color: #E8E2D6;'"
+                        class="relative px-4 sm:px-6 py-2 text-[11px] sm:text-xs tracking-[0.2em] uppercase font-semibold transition-all cursor-pointer whitespace-nowrap rounded-full"
+                        :class="activeCategory === cat 
+                            ? 'bg-[#14231C] text-[#E6C387] shadow-sm' 
+                            : 'text-[#5F6B63] hover:text-[#14231C] hover:bg-white/80'"
                     >
-                        {{ cat }}
+                        <span>{{ cat === 'All' ? 'All Harvests' : cat }}</span>
+                        <span 
+                            v-if="activeCategory === cat" 
+                            class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#C98A3E]"
+                        ></span>
                     </button>
                 </div>
-
-                <!-- Search + Sort -->
-                <div class="flex items-center gap-2.5 shrink-0">
-                    <!-- Search Box -->
-                    <div class="relative flex-1 md:w-56">
-                        <input
-                            v-model="searchQuery"
-                            type="text"
-                            placeholder="Search produce..."
-                            class="w-full pl-9 pr-3.5 py-2 rounded-full text-xs border focus:outline-none transition-all"
-                            style="background-color: #FFFFFF; border-color: #E8E2D6; color: #1A1A1A;"
-                        />
-                        <svg class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #5F6B63;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    </div>
-
-                    <!-- Sort Dropdown -->
-                    <select
-                        v-model="sortOrder"
-                        class="px-3.5 py-2 rounded-full text-xs font-semibold border cursor-pointer focus:outline-none"
-                        style="background-color: #FFFFFF; border-color: #E8E2D6; color: #14301F;"
-                        aria-label="Sort produce"
-                    >
-                        <option value="popular">Popular</option>
-                        <option value="price_asc">Price: Low to High</option>
-                        <option value="price_desc">Price: High to Low</option>
-                    </select>
-                </div>
-
             </div>
         </section>
 
-        <!-- ── PRODUCT GRID SECTION ───────────────────────────────────── -->
-        <section id="products-section" style="padding: 56px 0 88px;">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8">
 
-                <!-- Empty State -->
-                <div v-if="filteredProducts.length === 0" class="text-center py-20 bg-white rounded-3xl border p-8 space-y-4" style="border-color: #E8E2D6;">
-                    <div class="w-16 h-16 rounded-full mx-auto flex items-center justify-center border" style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    </div>
-                    <h3 class="font-bold text-xl" style="font-family: 'Playfair Display', serif; color: #14301F;">No produce found</h3>
-                    <p class="text-sm max-w-sm mx-auto" style="color: #5F6B63;">Try selecting a different category or clearing your search term.</p>
-                    <button
-                        @click="activeCategory = 'All'; searchQuery = '';"
-                        class="px-6 py-2.5 rounded-full text-white text-xs font-bold transition-all shadow-sm"
-                        style="background-color: #14301F;"
-                    >
-                        Show All Produce
-                    </button>
+        <!-- ══════════════════════════════════════════════════════════════════════
+             4. GALLERY SHOWCASE GRID (Clean, Editorial, High-Resolution Cards)
+        ══════════════════════════════════════════════════════════════════════ -->
+        <main id="produce-gallery-grid" class="max-w-7xl mx-auto px-4 sm:px-8 py-14 sm:py-20 space-y-16">
+
+            <!-- Category Summary Heading -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between border-b border-[#E8E2D6] pb-4 gap-2">
+                <div>
+                    <span class="text-[10px] tracking-[0.25em] uppercase text-[#C98A3E] font-bold block">
+                        Kitonga Estate Harvest
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-serif text-[#14231C] font-normal tracking-wide">
+                        {{ activeCategory === 'All' ? 'Complete Produce Catalog' : `${activeCategory} Collection` }}
+                    </h2>
                 </div>
+                <div class="text-xs text-[#5F6B63] font-serif italic">
+                    Showing {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'Produce item' : 'Produce items' }}
+                </div>
+            </div>
 
-                <!-- Product Grid: 4 cols desktop, 2 cols tablet, 2 cols mobile -->
-                <div v-else class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                    <div
-                        v-for="prod in visibleProducts"
-                        :key="prod.id"
-                        class="group flex flex-col overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 border"
-                        style="background-color: #FFFFFF; border-radius: 16px; border-color: #E8E2D6; box-shadow: 0 4px 20px rgba(20,48,31,0.05);"
-                        @click="openQuickView(prod)"
+            <!-- Empty State -->
+            <div v-if="filteredProducts.length === 0" class="py-20 text-center space-y-4 bg-white rounded-3xl border border-[#E8E2D6]">
+                <p class="font-serif text-lg text-[#14231C]">Hakuna bidhaa kwenye kategoria hii kwa sasa.</p>
+                <button @click="activeCategory = 'All'" class="text-xs text-[#C98A3E] font-bold uppercase tracking-widest hover:underline cursor-pointer">
+                    Tazama Bidhaa Zote
+                </button>
+            </div>
+
+            <!-- Luxury Masonry / Structured Grid -->
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+                
+                <article
+                    v-for="(prod, index) in filteredProducts"
+                    :key="prod.id || index"
+                    class="group bg-white rounded-2xl overflow-hidden border border-[#EAE4D8] shadow-xs hover:shadow-xl hover:border-[#C98A3E]/50 transition-all duration-500 flex flex-col"
+                >
+                    <!-- Photography Container (Clickable for Lightbox) -->
+                    <div 
+                        @click="openLightbox(index)"
+                        class="relative aspect-[4/3] bg-[#EAE4D8] overflow-hidden cursor-pointer"
+                        title="Bonyeza kutazama picha na maelezo"
                     >
-                        <!-- 4:3 Image Container with Subtle Zoom -->
-                        <div class="relative overflow-hidden" style="aspect-ratio: 4/3; background-color: #F6F3EC;">
-                            <img
-                                loading="lazy"
-                                decoding="async"
-                                :src="resolveProductImage(prod)"
-                                :alt="`${prod.name} from Kitonga Farm`"
-                                class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                            />
+                        <img 
+                            loading="lazy"
+                            decoding="async"
+                            :src="resolveProductImage(prod)" 
+                            :alt="prod.name"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        />
+                        
+                        <!-- Ambient Dark Vignette on Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                            <!-- Top-Left Category Badge -->
-                            <span
-                                class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-sm"
-                                style="background-color: #14301F;"
-                            >
-                                {{ getCategoryName(prod) }}
-                            </span>
-
-                            <!-- Top-Right Optional Badge -->
-                            <span
-                                v-if="prod.badge && prod.badge !== 'Out of Stock'"
-                                class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-sm"
-                                style="background-color: #D98A3D;"
+                        <!-- Top Badges -->
+                        <div class="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                            <span 
+                                v-if="prod.badge"
+                                class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#14231C]/85 backdrop-blur-md text-[#E6C387] border border-[#C98A3E]/30 shadow-xs"
                             >
                                 {{ prod.badge }}
                             </span>
-                            <span
-                                v-else-if="prod.badge === 'Out of Stock'"
-                                class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-sm"
-                                style="background-color: #8C968F;"
+                            <span v-else></span>
+
+                            <!-- Zoom Indicator Button -->
+                            <div class="w-8 h-8 rounded-full bg-white/90 backdrop-blur-md text-[#14231C] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md transform group-hover:scale-110">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Category Tag in image -->
+                        <div class="absolute bottom-3 left-4 text-[10px] tracking-[0.2em] font-semibold uppercase text-white/90 drop-shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            {{ getCategoryName(prod) }}
+                        </div>
+                    </div>
+
+                    <!-- Editorial Content Body -->
+                    <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-5 bg-white">
+                        
+                        <div class="space-y-3">
+                            <!-- Category & SKU -->
+                            <div class="flex items-center justify-between text-[10px] tracking-[0.2em] uppercase text-[#C98A3E] font-bold">
+                                <span>{{ getCategoryName(prod) }}</span>
+                                <span v-if="prod.origin" class="text-[#5F6B63] font-normal tracking-normal font-mono text-[9px]">{{ prod.origin }}</span>
+                            </div>
+
+                            <!-- Product Name in Editorial Serif -->
+                            <h3 
+                                @click="openLightbox(index)"
+                                class="text-xl sm:text-2xl font-serif text-[#14231C] font-semibold leading-snug group-hover:text-[#C98A3E] transition-colors cursor-pointer"
                             >
-                                Out of Stock
-                            </span>
-                        </div>
-
-                        <!-- Card Content -->
-                        <div class="p-3.5 sm:p-5 flex flex-col flex-1 justify-between gap-3">
-                            <div>
-                                <!-- Product Name (Max 2 lines, Serif font) -->
-                                <h3
-                                    class="font-bold leading-snug line-clamp-2"
-                                    style="font-family: 'Playfair Display', serif; font-size: clamp(14px, 1.2vw, 16px); color: #1A1A1A;"
-                                >
-                                    {{ prod.name }}
-                                </h3>
-
-                                <!-- Description (Max 2 lines) -->
-                                <p class="mt-1.5 line-clamp-2 text-xs leading-relaxed" style="color: #5F6B63;">
-                                    {{ prod.description }}
-                                </p>
-                            </div>
-
-                            <div>
-                                <!-- Subtle Divider Line -->
-                                <div class="mb-3" style="height: 1px; background-color: #E8E2D6;"></div>
-
-                                <!-- Card Bottom: Price + Add Button -->
-                                <div class="flex items-end justify-between gap-2" @click.stop>
-                                    <div>
-                                        <div class="font-bold text-sm sm:text-base leading-tight" style="color: #14301F;">
-                                            {{ formatCurrency(getPrice(prod)) }}
-                                        </div>
-                                        <div v-if="prod.unit" class="text-[10px] sm:text-[11px] mt-0.5" style="color: #5F6B63;">
-                                            per {{ prod.unit }}
-                                        </div>
-                                    </div>
-
-                                    <!-- Add to Basket / Stepper -->
-                                    <div v-if="cart[prod.id]" class="flex items-center gap-1 rounded-full border shadow-sm" style="background-color: #FFFBF5; border-color: rgba(20,48,31,0.2);">
-                                        <button
-                                            @click="decrementCart(prod.id)"
-                                            class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs cursor-pointer hover:bg-white transition-colors"
-                                            style="color: #14301F;"
-                                            aria-label="Decrease quantity"
-                                        >−</button>
-                                        <span class="w-5 text-center text-xs font-bold" style="color: #14301F;">{{ cart[prod.id].qty }}</span>
-                                        <button
-                                            @click="addToCart(prod)"
-                                            class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs cursor-pointer hover:bg-white transition-colors"
-                                            style="color: #14301F;"
-                                            aria-label="Increase quantity"
-                                        >+</button>
-                                    </div>
-                                    <button
-                                        v-else
-                                        @click="addToCart(prod)"
-                                        class="flex items-center gap-1 px-3 sm:px-4 py-2 rounded-full text-white text-xs font-bold transition-all cursor-pointer shadow-sm hover:opacity-90 hover:-translate-y-0.5"
-                                        style="background-color: #14301F; min-height: 36px;"
-                                        aria-label="Add to Basket"
-                                    >
-                                        <span>Add</span>
-                                        <span class="text-sm font-semibold leading-none">+</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Load More Button -->
-                <div v-if="hasMore" class="text-center mt-12">
-                    <button
-                        @click="loadMore"
-                        class="px-8 py-3 rounded-full border text-xs font-bold uppercase tracking-wider transition-all cursor-pointer hover:-translate-y-0.5 shadow-sm"
-                        style="border-color: #14301F; color: #14301F; background-color: #FFFFFF;"
-                    >
-                        Load More Produce
-                    </button>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ── WHY CHOOSE KITONGA ─────────────────────────────────────── -->
-        <section class="relative overflow-hidden" style="background-color: #14301F; padding: clamp(56px, 6vw, 84px) 0;">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8">
-                <!-- Section Heading -->
-                <div class="text-center mb-12 sm:mb-14">
-                    <p class="text-xs font-bold uppercase tracking-[0.2em] mb-2.5" style="color: #D98A3D;">Guaranteed Quality</p>
-                    <h2 class="font-bold text-white mb-3" style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 42px);">
-                        Why Choose Kitonga Farm?
-                    </h2>
-                    <p class="text-sm max-w-lg mx-auto text-white/70">
-                        Pure highland agriculture with uncompromising standards from our farm straight to your hands.
-                    </p>
-                </div>
-
-                <!-- 4 Benefits Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                    <!-- 1. Hygienic Packaging -->
-                    <div class="flex flex-col items-center text-center p-7 rounded-2xl border transition-transform hover:-translate-y-1" style="background-color: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08);">
-                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-[#D98A3D]" style="background-color: rgba(217,138,61,0.15);">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                        </div>
-                        <h3 class="font-bold text-white text-base mb-2" style="font-family: 'Playfair Display', serif;">Hygienic Packaging</h3>
-                        <p class="text-xs leading-relaxed text-white/65">Carefully handled, sanitized and sealed for maximum freshness and safety.</p>
-                    </div>
-
-                    <!-- 2. Reliable Delivery -->
-                    <div class="flex flex-col items-center text-center p-7 rounded-2xl border transition-transform hover:-translate-y-1" style="background-color: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08);">
-                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-[#D98A3D]" style="background-color: rgba(217,138,61,0.15);">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
-                        </div>
-                        <h3 class="font-bold text-white text-base mb-2" style="font-family: 'Playfair Display', serif;">Reliable Delivery</h3>
-                        <p class="text-xs leading-relaxed text-white/65">Fresh produce dispatched promptly to your location or ready for farm pickup.</p>
-                    </div>
-
-                    <!-- 3. Fair Prices -->
-                    <div class="flex flex-col items-center text-center p-7 rounded-2xl border transition-transform hover:-translate-y-1" style="background-color: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08);">
-                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-[#D98A3D]" style="background-color: rgba(217,138,61,0.15);">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-                        </div>
-                        <h3 class="font-bold text-white text-base mb-2" style="font-family: 'Playfair Display', serif;">Fair Prices</h3>
-                        <p class="text-xs leading-relaxed text-white/65">Direct farm gate pricing with zero middlemen markups on every single item.</p>
-                    </div>
-
-                    <!-- 4. Customer Support -->
-                    <div class="flex flex-col items-center text-center p-7 rounded-2xl border transition-transform hover:-translate-y-1" style="background-color: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08);">
-                        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-[#D98A3D]" style="background-color: rgba(217,138,61,0.15);">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                        </div>
-                        <h3 class="font-bold text-white text-base mb-2" style="font-family: 'Playfair Display', serif;">Customer Support</h3>
-                        <p class="text-xs leading-relaxed text-white/65">Dedicated WhatsApp assistance 7 days a week from morning until evening.</p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ── HOW TO ORDER ───────────────────────────────────────────── -->
-        <section style="background-color: #FFFBF5; padding: clamp(56px, 6vw, 84px) 0;">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8 text-center">
-                <p class="text-xs font-bold uppercase tracking-[0.2em] mb-2.5" style="color: #D98A3D;">Easy &amp; Seamless</p>
-                <h2 class="font-bold mb-3" style="font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 42px); color: #14301F;">
-                    How to Order
-                </h2>
-                <p class="text-sm mb-12 sm:mb-14 max-w-lg mx-auto" style="color: #5F6B63;">
-                    Get fresh farm produce delivered to your doorstep or ready for pickup in three easy steps.
-                </p>
-
-                <!-- 3 Steps -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                    <!-- Step 01 -->
-                    <div class="flex flex-col items-center text-center p-6 bg-white rounded-3xl border shadow-sm" style="border-color: #E8E2D6;">
-                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-lg mb-4 shadow-sm" style="background-color: #14301F; font-family: 'Playfair Display', serif;">
-                            01
-                        </div>
-                        <h3 class="font-bold text-base mb-2" style="font-family: 'Playfair Display', serif; color: #14301F;">Choose</h3>
-                        <p class="text-xs leading-relaxed" style="color: #5F6B63;">Browse and select your fresh produce from our seasonal farm catalog.</p>
-                    </div>
-
-                    <!-- Step 02 -->
-                    <div class="flex flex-col items-center text-center p-6 bg-white rounded-3xl border shadow-sm" style="border-color: #E8E2D6;">
-                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-lg mb-4 shadow-sm" style="background-color: #D98A3D; font-family: 'Playfair Display', serif;">
-                            02
-                        </div>
-                        <h3 class="font-bold text-base mb-2" style="font-family: 'Playfair Display', serif; color: #14301F;">Order</h3>
-                        <p class="text-xs leading-relaxed" style="color: #5F6B63;">Add products to your basket, customize quantities, and send via WhatsApp.</p>
-                    </div>
-
-                    <!-- Step 03 -->
-                    <div class="flex flex-col items-center text-center p-6 bg-white rounded-3xl border shadow-sm" style="border-color: #E8E2D6;">
-                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-lg mb-4 shadow-sm" style="background-color: #14301F; font-family: 'Playfair Display', serif;">
-                            03
-                        </div>
-                        <h3 class="font-bold text-base mb-2" style="font-family: 'Playfair Display', serif; color: #14301F;">Receive</h3>
-                        <p class="text-xs leading-relaxed" style="color: #5F6B63;">Get your order delivered fresh or collect directly from Kitonga Farm.</p>
-                    </div>
-                </div>
-
-                <!-- Supported Payment Methods -->
-                <div class="inline-flex flex-wrap items-center justify-center gap-2.5 p-4 rounded-2xl bg-white border shadow-sm" style="border-color: #E8E2D6;">
-                    <span class="text-xs font-bold mr-1" style="color: #14301F;">Supported Payment Methods:</span>
-                    <span
-                        v-for="method in ['M-Pesa', 'Airtel Money', 'Tigo Pesa', 'Cash on Delivery']"
-                        :key="method"
-                        class="px-3.5 py-1.5 rounded-full text-xs font-bold border"
-                        style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;"
-                    >
-                        {{ method }}
-                    </span>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── BULK ORDER CTA ─────────────────────────────────────────── -->
-        <section class="relative overflow-hidden" style="background-color: #14301F; padding: clamp(56px, 7vw, 92px) 0;">
-            <!-- Background Image with Overlay -->
-            <div class="absolute inset-0">
-                <img
-                    src="/images/general_farm_hero.webp"
-                    alt="Kitonga Farm estate landscape"
-                    class="w-full h-full object-cover opacity-25"
-                />
-                <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(20,48,31,0.92) 0%, rgba(20,48,31,0.75) 100%);"></div>
-            </div>
-
-            <div class="relative z-10 max-w-[1240px] mx-auto px-5 sm:px-8">
-                <div class="grid lg:grid-cols-12 gap-10 items-center">
-
-                    <!-- Left: Bold Headline & Intro -->
-                    <div class="lg:col-span-7">
-                        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider mb-4 border" style="background-color: rgba(217,138,61,0.2); border-color: rgba(217,138,61,0.4); color: #D98A3D;">
-                            B2B &amp; Wholesale Inquiries
-                        </div>
-                        <h2 class="font-bold text-white mb-4 leading-tight" style="font-family: 'Playfair Display', serif; font-size: clamp(32px, 4.5vw, 48px);">
-                            Fresh From Our Farm<br>To Your Table.
-                        </h2>
-                        <p class="text-sm leading-relaxed text-white/80 max-w-lg">
-                            We supply regular weekly orders of organic eggs, pasture milk, wild honey and farm produce to premier hotels, safari lodges, restaurants and institutions.
-                        </p>
-                    </div>
-
-                    <!-- Right: White Card with WhatsApp CTA -->
-                    <div class="lg:col-span-5">
-                        <div class="p-7 sm:p-8 rounded-3xl shadow-2xl bg-white border" style="border-color: #E8E2D6;">
-                            <h3 class="font-bold text-lg mb-1.5" style="font-family: 'Playfair Display', serif; color: #14301F;">
-                                Ready to place a bulk order?
+                                {{ prod.name }}
                             </h3>
-                            <p class="text-xs mb-5" style="color: #5F6B63;">
-                                Perfect for hotels, restaurants and other businesses. Get direct pricing and scheduled deliveries.
-                            </p>
 
-                            <div class="p-3.5 rounded-2xl mb-5 flex items-center gap-3 border" style="background-color: #FFFBF5; border-color: #E8E2D6;">
-                                <div class="w-9 h-9 rounded-xl flex items-center justify-center bg-[#14301F] text-[#D98A3D] shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                </div>
-                                <div>
-                                    <div class="text-[11px] font-semibold text-[#5F6B63]">Direct Line / WhatsApp</div>
-                                    <div class="text-sm font-bold text-[#14301F]">+255 758 774 695</div>
-                                </div>
-                            </div>
-
-                            <a
-                                :href="bulkWhatsappUrl"
-                                target="_blank"
-                                class="flex items-center justify-center gap-2.5 w-full py-3.5 rounded-full text-white text-sm font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                                style="background-color: #25D366;"
-                            >
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                <span>Chat on WhatsApp</span>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ── FOOTER ─────────────────────────────────────────────────── -->
-        <footer style="background-color: #14301F; color: #FFFFFF; padding: 68px 0 0;">
-            <div class="max-w-[1240px] mx-auto px-5 sm:px-8">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b" style="border-color: rgba(255,255,255,0.08);">
-
-                    <!-- Column 1: Brand -->
-                    <div>
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-xl shadow-sm" style="background-color: #D98A3D; font-family: 'Playfair Display', serif;">
-                                K
-                            </div>
-                            <div>
-                                <div class="font-bold tracking-widest text-sm text-white" style="font-family: 'Playfair Display', serif;">KITONGA</div>
-                                <div class="text-[9px] tracking-[3px] font-semibold mt-0.5" style="color: #D98A3D;">FARM VILLAS</div>
-                            </div>
-                        </div>
-                        <p class="text-xs leading-relaxed mb-5 text-white/65">
-                            Organic agriculture, fresh pasture harvests, and luxury private villas nestled in Komkonga highlands, Handeni, Tanga.
-                        </p>
-                        <div class="flex items-center gap-3">
-                            <a href="https://instagram.com" target="_blank" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-white/10 hover:bg-[#D98A3D] text-white" aria-label="Instagram">
-                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-                            </a>
-                            <a href="https://facebook.com" target="_blank" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-white/10 hover:bg-[#D98A3D] text-white" aria-label="Facebook">
-                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                            </a>
-                            <a :href="directWhatsapp" target="_blank" class="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-white/10 hover:bg-[#25D366] text-white" aria-label="WhatsApp">
-                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Column 2: Quick Links -->
-                    <div>
-                        <h4 class="text-xs font-bold uppercase tracking-widest mb-4" style="color: #D98A3D;">Quick Links</h4>
-                        <ul class="space-y-2.5 text-xs text-white/70">
-                            <li><Link :href="route('home')" prefetch class="hover:text-white transition-colors">Home</Link></li>
-                            <li><Link :href="route('farm')" prefetch class="hover:text-white transition-colors">Farm</Link></li>
-                            <li><Link :href="route('products')" prefetch class="text-white font-semibold">Produce</Link></li>
-                            <li><Link :href="route('gallery')" prefetch class="hover:text-white transition-colors">Gallery</Link></li>
-                            <li><Link :href="route('villas')" prefetch class="hover:text-white transition-colors">Stay</Link></li>
-                            <li><Link :href="route('contact')" prefetch class="hover:text-white transition-colors">Contact</Link></li>
-                        </ul>
-                    </div>
-
-                    <!-- Column 3: Produce Categories -->
-                    <div>
-                        <h4 class="text-xs font-bold uppercase tracking-widest mb-4" style="color: #D98A3D;">Produce</h4>
-                        <ul class="space-y-2.5 text-xs text-white/70">
-                            <li v-for="cat in categoriesList.filter(c => c !== 'All')" :key="cat">
-                                <button @click="activeCategory = cat; scrollToProducts()" class="hover:text-white transition-colors cursor-pointer text-left">{{ cat }}</button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Column 4: Contact Info -->
-                    <div>
-                        <h4 class="text-xs font-bold uppercase tracking-widest mb-4" style="color: #D98A3D;">Contact</h4>
-                        <ul class="space-y-3 text-xs text-white/70">
-                            <li class="flex items-start gap-2.5">
-                                <svg class="w-4 h-4 text-[#D98A3D] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                <span>Komkonga, Handeni, Tanga</span>
-                            </li>
-                            <li class="flex items-center gap-2.5">
-                                <svg class="w-4 h-4 text-[#D98A3D] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                                <span>+255 758 774 695</span>
-                            </li>
-                            <li class="flex items-center gap-2.5">
-                                <svg class="w-4 h-4 text-[#D98A3D] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                                <span>info@kitongafarm.com</span>
-                            </li>
-                            <li class="flex items-center gap-2.5">
-                                <svg class="w-4 h-4 text-[#D98A3D] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <span>Mon – Sat: 7:00 AM – 6:00 PM</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-
-                <!-- Footer Copyright & Legal -->
-                <div class="py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/50">
-                    <p>© 2026 Kitonga Farm Villas. All rights reserved.</p>
-                    <div class="flex items-center gap-5">
-                        <Link :href="route('policies', { policyName: 'privacy' })" class="hover:text-white transition-colors">Privacy Policy</Link>
-                        <Link :href="route('policies', { policyName: 'terms' })" class="hover:text-white transition-colors">Terms</Link>
-                    </div>
-                </div>
-            </div>
-        </footer>
-
-        <!-- ── QUICK VIEW MODAL ────────────────────────────────────────── -->
-        <Teleport to="body">
-            <div
-                v-if="quickViewProduct"
-                class="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6"
-                role="dialog"
-                aria-modal="true"
-                @click.self="closeQuickView"
-            >
-                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="closeQuickView"></div>
-
-                <div class="relative w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl bg-white border z-10 max-h-[90vh] flex flex-col" style="border-color: #E8E2D6;">
-                    <!-- Modal Header Image -->
-                    <div class="relative" style="aspect-ratio: 16/9; background-color: #F6F3EC;">
-                        <img
-                            loading="lazy"
-                            :src="resolveProductImage(quickViewProduct)"
-                            :alt="quickViewProduct.name"
-                            class="w-full h-full object-cover"
-                        />
-                        <button
-                            @click="closeQuickView"
-                            class="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-white bg-black/50 hover:bg-black/70 transition-colors cursor-pointer"
-                            aria-label="Close modal"
-                        >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
-                        </button>
-                        <span class="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white" style="background-color: #14301F;">
-                            {{ getCategoryName(quickViewProduct) }}
-                        </span>
-                    </div>
-
-                    <!-- Modal Body -->
-                    <div class="p-6 sm:p-8 flex-1 overflow-y-auto">
-                        <h2 class="font-bold text-xl sm:text-2xl mb-2.5" style="font-family: 'Playfair Display', serif; color: #14301F;">
-                            {{ quickViewProduct.name }}
-                        </h2>
-                        <p class="text-sm leading-relaxed mb-6" style="color: #5F6B63;">
-                            {{ quickViewProduct.description }}
-                        </p>
-
-                        <div class="pt-4 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-4" style="border-color: #E8E2D6;">
-                            <div>
-                                <div class="font-bold text-2xl" style="color: #14301F; font-family: 'Playfair Display', serif;">
-                                    {{ formatCurrency(getPrice(quickViewProduct)) }}
-                                </div>
-                                <div v-if="quickViewProduct.unit" class="text-xs mt-0.5" style="color: #5F6B63;">
-                                    per {{ quickViewProduct.unit }}
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-3">
-                                <!-- Qty Selector -->
-                                <div class="flex items-center rounded-full border px-1" style="border-color: #E8E2D6; background-color: #FFFBF5;">
-                                    <button
-                                        @click="quickViewQty = Math.max(1, quickViewQty - 1)"
-                                        class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm cursor-pointer hover:bg-white transition-colors"
-                                        style="color: #14301F;"
-                                    >−</button>
-                                    <span class="w-7 text-center font-bold text-sm" style="color: #14301F;">{{ quickViewQty }}</span>
-                                    <button
-                                        @click="quickViewQty++"
-                                        class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm cursor-pointer hover:bg-white transition-colors"
-                                        style="color: #14301F;"
-                                    >+</button>
-                                </div>
-
-                                <button
-                                    @click="addQuickViewToCart"
-                                    class="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
-                                    style="background-color: #14301F; min-height: 42px;"
-                                >
-                                    Add to Basket
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </Teleport>
-
-        <!-- ── BASKET SLIDE-OVER DRAWER ────────────────────────────────── -->
-        <Teleport to="body">
-            <div v-if="cartDrawerOpen" class="fixed inset-0 z-[120] overflow-hidden" role="dialog" aria-modal="true">
-                <div @click="cartDrawerOpen = false" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
-                <div class="fixed inset-y-0 right-0 max-w-full flex pl-8">
-                    <div class="w-screen max-w-sm sm:max-w-md flex flex-col shadow-2xl bg-white">
-
-                        <!-- Drawer Header -->
-                        <div class="flex items-center justify-between p-5 sm:p-6" style="background-color: #14301F; color: #FFFFFF;">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-xl flex items-center justify-center bg-white/10 text-[#D98A3D]">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-base" style="font-family: 'Playfair Display', serif;">Your Harvest Basket</h3>
-                                    <span class="text-[11px]" style="color: #D98A3D;">Kitonga Farm Direct</span>
-                                </div>
-                            </div>
-                            <button
-                                @click="cartDrawerOpen = false"
-                                class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white cursor-pointer"
-                                aria-label="Close basket"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-
-                        <!-- Basket Items List -->
-                        <div class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-3.5">
-                            <!-- Empty Basket -->
-                            <div v-if="cartList.length === 0" class="py-20 text-center space-y-3">
-                                <div class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center border" style="background-color: #FFFBF5; border-color: #E8E2D6; color: #14301F;">
-                                    <svg class="w-8 h-8 text-[#5F6B63]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                                </div>
-                                <h4 class="font-bold text-base" style="color: #14301F; font-family: 'Playfair Display', serif;">Your basket is empty</h4>
-                                <p class="text-xs max-w-xs mx-auto" style="color: #5F6B63;">Browse fresh produce in our catalog and add items directly to your basket.</p>
-                                <button
-                                    @click="cartDrawerOpen = false; scrollToProducts()"
-                                    class="px-6 py-2.5 rounded-full text-white text-xs font-bold transition-all shadow-sm"
-                                    style="background-color: #14301F;"
-                                >
-                                    Browse Produce
-                                </button>
-                            </div>
-
-                            <!-- List -->
-                            <div
-                                v-for="item in cartList"
-                                :key="item.id"
-                                class="flex items-center gap-3.5 p-3 rounded-2xl border"
-                                style="background-color: #FFFBF5; border-color: #E8E2D6;"
-                            >
-                                <img
-                                    loading="lazy"
-                                    :src="item.image"
-                                    :alt="item.name"
-                                    class="w-14 h-14 rounded-xl object-cover shrink-0 border"
-                                    style="border-color: #E8E2D6;"
-                                />
-                                <div class="flex-1 min-w-0">
-                                    <h4 class="text-xs font-bold truncate" style="color: #1A1A1A;">{{ item.name }}</h4>
-                                    <div class="text-[11px] font-semibold mt-0.5" style="color: #D98A3D;">
-                                        {{ formatCurrency(item.price) }} / {{ item.unit }}
-                                    </div>
-                                    <div class="text-xs font-bold mt-0.5" style="color: #14301F;">
-                                        {{ formatCurrency(item.price * item.qty) }}
-                                    </div>
-                                </div>
-
-                                <!-- Quantity Stepper -->
-                                <div class="flex items-center rounded-full border bg-white" style="border-color: #E8E2D6;">
-                                    <button
-                                        @click="decrementCart(item.id)"
-                                        class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer hover:bg-gray-100 transition-colors"
-                                        style="color: #14301F;"
-                                    >−</button>
-                                    <span class="w-5 text-center text-xs font-bold" style="color: #14301F;">{{ item.qty }}</span>
-                                    <button
-                                        @click="addToCart(item)"
-                                        class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer hover:bg-gray-100 transition-colors"
-                                        style="color: #14301F;"
-                                    >+</button>
-                                </div>
-
-                                <!-- Remove -->
-                                <button
-                                    @click="removeFromCart(item.id)"
-                                    class="text-gray-400 hover:text-red-500 w-6 h-6 flex items-center justify-center cursor-pointer transition-colors"
-                                    aria-label="Remove item"
-                                >
-                                    ✕
-                                </button>
-                            </div>
-
-                            <!-- Delivery Note Input -->
-                            <div v-if="cartList.length > 0" class="pt-2">
-                                <label class="text-xs font-bold block mb-1.5" style="color: #14301F;">
-                                    Delivery / Special Instructions:
-                                </label>
-                                <textarea
-                                    v-model="deliveryNotes"
-                                    rows="2"
-                                    placeholder="e.g., Deliver to Handeni Town at 9:00 AM or farm pickup..."
-                                    class="w-full p-3 rounded-2xl text-xs border focus:outline-none resize-none"
-                                    style="background-color: #FFFBF5; border-color: #E8E2D6; color: #1A1A1A;"
-                                ></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Drawer Footer & Checkout -->
-                        <div v-if="cartList.length > 0" class="p-5 sm:p-6 border-t space-y-3.5" style="background-color: #FFFBF5; border-color: #E8E2D6;">
-                            <div class="flex items-baseline justify-between">
-                                <span class="text-xs font-semibold uppercase tracking-wider" style="color: #5F6B63;">Estimated Total</span>
-                                <span class="font-bold text-2xl" style="font-family: 'Playfair Display', serif; color: #14301F;">
-                                    {{ formatCurrency(totalCartPrice) }}
+                            <!-- Price Tag Display -->
+                            <div class="pt-1 flex items-baseline gap-2">
+                                <span class="text-2xl font-serif font-bold text-[#14231C] tracking-tight">
+                                    {{ formatCurrency(getPrice(prod)) }}
+                                </span>
+                                <span v-if="prod.unit" class="text-xs text-[#5F6B63] font-medium">
+                                    / {{ prod.unit }}
                                 </span>
                             </div>
 
-                            <a
-                                :href="whatsappUrl"
-                                target="_blank"
-                                class="flex items-center justify-center gap-2.5 w-full py-3.5 rounded-full text-white text-sm font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                                style="background-color: #25D366;"
+                            <!-- Description / Farm Story -->
+                            <p class="text-xs text-[#5F6B63] leading-relaxed line-clamp-3 pt-1">
+                                {{ prod.description || 'Organic harvest produced with pure natural care at Kitonga Farm Sanctuary.' }}
+                            </p>
+                        </div>
+
+                        <!-- Action Bar: View Detail & WhatsApp Inquiry -->
+                        <div class="pt-4 border-t border-[#F0EBE0] flex items-center justify-between gap-3 text-xs">
+                            <button
+                                @click="openLightbox(index)"
+                                class="text-[11px] font-bold tracking-wider uppercase text-[#14231C] hover:text-[#C98A3E] inline-flex items-center gap-1.5 transition cursor-pointer"
                             >
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                                <span>Send Order via WhatsApp</span>
+                                <span>Maelezo Kamili</span>
+                                <span>➔</span>
+                            </button>
+
+                            <a
+                                :href="getProductWhatsappUrl(prod)"
+                                target="_blank"
+                                class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EAF7EE] hover:bg-[#25D366] text-[#1E7E34] hover:text-white font-semibold text-[11px] transition duration-300 shadow-2xs"
+                                title="Ulizia kupitia WhatsApp"
+                            >
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                <span>Ulizia</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </article>
+
+            </div>
+
+        </main>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════════
+             5. FARM PROVENANCE & ORGANIC STANDARDS (Quality Strip)
+        ══════════════════════════════════════════════════════════════════════ -->
+        <section class="bg-[#14231C] text-white py-16 sm:py-20 px-4 sm:px-8 border-t border-[#C98A3E]/20 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto space-y-12 relative z-10">
+                
+                <div class="text-center max-w-2xl mx-auto space-y-3">
+                    <span class="text-[10px] tracking-[0.25em] uppercase text-[#C98A3E] font-bold">Uncompromising Quality</span>
+                    <h2 class="text-2xl sm:text-4xl font-serif font-normal text-white">Our Agricultural Principles</h2>
+                    <p class="text-xs sm:text-sm text-white/70 font-light leading-relaxed">
+                        Every drop of milk, egg, and fresh harvest is raised in strict harmony with nature on our 150-acre highland sanctuary.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                    
+                    <div class="bg-[#1B2E24] p-6 rounded-2xl border border-white/10 space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-[#14231C] border border-[#C98A3E]/40 text-[#E6C387] mx-auto flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h4 class="font-serif text-base text-[#E6C387]">Pasture-Fed Cattle</h4>
+                        <p class="text-xs text-white/60 leading-relaxed">Pedigree dairy cows graze on nutrient-rich highland grasses with zero chemical growth stimulants.</p>
+                    </div>
+
+                    <div class="bg-[#1B2E24] p-6 rounded-2xl border border-white/10 space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-[#14231C] border border-[#C98A3E]/40 text-[#E6C387] mx-auto flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        </div>
+                        <h4 class="font-serif text-base text-[#E6C387]">Dawn Harvest & Milking</h4>
+                        <p class="text-xs text-white/60 leading-relaxed">Gathered fresh at 6:00 AM daily to guarantee maximum natural taste, texture, and living nutrients.</p>
+                    </div>
+
+                    <div class="bg-[#1B2E24] p-6 rounded-2xl border border-white/10 space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-[#14231C] border border-[#C98A3E]/40 text-[#E6C387] mx-auto flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                        </div>
+                        <h4 class="font-serif text-base text-[#E6C387]">100% Free-Range Poultry</h4>
+                        <p class="text-xs text-white/60 leading-relaxed">Hens enjoy open sunlight, natural scratching soil, and pure organic grain for golden yolks.</p>
+                    </div>
+
+                    <div class="bg-[#1B2E24] p-6 rounded-2xl border border-white/10 space-y-3">
+                        <div class="w-12 h-12 rounded-full bg-[#14231C] border border-[#C98A3E]/40 text-[#E6C387] mx-auto flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+                        </div>
+                        <h4 class="font-serif text-base text-[#E6C387]">Highland Spring Water</h4>
+                        <p class="text-xs text-white/60 leading-relaxed">Irrigated exclusively by virgin mountain spring aquifers preserving native Handeni soil ecosystems.</p>
+                    </div>
+
+                </div>
+
+                <!-- Bespoke Inquiries Banner -->
+                <div class="bg-[#1B2E24] p-8 sm:p-10 rounded-3xl border border-[#C98A3E]/30 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-2 text-center md:text-left">
+                        <h3 class="text-xl sm:text-2xl font-serif text-[#E6C387]">Direct Farm Inquiries & Lodge Supply</h3>
+                        <p class="text-xs sm:text-sm text-white/70 max-w-xl">
+                            Looking to arrange regular weekly supply for premier lodges, restaurants, or private villa breakfast deliveries? Speak directly with our farm management.
+                        </p>
+                    </div>
+                    <a
+                        :href="generalWhatsappUrl"
+                        target="_blank"
+                        class="px-8 py-3.5 rounded-full bg-[#C98A3E] hover:bg-[#b57a34] text-white text-xs font-bold tracking-widest uppercase shadow-lg transition duration-300 whitespace-nowrap"
+                    >
+                        WhatsApp Farm Desk
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════════
+             6. CENIZARO-STYLE FULLSCREEN LIGHTBOX & MODAL
+        ══════════════════════════════════════════════════════════════════════ -->
+        <Teleport to="body">
+            <Transition name="fade">
+                <div 
+                    v-if="isLightboxOpen && currentLightboxProduct"
+                    class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 select-none"
+                    @click.self="closeLightbox"
+                >
+                    <!-- Close button -->
+                    <button
+                        @click="closeLightbox"
+                        class="absolute top-6 right-6 z-20 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer text-lg"
+                        title="Close (Esc)"
+                    >
+                        ✕
+                    </button>
+
+                    <!-- Prev Arrow -->
+                    <button
+                        @click="prevLightbox"
+                        class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer text-xl"
+                        title="Previous (Left Arrow)"
+                    >
+                        ‹
+                    </button>
+
+                    <!-- Next Arrow -->
+                    <button
+                        @click="nextLightbox"
+                        class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer text-xl"
+                        title="Next (Right Arrow)"
+                    >
+                        ›
+                    </button>
+
+                    <!-- Lightbox Modal Container -->
+                    <div class="relative bg-[#14231C] text-white rounded-3xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row border border-white/20 shadow-2xl">
+                        
+                        <!-- Left: Large Photography -->
+                        <div class="md:w-1/2 aspect-square md:aspect-auto bg-black flex items-center justify-center overflow-hidden">
+                            <img 
+                                :src="resolveProductImage(currentLightboxProduct)" 
+                                :alt="currentLightboxProduct.name"
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        <!-- Right: Editorial Details -->
+                        <div class="p-6 sm:p-10 md:w-1/2 flex flex-col justify-between space-y-6 overflow-y-auto">
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between text-[10px] tracking-[0.25em] uppercase text-[#C98A3E] font-bold">
+                                    <span>{{ getCategoryName(currentLightboxProduct) }}</span>
+                                    <span>{{ (lightboxIndex + 1) }} / {{ filteredProducts.length }}</span>
+                                </div>
+
+                                <h2 class="text-2xl sm:text-3xl font-serif text-white font-semibold leading-tight">
+                                    {{ currentLightboxProduct.name }}
+                                </h2>
+
+                                <div class="flex items-baseline gap-2 pt-1 border-b border-white/10 pb-4">
+                                    <span class="text-3xl font-serif font-bold text-[#E6C387]">
+                                        {{ formatCurrency(getPrice(currentLightboxProduct)) }}
+                                    </span>
+                                    <span v-if="currentLightboxProduct.unit" class="text-xs text-white/60">
+                                        / {{ currentLightboxProduct.unit }}
+                                    </span>
+                                </div>
+
+                                <div class="space-y-2 text-xs text-white/80 leading-relaxed font-light">
+                                    <p class="text-white/40 text-[10px] uppercase tracking-widest font-bold">Provenance & Harvest Story</p>
+                                    <p>{{ currentLightboxProduct.description }}</p>
+                                </div>
+
+                                <div v-if="currentLightboxProduct.origin" class="bg-[#1B2E24] p-3.5 rounded-xl border border-white/10 text-xs text-white/80 flex items-center gap-2.5">
+                                    <svg class="w-4 h-4 text-[#E6C387] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <span>Harvested at <strong>{{ currentLightboxProduct.origin }}</strong></span>
+                                </div>
+                            </div>
+
+                            <!-- Direct WhatsApp Inquiry -->
+                            <div class="pt-4 border-t border-white/10 flex items-center justify-between gap-3">
+                                <a
+                                    :href="getProductWhatsappUrl(currentLightboxProduct)"
+                                    target="_blank"
+                                    class="w-full py-3.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition duration-300 cursor-pointer"
+                                >
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                    <span>Ulizia Bidhaa Hii WhatsApp</span>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </Transition>
+        </Teleport>
+
+
+        <!-- ══════════════════════════════════════════════════════════════════════
+             7. LUXURY FOOTER
+        ══════════════════════════════════════════════════════════════════════ -->
+        <footer class="bg-[#0F1D16] text-white py-14 px-4 sm:px-8 border-t border-white/10">
+            <div class="max-w-7xl mx-auto space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    
+                    <!-- Col 1: Brand -->
+                    <div class="space-y-4 md:col-span-2">
+                        <span class="font-serif text-lg font-bold tracking-[0.25em] text-[#E6C387] uppercase block">
+                            KITONGA FARM VILLAS
+                        </span>
+                        <p class="text-xs text-white/60 max-w-sm leading-relaxed font-light">
+                            150-acre integrated organic agricultural sanctuary and luxury private villas located in the fertile highlands of Komkonga Village, Handeni, Tanga, Tanzania.
+                        </p>
+                    </div>
+
+                    <!-- Col 2: Navigation -->
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C98A3E] mb-3">Sanctuary</h4>
+                        <ul class="space-y-2 text-xs text-white/70">
+                            <li><Link :href="route('home')" class="hover:text-white transition">Home</Link></li>
+                            <li><Link :href="route('villas')" class="hover:text-white transition">Private Villas</Link></li>
+                            <li><Link :href="route('experiences')" class="hover:text-white transition">Farm Experiences</Link></li>
+                            <li><Link :href="route('farm')" class="hover:text-white transition">Our Farm</Link></li>
+                            <li><Link :href="route('gallery')" class="hover:text-white transition">Photo Gallery</Link></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 3: Contact & Location -->
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C98A3E] mb-3">Direct Contact</h4>
+                        <p class="text-xs text-white/70 leading-relaxed">
+                            Komkonga Village, Handeni, Tanga, Tanzania<br />
+                            Phone: +255 758 774 695 / +255 675 315 279
+                        </p>
+                        <div class="pt-3">
+                            <a
+                                :href="generalWhatsappUrl"
+                                target="_blank"
+                                class="inline-flex items-center gap-1.5 text-xs text-[#E6C387] hover:underline"
+                            >
+                                <span>✦ Chat with us on WhatsApp</span>
                             </a>
                         </div>
                     </div>
+
                 </div>
-            </div>
-        </Teleport>
 
-        <!-- ── MOBILE FLOATING BASKET BUTTON ─────────────────────────── -->
-        <Transition name="slide-up">
-            <div v-if="totalCartItems > 0" class="fixed bottom-6 left-4 right-4 sm:left-auto sm:right-6 sm:w-auto z-[95]">
-                <button
-                    @click="cartDrawerOpen = true"
-                    class="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-4 px-6 py-3.5 rounded-full text-white text-sm font-bold shadow-2xl cursor-pointer transition-all hover:scale-105 border-2"
-                    style="background-color: #14301F; border-color: #D98A3D;"
-                >
-                    <div class="flex items-center gap-2.5">
-                        <svg class="w-5 h-5 text-[#D98A3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                        <span>{{ totalCartItems }} {{ totalCartItems === 1 ? 'Item' : 'Items' }}</span>
+                <!-- Copyright -->
+                <div class="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-white/50 gap-4">
+                    <p>© 2026 Kitonga Farm Villas &amp; Sanctuary. All rights reserved.</p>
+                    <div class="flex items-center gap-2 text-[10px]">
+                        <span class="text-gray-400">Created by</span>
+                        <a 
+                            href="https://wa.me/255675315279" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1E3326] hover:bg-[#C98A3E] text-[#E6C387] hover:text-white rounded-full border border-[#C98A3E]/30 transition duration-300 font-medium shadow-xs"
+                            title="Chat on WhatsApp"
+                        >
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>0675 315 279</span>
+                        </a>
                     </div>
-                    <span class="text-white/40">•</span>
-                    <span>{{ formatCurrency(totalCartPrice) }}</span>
-                </button>
-            </div>
-        </Transition>
+                </div>
 
-        <!-- ── FLOATING WHATSAPP BUTTON ───────────────────────────────── -->
-        <a
-            :href="directWhatsapp"
-            target="_blank"
-            class="fixed z-[90] flex items-center justify-center rounded-full text-white shadow-2xl transition-all hover:scale-110"
-            style="background-color: #25D366; width: 52px; height: 52px; bottom: 88px; right: 20px;"
-            title="Chat on WhatsApp"
-            aria-label="Chat on WhatsApp"
-        >
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        </a>
+            </div>
+        </footer>
 
     </div>
 </template>
 
 <style scoped>
-.scrollbar-none::-webkit-scrollbar {
-    display: none;
-}
-.scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-.line-clamp-2 {
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+.line-clamp-3 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-/* Toast Transitions */
-.toast-enter-active, .toast-leave-active {
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s ease;
 }
-.toast-enter-from, .toast-leave-to {
+.fade-enter-from, .fade-leave-to {
     opacity: 0;
-    transform: translateY(-12px) scale(0.95);
-}
-
-/* Floating Bottom Drawer / Basket Transitions */
-.slide-up-enter-active, .slide-up-leave-active {
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.slide-up-enter-from, .slide-up-leave-to {
-    opacity: 0;
-    transform: translateY(24px);
 }
 </style>
