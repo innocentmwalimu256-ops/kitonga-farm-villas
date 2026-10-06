@@ -247,6 +247,40 @@ const filteredRooms = computed(() => {
                 </div>
 
                 <!-- ════════════════════════════════════════════════════════════════ -->
+                <!-- WEBSITE VISITOR ANALYTICS QUICK LAUNCH BANNER                   -->
+                <!-- ════════════════════════════════════════════════════════════════ -->
+                <div class="bg-gradient-to-r from-indigo-900 via-slate-900 to-[#14231C] p-4 sm:p-5 rounded-2xl text-white shadow-xs border border-indigo-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-bold text-sm sm:text-base text-white">Website Visitor Analytics &amp; Live Traffic</h4>
+                                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/30 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    Live Tracker
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-300 mt-0.5">
+                                Real-time online visitors, traffic sources (Google, WhatsApp, Instagram), top viewed villas, and conversion leads.
+                            </p>
+                        </div>
+                    </div>
+                    <Link
+                        :href="route('admin.analytics.index')"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#C98A3E] hover:bg-[#b07833] text-white text-xs font-bold shadow-xs transition shrink-0 self-stretch sm:self-auto justify-center"
+                    >
+                        <span>Open Analytics Desk</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </Link>
+                </div>
+
+                <!-- ════════════════════════════════════════════════════════════════ -->
                 <!-- REAL-TIME ROOM & VILLA OCCUPANCY STATUS GRID (HALI YA VYUMBA)    -->
                 <!-- ════════════════════════════════════════════════════════════════ -->
                 <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/90 space-y-5">

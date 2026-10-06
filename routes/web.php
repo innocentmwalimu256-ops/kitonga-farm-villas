@@ -91,6 +91,10 @@ Route::get('/meet-mr-kitonga', [\App\Http\Controllers\ConsultationController::cl
 Route::post('/meet-mr-kitonga/request', [\App\Http\Controllers\ConsultationController::class, 'store'])->name('meet.mr.kitonga.store');
 Route::post('/meet-mr-kitonga/{reference}/track-click', [\App\Http\Controllers\ConsultationController::class, 'trackWhatsAppClick'])->name('meet.mr.kitonga.track');
 
+// --- Real-Time Website Visitor Analytics Public Tracking API ---
+Route::post('/api/analytics/track', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackPageView'])->name('api.analytics.track');
+Route::post('/api/analytics/event', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackEvent'])->name('api.analytics.event');
+
 // --- SEO Engine (Dynamic XML Sitemap & Robots.txt) ---
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots'])->name('robots');
@@ -141,6 +145,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/consultations', [\App\Http\Controllers\Admin\ConsultationRequestController::class, 'index'])->name('consultations.index');
     Route::patch('/consultations/{id}', [\App\Http\Controllers\Admin\ConsultationRequestController::class, 'update'])->name('consultations.update');
     Route::delete('/consultations/{id}', [\App\Http\Controllers\Admin\ConsultationRequestController::class, 'destroy'])->name('consultations.destroy');
+
+    // Website Visitor Analytics
+    Route::get('/analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::get('/analytics/live', [\App\Http\Controllers\Admin\AnalyticsController::class, 'live'])->name('analytics.live');
+    Route::get('/analytics/export', [\App\Http\Controllers\Admin\AnalyticsController::class, 'export'])->name('analytics.export');
 
     // POS & Bar Commerce
     Route::get('/pos', [AdminPOSController::class, 'terminal'])->name('pos.terminal');

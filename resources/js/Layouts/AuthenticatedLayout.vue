@@ -34,6 +34,10 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="text-xs font-bold uppercase tracking-wider">
                                     Dashboard
                                 </NavLink>
+                                <NavLink :href="route('admin.analytics.index')" :active="route().current('admin.analytics.*')" class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50/80 px-2.5 py-1 rounded-md border border-indigo-200 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                    Analytics
+                                </NavLink>
                                 <NavLink :href="route('admin.pos.terminal')" :active="route().current('admin.pos.terminal')" class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50/80 px-2.5 py-1 rounded-md border border-emerald-200">
                                     POS Terminal
                                 </NavLink>
@@ -93,6 +97,7 @@ const showingNavigationDropdown = ref(false);
                                         </template>
                                         <template #content>
                                             <div class="py-1">
+                                                <DropdownLink :href="route('admin.analytics.index')" class="text-indigo-800 font-bold bg-indigo-50/50">📊 Website Visitor Analytics</DropdownLink>
                                                 <DropdownLink :href="route('admin.reports.index')">Reports Center</DropdownLink>
                                                 <DropdownLink :href="route('admin.cms.index')">CMS Manager</DropdownLink>
                                                 <DropdownLink :href="route('admin.media.index')">Media & Video Studio</DropdownLink>
@@ -243,6 +248,10 @@ const showingNavigationDropdown = ref(false);
                             System Admin & Settings
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 mt-2">
+                            <Link :href="route('admin.analytics.index')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 font-bold text-indigo-900 border border-indigo-200 flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                📊 Website Visitor Analytics
+                            </Link>
                             <Link :href="route('admin.reports.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Reports Center</Link>
                             <Link :href="route('admin.cms.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">CMS Manager</Link>
                             <Link :href="route('admin.media.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-emerald-700 font-bold">Media & Videos</Link>

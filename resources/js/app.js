@@ -5,8 +5,12 @@ import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { initAnalyticsTracker } from './Services/analyticsTracker';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Kitonga Farm Villas';
+
+// Initialize Global Non-Blocking Analytics Tracker
+initAnalyticsTracker();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
