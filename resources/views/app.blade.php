@@ -4,7 +4,18 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Kitonga Farm Villas') }}</title>
+
+        <!-- Brand Favicons & Icons for Google Search & Browsers -->
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <meta name="theme-color" content="#14231C">
+        <meta name="application-name" content="Kitonga Farm Villas">
 
         <!-- Preconnect & DNS-Prefetch for Ultra Fast Font Loading -->
         <link rel="dns-prefetch" href="//fonts.googleapis.com">
