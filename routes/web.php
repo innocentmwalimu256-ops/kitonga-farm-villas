@@ -89,6 +89,10 @@ Route::get('/policies/{policyName?}', [PublicController::class, 'policies'])->na
 // --- SEO Engine (Dynamic XML Sitemap & Robots.txt) ---
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots'])->name('robots');
+Route::get('/google3cf85602cb396339.html', function () {
+    return response("google-site-verification: google3cf85602cb396339.html", 200)
+        ->header('Content-Type', 'text/html');
+});
 
 // --- Guest Booking Wizard ---
 Route::get('/book', [BookController::class, 'showForm'])->name('booking.form');
