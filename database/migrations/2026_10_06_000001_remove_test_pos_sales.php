@@ -37,9 +37,9 @@ return new class extends Migration
             DB::table('sales')->where('id', $sale->id)->delete();
         }
 
-        // Also clean up any orphan payments or movements created during test honey sales
+        // Also clean up any orphaned payments not attached to any booking or sale
         DB::table('payments')
-            ->where('payable_type', 'sale')
+            ->whereNull('booking_id')
             ->whereNull('sale_id')
             ->delete();
     }

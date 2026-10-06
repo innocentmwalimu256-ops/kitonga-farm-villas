@@ -49,7 +49,7 @@ class PurgeTestSales extends Command
         }
 
         DB::table('payments')
-            ->where('payable_type', 'sale')
+            ->whereNull('booking_id')
             ->whereNull('sale_id')
             ->delete();
 
