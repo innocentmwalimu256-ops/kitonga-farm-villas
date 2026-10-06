@@ -39,10 +39,10 @@ const navLinks = [
     { name: 'home', label: 'Home', route: 'home' },
     { name: 'villas', label: 'Villas', route: 'villas' },
     { name: 'experiences', label: 'Experiences', route: 'experiences' },
+    { name: 'meet-mr-kitonga', label: 'Meet Mr. Kitonga', route: 'meet.mr.kitonga' },
     { name: 'farm', label: 'Our Farm', route: 'farm' },
     { name: 'products', label: 'Produce', route: 'products' },
     { name: 'gallery', label: 'Gallery', route: 'gallery' },
-    { name: 'about', label: 'About', route: 'about' },
     { name: 'contact', label: 'Contact', route: 'contact' },
 ];
 </script>
@@ -208,6 +208,31 @@ const navLinks = [
                     <span>WhatsApp Concierge</span>
                 </a>
             </div>
+        </div>
+    </Teleport>
+
+    <!-- GLOBAL FLOATING "MEET MR. KITONGA" BUTTON (TELEPORTED TO BODY) -->
+    <Teleport to="body" v-if="currentPage !== 'meet-mr-kitonga'">
+        <div class="fixed bottom-5 right-5 z-[80] transition-all duration-300 hover:scale-105">
+            <Link 
+                :href="route('meet.mr.kitonga')"
+                prefetch
+                class="inline-flex items-center gap-2.5 px-4 py-3 bg-[#14231C]/95 hover:bg-[#1B2E24] text-white rounded-full border-2 border-[#C98A3E] shadow-2xl backdrop-blur-md transition group cursor-pointer"
+                title="Book 1-on-1 Consultation with Mr. Kitonga"
+            >
+                <div class="w-7 h-7 rounded-full bg-[#C98A3E] text-white flex items-center justify-center font-serif font-bold text-xs shadow-inner shrink-0">
+                    K
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="font-bold text-[11px] uppercase tracking-wider text-[#F5F1E8] group-hover:text-[#E6C387] transition font-sans leading-none">
+                        Meet Mr. Kitonga
+                    </span>
+                    <span class="text-[9px] text-[#C98A3E] font-semibold tracking-widest uppercase mt-0.5 leading-none">
+                        1-on-1 Advisory
+                    </span>
+                </div>
+                <span class="text-[#C98A3E] text-xs font-bold pl-0.5">✦</span>
+            </Link>
         </div>
     </Teleport>
 </template>

@@ -51,6 +51,7 @@ const showingNavigationDropdown = ref(false);
                                             <div class="py-1">
                                                 <DropdownLink :href="route('admin.bookings.calendar')">Calendar Grid</DropdownLink>
                                                 <DropdownLink :href="route('admin.bookings.index')">Reservations List</DropdownLink>
+                                                <DropdownLink :href="route('admin.consultations.index')" class="text-emerald-800 font-semibold bg-emerald-50/50">✦ Meet Mr. Kitonga</DropdownLink>
                                                 <DropdownLink :href="route('admin.bookings.create')">New Booking</DropdownLink>
                                             </div>
                                         </template>
@@ -212,6 +213,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="grid grid-cols-2 gap-1.5 mt-2">
                             <Link :href="route('admin.bookings.calendar')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Calendar Grid</Link>
                             <Link :href="route('admin.bookings.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Reservations</Link>
+                            <Link :href="route('admin.consultations.index')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-[#14231C] text-[#E6C387] font-bold text-center">✦ Meet Mr. Kitonga Requests</Link>
                             <Link :href="route('admin.bookings.create')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-center">+ New Reservation</Link>
                         </div>
                     </div>

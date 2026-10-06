@@ -86,6 +86,11 @@ Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
 Route::post('/contact', [PublicController::class, 'contactSubmit'])->name('contact.submit');
 Route::get('/policies/{policyName?}', [PublicController::class, 'policies'])->name('policies');
 
+// --- Meet Mr. Kitonga Consultation Workflow ---
+Route::get('/meet-mr-kitonga', [\App\Http\Controllers\ConsultationController::class, 'index'])->name('meet.mr.kitonga');
+Route::post('/meet-mr-kitonga/request', [\App\Http\Controllers\ConsultationController::class, 'store'])->name('meet.mr.kitonga.store');
+Route::post('/meet-mr-kitonga/{reference}/track-click', [\App\Http\Controllers\ConsultationController::class, 'trackWhatsAppClick'])->name('meet.mr.kitonga.track');
+
 // --- SEO Engine (Dynamic XML Sitemap & Robots.txt) ---
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots'])->name('robots');
@@ -131,6 +136,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.status');
     Route::post('/bookings/{id}/payment', [AdminBookingController::class, 'addPayment'])->name('bookings.payment');
     Route::post('/bookings/{id}/reschedule', [AdminBookingController::class, 'reschedule'])->name('bookings.reschedule');
+
+    // Meet Mr. Kitonga Consultation Requests
+    Route::get('/consultations', [\App\Http\Controllers\Admin\ConsultationRequestController::class, 'index'])->name('consultations.index');
+    Route::patch('/consultations/{id}', [\App\Http\Controllers\Admin\ConsultationRequestController::class, 'update'])->name('consultations.update');
+    Route::delete('/consultations/{id}', [\App\Http\Controllers\Admin\ConsultationRequestController::class, 'destroy'])->name('consultations.destroy');
 
     // POS & Bar Commerce
     Route::get('/pos', [AdminPOSController::class, 'terminal'])->name('pos.terminal');
