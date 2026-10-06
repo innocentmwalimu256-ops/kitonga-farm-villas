@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import SEOHead from '@/Components/SEOHead.vue';
+import PublicNavbar from '@/Components/PublicNavbar.vue';
 
 const gallerySchema = {
     '@context': 'https://schema.org',
@@ -157,79 +158,8 @@ const categories = [
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
-        <!-- 1. STICKY TOP NAVBAR -->
-        <header class="sticky top-0 z-50 w-full px-6 py-4 md:px-12 flex justify-between items-center text-white bg-[#14231C]/95 backdrop-blur-md border-b border-white/10 shadow-md transition duration-300">
-            
-            <!-- Logo -->
-            <Link :href="route('home')" class="flex flex-col items-start group cursor-pointer">
-                <span class="font-serif text-lg md:text-2xl font-light text-[#F5F1E8] tracking-[4px] uppercase leading-none transition group-hover:text-[#C98A3E] duration-300">
-                    KITONGA
-                </span>
-                <span class="font-sans text-[8px] md:text-[9px] font-medium text-[#C98A3E] tracking-[6px] uppercase leading-none mt-1 pl-[2px] transition group-hover:text-[#F5F1E8] duration-300">
-                    FARMS VILLAS
-                </span>
-            </Link>
-
-            <!-- Desktop Navigation Links -->
-            <nav class="hidden md:flex space-x-6 lg:space-x-8 text-xs font-semibold uppercase tracking-widest text-gray-200 font-sans items-center">
-                <Link :href="route('home')" prefetch class="hover:text-[#C98A3E] transition duration-200">Home</Link>
-                <Link :href="route('villas')" prefetch class="hover:text-[#C98A3E] transition duration-200">Villas</Link>
-                <Link :href="route('experiences')" prefetch class="hover:text-[#C98A3E] transition duration-200">Experiences</Link>
-                <Link :href="route('farm')" prefetch class="hover:text-[#C98A3E] transition duration-200">Our Farm</Link>
-                <Link :href="route('products')" prefetch class="hover:text-[#C98A3E] transition duration-200">Produce</Link>
-                <Link :href="route('gallery')" prefetch class="text-[#E6C387] font-bold border-b-2 border-[#C98A3E] pb-1">Gallery</Link>
-                <Link :href="route('contact')" prefetch class="hover:text-[#C98A3E] transition duration-200">Contact</Link>
-            </nav>
-
-            <!-- Right CTA Button -->
-            <div class="flex items-center space-x-4">
-                <Link 
-                    :href="route('booking.form')" 
-                    prefetch 
-                    class="px-3.5 py-1.5 bg-white text-gray-900 text-[11px] font-extrabold uppercase tracking-wider rounded transition font-sans shadow-xs cursor-pointer hover:bg-[#E6C387]"
-                >
-                    BOOK STAY
-                </Link>
-                <button 
-                    type="button" 
-                    @click="toggleMobileMenu" 
-                    class="p-1.5 text-white hover:text-[#C98A3E] focus:outline-none transition cursor-pointer md:hidden"
-                    aria-label="Toggle navigation menu"
-                >
-                    <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </header>
-
-        <!-- Mobile Navigation Menu Drawer -->
-        <div 
-            v-if="isMobileMenuOpen" 
-            class="md:hidden sticky top-[68px] left-0 w-full bg-[#14231C]/98 backdrop-blur-md border-b border-white/15 z-40 px-6 py-6 space-y-4 font-sans text-xs uppercase tracking-widest text-white shadow-2xl"
-        >
-            <div class="flex flex-col space-y-4">
-                <Link :href="route('home')" @click="isMobileMenuOpen = false" class="hover:text-[#C98A3E] transition py-1">Home</Link>
-                <Link :href="route('villas')" @click="isMobileMenuOpen = false" class="hover:text-[#C98A3E] transition py-1">Villas</Link>
-                <Link :href="route('experiences')" @click="isMobileMenuOpen = false" class="hover:text-[#C98A3E] transition py-1">Experiences</Link>
-                <Link :href="route('farm')" @click="isMobileMenuOpen = false" class="hover:text-[#C98A3E] transition py-1">Our Farm</Link>
-                <Link :href="route('products')" @click="isMobileMenuOpen = false" class="hover:text-[#C98A3E] transition py-1">Produce</Link>
-                <Link :href="route('gallery')" @click="isMobileMenuOpen = false" class="text-[#E6C387] font-bold py-1">Gallery</Link>
-                <Link :href="route('contact')" @click="isMobileMenuOpen = false" class="hover:text-[#C98A3E] transition py-1">Contact</Link>
-            </div>
-            <div class="pt-2 border-t border-white/10">
-                <Link 
-                    :href="route('booking.form')" 
-                    @click="isMobileMenuOpen = false"
-                    class="block w-full py-3 bg-[#C98A3E] text-white text-center font-bold uppercase tracking-wider rounded-lg shadow-sm"
-                >
-                    BOOK STAY
-                </Link>
-            </div>
-        </div>
+        <!-- 1. UNIVERSAL LUXURY NAVBAR & TELEPORTED MOBILE DRAWER -->
+        <PublicNavbar current-page="gallery" />
 
         <!-- 2. HERO SECTION WITH AUTHENTIC BACKGROUND -->
         <section class="relative bg-[#14231C] text-white pt-24 pb-20 md:pt-32 md:pb-28 px-6 md:px-12 overflow-hidden text-center select-none">

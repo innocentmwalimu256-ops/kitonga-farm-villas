@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import SEOHead from '@/Components/SEOHead.vue';
+import PublicNavbar from '@/Components/PublicNavbar.vue';
 
 const props = defineProps({
     villa: Object,
@@ -201,29 +202,8 @@ const getImageUrl = (path, slug) => {
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         
-        <!-- STICKY TOP NAVBAR -->
-        <header class="sticky top-0 z-50 bg-[#14231C]/95 backdrop-blur-md px-6 py-4 md:px-12 flex justify-between items-center text-white border-b border-white/10 shadow-md transition duration-300">
-            <Link :href="route('home')" class="flex flex-col items-start group">
-                <span class="font-serif text-lg md:text-2xl font-light text-[#F5F1E8] tracking-[4px] uppercase leading-none transition group-hover:text-[#C98A3E] duration-300">
-                    KITONGA
-                </span>
-                <span class="font-sans text-[8px] md:text-[9px] font-medium text-[#C98A3E] tracking-[6px] uppercase leading-none mt-1 pl-[2px] transition group-hover:text-[#F5F1E8] duration-300">
-                    FARMS VILLAS
-                </span>
-            </Link>
-            <nav class="hidden md:flex space-x-7 lg:space-x-8 text-xs font-semibold uppercase tracking-widest text-gray-200 items-center font-sans">
-                <Link :href="route('home')" prefetch class="hover:text-[#C98A3E] transition">Home</Link>
-                <Link :href="route('villas')" prefetch class="text-[#E6C387] font-bold border-b-2 border-[#E6C387] pb-0.5">Villas</Link>
-                <Link :href="route('experiences')" prefetch class="hover:text-[#C98A3E] transition">Experiences</Link>
-                <Link :href="route('farm')" prefetch class="hover:text-[#C98A3E] transition">Our Farm</Link>
-                <Link :href="route('products')" prefetch class="hover:text-[#C98A3E] transition">Produce</Link>
-                <Link :href="route('contact')" prefetch class="hover:text-[#C98A3E] transition">Contact</Link>
-                <Link :href="route('login')" prefetch class="hover:text-[#C98A3E] transition">Sign In</Link>
-            </nav>
-            <Link :href="route('booking.form')" prefetch class="px-5 py-2.5 bg-white text-gray-900 hover:bg-[#FAF8F5] text-xs font-extrabold uppercase tracking-wider rounded-lg transition font-sans shadow-xs">
-                BOOK STAY
-            </Link>
-        </header>
+        <!-- UNIVERSAL LUXURY NAVBAR & TELEPORTED MOBILE DRAWER -->
+        <PublicNavbar current-page="villas" />
 
         <!-- 1. FULL-WIDTH CINEMATIC HERO -->
         <section class="w-full h-[65vh] md:h-[75vh] min-h-[500px] bg-[#14231C] overflow-hidden relative select-none">

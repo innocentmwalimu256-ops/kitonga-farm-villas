@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import SEOHead from '@/Components/SEOHead.vue';
+import PublicNavbar from '@/Components/PublicNavbar.vue';
 
 const props = defineProps({
     products: { type: Array, default: () => [] },
@@ -336,57 +337,9 @@ const scrollToGallery = () => {
     <div class="min-h-screen bg-[#FAF8F5] text-[#2C3530] font-sans antialiased selection:bg-[#C98A3E] selection:text-white">
 
         <!-- ══════════════════════════════════════════════════════════════════════
-             1. REFINED LUXURY TOP NAVIGATION (Cenizaro Style)
+             1. UNIVERSAL LUXURY NAVBAR & TELEPORTED MOBILE DRAWER
         ══════════════════════════════════════════════════════════════════════ -->
-        <header class="sticky top-0 z-50 bg-[#14231C]/95 backdrop-blur-md border-b border-white/10 text-white transition-all">
-            <div class="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between">
-                
-                <!-- Left: Logo & Crest -->
-                <Link :href="route('home')" class="flex items-center gap-3 group">
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#C98A3E]/60 flex items-center justify-center p-1 bg-[#1B2E24] shadow-sm group-hover:border-[#E6C387] transition shrink-0">
-                        <img src="/favicon.svg" alt="Kitonga Logo Crest" class="w-full h-full object-contain" />
-                    </div>
-                    <div>
-                        <span class="block text-sm sm:text-base font-serif font-bold tracking-[0.25em] text-[#E6C387] uppercase leading-none">
-                            KITONGA
-                        </span>
-                        <span class="block text-[8px] sm:text-[9px] tracking-[0.3em] text-white/60 uppercase font-light mt-0.5">
-                            FARM VILLAS SANCTUARY
-                        </span>
-                    </div>
-                </Link>
-
-                <!-- Center: Luxury Navigation Links -->
-                <nav class="hidden lg:flex items-center gap-8 text-[11px] font-medium tracking-[0.2em] uppercase text-white/80">
-                    <Link :href="route('home')" class="hover:text-[#E6C387] transition-colors">Home</Link>
-                    <Link :href="route('villas')" class="hover:text-[#E6C387] transition-colors">Villas</Link>
-                    <Link :href="route('experiences')" class="hover:text-[#E6C387] transition-colors">Experiences</Link>
-                    <Link :href="route('farm')" class="hover:text-[#E6C387] transition-colors">Farm</Link>
-                    <Link :href="route('products')" class="text-[#E6C387] font-bold border-b border-[#E6C387] pb-1">Produce</Link>
-                    <Link :href="route('gallery')" class="hover:text-[#E6C387] transition-colors">Gallery</Link>
-                    <Link :href="route('about')" class="hover:text-[#E6C387] transition-colors">About</Link>
-                    <Link :href="route('contact')" class="hover:text-[#E6C387] transition-colors">Contact</Link>
-                </nav>
-
-                <!-- Right: Direct Concierge Action -->
-                <div class="flex items-center gap-3">
-                    <a
-                        :href="generalWhatsappUrl"
-                        target="_blank"
-                        class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-semibold tracking-widest uppercase border border-[#C98A3E]/70 text-[#E6C387] hover:bg-[#C98A3E] hover:text-white transition duration-300"
-                    >
-                        <span>Farm Concierge</span>
-                    </a>
-                    <Link
-                        :href="route('booking.form')"
-                        class="px-5 py-2 rounded-full text-[11px] font-bold tracking-widest uppercase bg-[#C98A3E] hover:bg-[#b57a34] text-white shadow-md transition duration-300"
-                    >
-                        Book Stay
-                    </Link>
-                </div>
-
-            </div>
-        </header>
+        <PublicNavbar current-page="products" />
 
 
         <!-- ══════════════════════════════════════════════════════════════════════

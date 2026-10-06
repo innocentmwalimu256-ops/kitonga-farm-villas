@@ -2,6 +2,8 @@
 import { Head, Link } from '@inertiajs/vue3';
 import SEOHead from '@/Components/SEOHead.vue';
 
+import PublicNavbar from '@/Components/PublicNavbar.vue';
+
 defineProps({
     cms: {
         type: Object,
@@ -42,28 +44,7 @@ const aboutSchema = {
     <div class="bg-[#FAF8F5] text-[#2C3E2B] font-serif min-h-screen">
         
         <!-- HEADER -->
-        <header class="bg-[#2C3E2B] px-6 py-6 md:px-12 flex justify-between items-center text-white">
-            <Link :href="route('home')" class="flex flex-col items-center md:items-start text-center md:text-left group">
-                <span class="font-['Cormorant_Garamond'] text-lg md:text-2xl font-light text-[#F5F1E8] tracking-[4px] uppercase leading-none transition group-hover:text-[#C8A96B] duration-300">
-                    KITONGA
-                </span>
-                <span class="font-['Inter'] text-[8px] md:text-[9px] font-medium text-[#C8A96B] tracking-[6px] uppercase leading-none mt-1 pl-[6px] transition group-hover:text-[#F5F1E8] duration-300">
-                    FARMS VILLAS
-                </span>
-            </Link>
-            <nav class="hidden md:flex space-x-7 lg:space-x-8 text-xs font-semibold uppercase tracking-widest text-gray-300 items-center font-sans">
-                <Link :href="route('villas')" prefetch class="hover:text-[#E6C387] transition">Villas</Link>
-                <Link :href="route('experiences')" prefetch class="hover:text-[#E6C387] transition">Experiences</Link>
-                <Link :href="route('farm')" prefetch class="hover:text-[#E6C387] transition">Our Farm</Link>
-                <Link :href="route('products')" prefetch class="hover:text-[#E6C387] transition">Produce</Link>
-                <Link :href="route('gallery')" prefetch class="hover:text-[#E6C387] transition">Gallery</Link>
-                <Link :href="route('contact')" prefetch class="hover:text-[#E6C387] transition">Contact</Link>
-                <Link :href="route('login')" prefetch class="hover:text-[#E6C387] transition">Sign In</Link>
-            </nav>
-            <Link :href="route('booking.form')" prefetch class="px-5 py-2 bg-[#E6C387] hover:bg-[#D5B276] text-gray-900 text-xs font-bold uppercase tracking-wider rounded transition">
-                Book Stay
-            </Link>
-        </header>
+        <PublicNavbar current-page="about" />
 
         <!-- MAIN STORY -->
         <section class="max-w-3xl mx-auto px-6 py-12 md:py-20 space-y-8 text-center">
