@@ -339,18 +339,18 @@ const scrollToGallery = () => {
              1. REFINED LUXURY TOP NAVIGATION (Cenizaro Style)
         ══════════════════════════════════════════════════════════════════════ -->
         <header class="sticky top-0 z-50 bg-[#14231C]/95 backdrop-blur-md border-b border-white/10 text-white transition-all">
-            <div class="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
+            <div class="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between">
                 
                 <!-- Left: Logo & Crest -->
-                <Link :href="route('home')" class="flex items-center gap-3.5 group">
-                    <div class="w-10 h-10 rounded-full border border-[#C98A3E]/60 flex items-center justify-center p-1.5 bg-[#1B2E24] shadow-sm group-hover:border-[#E6C387] transition">
-                        <img src="/images/logo_gold.webp" alt="Kitonga Logo" class="w-full h-full object-contain" />
+                <Link :href="route('home')" class="flex items-center gap-3 group">
+                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#C98A3E]/60 flex items-center justify-center p-1 bg-[#1B2E24] shadow-sm group-hover:border-[#E6C387] transition shrink-0">
+                        <img src="/favicon.svg" alt="Kitonga Logo Crest" class="w-full h-full object-contain" />
                     </div>
                     <div>
                         <span class="block text-sm sm:text-base font-serif font-bold tracking-[0.25em] text-[#E6C387] uppercase leading-none">
                             KITONGA
                         </span>
-                        <span class="block text-[9px] tracking-[0.3em] text-white/60 uppercase font-light mt-0.5">
+                        <span class="block text-[8px] sm:text-[9px] tracking-[0.3em] text-white/60 uppercase font-light mt-0.5">
                             FARM VILLAS SANCTUARY
                         </span>
                     </div>
@@ -392,14 +392,20 @@ const scrollToGallery = () => {
         <!-- ══════════════════════════════════════════════════════════════════════
              2. MASTHEAD HERO SECTION (Cenizaro Editorial Inspiration)
         ══════════════════════════════════════════════════════════════════════ -->
-        <section class="relative bg-[#14231C] text-white pt-20 pb-24 sm:pt-24 sm:pb-28 px-4 sm:px-8 overflow-hidden">
-            <!-- Ambient Background Glow & Vignette -->
-            <div class="absolute inset-0 bg-radial from-transparent via-[#14231C]/60 to-[#0C1712] pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-96 h-96 bg-[#C98A3E]/10 rounded-full blur-3xl pointer-events-none"></div>
+        <section class="relative bg-[#14231C] text-white pt-24 pb-28 sm:pt-28 sm:pb-32 px-4 sm:px-8 overflow-hidden min-h-[440px] flex items-center justify-center select-none">
+            <!-- Authentic High-Res Background Image -->
+            <img 
+                src="/images/produce_hero_bg.webp" 
+                alt="Kitonga Organic Farm Produce Harvest" 
+                class="absolute inset-0 w-full h-full object-cover object-center transform scale-102 filter brightness-85"
+            />
+            <!-- Layered Cinematic Gradient for High Legibility -->
+            <div class="absolute inset-0 bg-gradient-to-b from-[#14231C]/92 via-[#14231C]/75 to-[#14231C]/95 pointer-events-none"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-[#C98A3E]/20 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div class="relative max-w-4xl mx-auto text-center space-y-5">
+            <div class="relative max-w-4xl mx-auto text-center space-y-5 z-10">
                 <!-- Breadcrumbs -->
-                <div class="flex items-center justify-center gap-2 text-[10px] tracking-[0.25em] uppercase text-white/50 font-light">
+                <div class="flex items-center justify-center gap-2 text-[10px] tracking-[0.25em] uppercase text-white/70 font-light">
                     <Link :href="route('home')" class="hover:text-[#E6C387] transition">Home</Link>
                     <span>/</span>
                     <Link :href="route('farm')" class="hover:text-[#E6C387] transition">Farm</Link>
@@ -408,25 +414,25 @@ const scrollToGallery = () => {
                 </div>
 
                 <!-- Subtitle Pill -->
-                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1F352A] border border-[#C98A3E]/40 text-[#E6C387] text-[10px] tracking-[0.25em] uppercase font-semibold">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1F352A]/90 border border-[#C98A3E]/50 text-[#E6C387] text-[10px] tracking-[0.25em] uppercase font-semibold backdrop-blur-xs shadow-xs">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#E6C387] animate-pulse"></span>
                     <span>Agro-Ecological Sanctuary</span>
                 </div>
 
                 <!-- Main Editorial Title -->
-                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-white tracking-wide leading-tight">
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#F7F3EA] tracking-wide leading-tight drop-shadow-md">
                     Organic Farm Produce
                 </h1>
 
                 <!-- Elegant Divider -->
-                <div class="flex items-center justify-center gap-3 pt-2">
+                <div class="flex items-center justify-center gap-3 pt-1">
                     <span class="w-12 h-px bg-gradient-to-r from-transparent to-[#C98A3E]"></span>
                     <span class="text-xs text-[#C98A3E]">✦</span>
                     <span class="w-12 h-px bg-gradient-to-l from-transparent to-[#C98A3E]"></span>
                 </div>
 
                 <!-- Narrative Description -->
-                <p class="text-xs sm:text-sm text-white/80 font-light max-w-2xl mx-auto leading-relaxed pt-1">
+                <p class="text-xs sm:text-sm text-white/90 font-light max-w-2xl mx-auto leading-relaxed pt-1 drop-shadow-sm">
                     Nurtured by highland spring water and rich organic compost in Komkonga, Handeni.
                     Explore our daily dawn-milked pasture dairy, farm-fresh eggs, and sun-ripened orchard fruits cultivated with unhurried care.
                 </p>
@@ -435,10 +441,10 @@ const scrollToGallery = () => {
                 <div class="pt-4">
                     <button 
                         @click="scrollToGallery"
-                        class="text-[10px] tracking-[0.25em] uppercase text-white/60 hover:text-[#E6C387] transition inline-flex items-center gap-2 cursor-pointer"
+                        class="text-[10px] sm:text-[11px] tracking-[0.25em] uppercase text-[#E6C387] hover:text-white transition inline-flex items-center gap-2 cursor-pointer font-semibold group"
                     >
                         <span>View Harvest Showcase</span>
-                        <svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                        <svg class="w-3.5 h-3.5 group-hover:translate-y-1 transition duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
                     </button>
                 </div>
             </div>
