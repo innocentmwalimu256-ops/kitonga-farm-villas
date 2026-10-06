@@ -18,6 +18,35 @@ const guests = ref(2);
 const bookingDate = ref(defaultDate());
 const timeSlot = ref('09:00 AM - 11:00 AM');
 
+const updateGuests = (val) => {
+    let num = parseInt(val, 10);
+    if (isNaN(num) || num < 1) {
+        guests.value = 1;
+    } else if (num > 500) {
+        guests.value = 500;
+    } else {
+        guests.value = num;
+    }
+};
+
+const incrementGuests = () => {
+    const current = parseInt(guests.value, 10) || 1;
+    if (current < 500) {
+        guests.value = current + 1;
+    }
+};
+
+const decrementGuests = () => {
+    const current = parseInt(guests.value, 10) || 1;
+    if (current > 1) {
+        guests.value = current - 1;
+    }
+};
+
+const setGuestPreset = (num) => {
+    guests.value = num;
+};
+
 // Modal State
 const isModalOpen = ref(false);
 const isSubmitting = ref(false);
@@ -170,17 +199,79 @@ const printTicket = () => {
                 </div>
             </div>
 
-            <!-- Guest Counter -->
-            <div class="space-y-1">
-                <label class="font-bold text-gray-600 uppercase text-[10px] block">3. Number of Guests</label>
-                <select 
-                    v-model="guests" 
-                    class="w-full text-xs rounded-lg border-gray-300 focus:border-[#1B2E22] focus:ring-1 focus:ring-[#1B2E22] mt-1 py-2 px-3"
-                >
-                    <option v-for="n in (experience.capacity_per_slot || 20)" :key="n" :value="n">
-                        {{ n }} {{ n === 1 ? 'Guest' : 'Guests' }} ({{ formatCurrency(n * experience.price) }})
-                    </option>
-                </select>
+            <!-- 3. GUEST COUNTER WITH DIRECT NUMBER TYPING & STEPPER -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="font-bold text-gray-700 uppercase text-[10px] block">3. Number of Guests (Idadi ya Wageni)</label>
+                    <span class="text-[10px] text-amber-700 font-semibold font-sans">Andika idadi yoyote</span>
+                </div>
+
+                <!-- Interactive Stepper & Direct Typing Input -->
+                <div class="flex items-center bg-[#FAF8F5] border border-gray-300 focus-within:border-[#1B2E22] focus-within:ring-2 focus-within:ring-[#1B2E22]/20 rounded-xl p-1 shadow-xs transition">
+                    <!-- Minus Button -->
+                    <button 
+                        type="button" 
+                        @click="decrementGuests" 
+                        :disabled="guests <= 1"
+                        class="w-10 h-10 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-[#1B2E22] hover:text-white disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-gray-700 flex items-center justify-center font-bold text-xl transition cursor-pointer shrink-0 shadow-2xs select-none"
+                        aria-label="Punguza idadi ya wageni"
+                    >
+                        −
+                    </button>
+
+                    <!-- Direct Number Input (User can type any number) -->
+                    <div class="flex-1 text-center px-2 flex items-center justify-center gap-1.5">
+                        <input 
+                            type="number" 
+                            :value="guests"
+                            @input="updateGuests($event.target.value)"
+                            min="1" 
+                            max="500" 
+                            class="w-16 sm:w-20 text-center text-lg sm:text-xl font-extrabold text-[#1B2E22] bg-white rounded-md border border-gray-200 focus:border-[#C98A3E] focus:ring-1 focus:ring-[#C98A3E] py-1 px-1.5 font-sans [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none shadow-2xs"
+                            placeholder="1"
+                        />
+                        <span class="text-xs text-gray-700 font-bold uppercase tracking-wider font-sans select-none">
+                            {{ guests === 1 ? 'Guest' : 'Guests' }}
+                        </span>
+                    </div>
+
+                    <!-- Plus Button -->
+                    <button 
+                        type="button" 
+                        @click="incrementGuests" 
+                        class="w-10 h-10 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-[#1B2E22] hover:text-white flex items-center justify-center font-bold text-xl transition cursor-pointer shrink-0 shadow-2xs select-none"
+                        aria-label="Ongeza idadi ya wageni"
+                    >
+                        +
+                    </button>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="flex items-center gap-1.5 pt-0.5">
+                    <span class="text-[9px] uppercase tracking-wider text-gray-400 font-bold shrink-0">Haraka:</span>
+                    <div class="flex flex-wrap gap-1">
+                        <button 
+                            v-for="p in [1, 2, 3, 5, 10, 20]" 
+                            :key="p"
+                            type="button"
+                            @click="setGuestPreset(p)"
+                            :class="[
+                                'px-2 py-0.5 rounded-md text-[10px] font-bold transition cursor-pointer',
+                                guests === p 
+                                    ? 'bg-[#1B2E22] text-[#E6C387] shadow-2xs ring-1 ring-[#C98A3E]/40' 
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ]"
+                        >
+                            {{ p }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rate calculation detail -->
+                <div class="text-[11px] text-gray-500 pt-1 flex justify-between items-center bg-gray-50/80 px-2.5 py-1.5 rounded-lg border border-gray-200/60 font-sans">
+                    <span>{{ formatCurrency(experience.price) }} × {{ guests }} wageni</span>
+                    <span class="font-extrabold text-[#1B2E22]">{{ formatCurrency(totalPrice) }}</span>
+                </div>
             </div>
         </div>
 
@@ -256,10 +347,16 @@ const printTicket = () => {
                             <h3 class="text-2xl font-serif font-light text-[#1B2E22] mt-0.5">{{ experience.name }}</h3>
                             
                             <!-- Reservation Summary Badges -->
-                            <div class="flex flex-wrap gap-2 pt-2.5 text-xs text-gray-700">
-                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">Date: {{ bookingDate }}</span>
-                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">Time: {{ timeSlot }}</span>
-                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">{{ guests }} {{ guests === 1 ? 'Guest' : 'Guests' }}</span>
+                            <div class="flex flex-wrap items-center gap-2 pt-2.5 text-xs text-gray-700">
+                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">📅 {{ bookingDate }}</span>
+                                <span class="bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">⏰ {{ timeSlot }}</span>
+                                <div class="inline-flex items-center gap-1.5 bg-[#ECE7DF] px-2.5 py-1 rounded-md font-medium">
+                                    <span>👥 Idadi:</span>
+                                    <button type="button" @click="decrementGuests" :disabled="guests <= 1" class="w-5 h-5 rounded bg-white text-gray-800 flex items-center justify-center font-bold text-xs disabled:opacity-30 cursor-pointer hover:bg-gray-100 shadow-2xs">−</button>
+                                    <span class="font-extrabold text-[#1B2E22] min-w-[20px] text-center">{{ guests }}</span>
+                                    <button type="button" @click="incrementGuests" class="w-5 h-5 rounded bg-white text-gray-800 flex items-center justify-center font-bold text-xs cursor-pointer hover:bg-gray-100 shadow-2xs">+</button>
+                                    <span class="text-[11px] text-gray-500">{{ guests === 1 ? 'Guest' : 'Guests' }}</span>
+                                </div>
                             </div>
                         </div>
 

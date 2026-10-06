@@ -527,7 +527,7 @@
     ]
   },
   "resources/js/Pages/Public/ExperienceDetail.vue": {
-    "file": "assets/ExperienceDetail-gqsGAPe2.js",
+    "file": "assets/ExperienceDetail-DNJ9Sv6i.js",
     "name": "ExperienceDetail",
     "src": "resources/js/Pages/Public/ExperienceDetail.vue",
     "isDynamicEntry": true,
@@ -577,7 +577,7 @@
     ]
   },
   "resources/js/Pages/Public/Experiences/Components/ExperienceBookingPanel.vue": {
-    "file": "assets/ExperienceBookingPanel-BcsAOJ6Y.js",
+    "file": "assets/ExperienceBookingPanel-DTe-937V.js",
     "name": "ExperienceBookingPanel",
     "src": "resources/js/Pages/Public/Experiences/Components/ExperienceBookingPanel.vue",
     "isDynamicEntry": true,
@@ -848,7 +848,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-D18JV7lb.js",
+    "file": "assets/app-Cl6jZWAC.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -929,7 +929,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-57b0IpS_.css"
+      "assets/app-Bc7BiOqa.css"
     ]
   }
 }

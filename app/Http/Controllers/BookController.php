@@ -156,7 +156,7 @@ class BookController extends Controller
             'farm_tour_id' => 'required|exists:farm_tours,id',
             'tour_date' => 'required|date|after_or_equal:today',
             'time_slot' => 'required|string|max:50',
-            'guests_count' => 'required|integer|min:1|max:50',
+            'guests_count' => 'required|integer|min:1|max:500',
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:30',
             'customer_email' => 'nullable|email|max:255',
