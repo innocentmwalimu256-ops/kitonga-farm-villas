@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
 
 const props = defineProps({
     villa: Object,
@@ -13,6 +14,40 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+
+const villaSchema = computed(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'HotelRoom',
+    'name': props.villa?.name || 'Luxury Villa',
+    'description': props.villa?.seo_description || props.villa?.description || 'Private luxury villa at Kitonga Farm Villas with stunning landscape views, personalized hospitality, and serene farm ambience.',
+    'url': `https://kitongafarm.com/villas/${props.villa?.slug || ''}`,
+    'image': props.villa?.featured_image ? (props.villa.featured_image.startsWith('http') ? props.villa.featured_image : `https://kitongafarm.com${props.villa.featured_image.startsWith('/') ? '' : '/'}${props.villa.featured_image}`) : 'https://kitongafarm.com/images/luxury_villa_img.webp',
+    'occupancy': {
+        '@type': 'QuantitativeValue',
+        'maxValue': props.villa?.capacity || 2,
+        'unitText': 'person'
+    },
+    'numberOfBedrooms': props.villa?.bedrooms || 1,
+    'numberOfBathroomsTotal': props.villa?.bathrooms || 1,
+    'offers': {
+        '@type': 'Offer',
+        'price': props.villa?.price_per_night || 295000,
+        'priceCurrency': 'TZS',
+        'availability': 'https://schema.org/InStock',
+        'url': `https://kitongafarm.com/villas/${props.villa?.slug || ''}`
+    },
+    'containedInPlace': {
+        '@type': 'Resort',
+        'name': 'Kitonga Farm Villas',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Kitonga Farm Estate',
+            'addressLocality': 'Iringa',
+            'addressRegion': 'Iringa',
+            'addressCountry': 'TZ'
+        }
+    }
+}));
 
 // Dynamic Gallery Images per Villa (Original Authentic 4 Distinct Photos per Villa prioritized)
 const getGallery = (slug, dbGallery) => {
@@ -155,7 +190,14 @@ const getImageUrl = (path, slug) => {
 </script>
 
 <template>
-    <Head :title="`${villa.name} — Private Residence | Kitonga Farm Villas`" />
+    <SEOHead 
+        :title="villa.seo_title || `${villa.name} — Private Luxury Residence`"
+        :description="villa.seo_description || `${villa.name} at Kitonga Farm Villas. Enjoy boutique mountain views, handcrafted architecture, plunge pool, and bespoke hospitality in Iringa.`"
+        :canonical="`/villas/${villa.slug}`"
+        :og-image="getImageUrl(villa.featured_image, villa.slug)"
+        og-type="article"
+        :schema="villaSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

@@ -1,6 +1,23 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
+
+const farmSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    'name': 'Kitonga Farm Sanctuary & Agritourism',
+    'description': 'A sanctuary of modern sustainable farming in Tanzania, producing organic honey, fresh dairy, pasture poultry, and lush citrus orchards.',
+    'url': 'https://kitongafarm.com/farm',
+    'image': 'https://kitongafarm.com/images/IMG_0321.webp',
+    'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': 'Kitonga Farm Estate',
+        'addressLocality': 'Iringa',
+        'addressRegion': 'Iringa',
+        'addressCountry': 'TZ'
+    }
+};
 
 const props = defineProps({
     cms: {
@@ -111,7 +128,13 @@ const orderProduct = (product) => {
 </script>
 
 <template>
-    <Head title="Our Organic Farm & Countryside Heritage — Kitonga Farm Villas" />
+    <SEOHead 
+        title="Organic Farm Heritage, Dairy, Poultry & Honey Sanctuary"
+        description="Discover Kitonga Farm's regenerative agriculture in Iringa, Tanzania. Pedigree dairy cattle, modern layer poultry, beekeeping apiaries, and farm-fresh produce."
+        canonical="/farm"
+        og-image="/images/IMG_0321.webp"
+        :schema="farmSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

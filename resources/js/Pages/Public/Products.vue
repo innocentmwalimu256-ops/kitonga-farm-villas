@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
 
 const props = defineProps({
     products: { type: Array, default: () => [] },
@@ -11,6 +12,38 @@ const props = defineProps({
     },
     auth: { type: Object, default: () => ({ user: null }) },
 });
+
+const productsSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    'name': 'Organic Farm Produce & Artisanal Dairy Catalog',
+    'description': 'Browse authentic farm-fresh produce from Kitonga Farm Villas: organic pasture eggs, pure cultured whole milk (mtindi), velvety yogurts, citrus fruits, and organic honey.',
+    'url': 'https://kitongafarm.com/products',
+    'mainEntity': {
+        '@type': 'ItemList',
+        'name': 'Kitonga Farm Produce',
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Farm Fresh Free-Range Eggs',
+                'url': 'https://kitongafarm.com/products'
+            },
+            {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Kitonga Cultured Sour Milk (Mtindi)',
+                'url': 'https://kitongafarm.com/products'
+            },
+            {
+                '@type': 'ListItem',
+                'position': 3,
+                'name': 'Fresh Pasture Whole Milk',
+                'url': 'https://kitongafarm.com/products'
+            }
+        ]
+    }
+};
 
 // ─── Default High-Quality Authentic Products ─────────────────────────────────
 const defaultProducts = [
@@ -292,7 +325,13 @@ const scrollToGallery = () => {
 </script>
 
 <template>
-    <Head title="Organic Farm Produce Gallery | Kitonga Farm Villas" />
+    <SEOHead 
+        title="Organic Farm Produce Gallery — Fresh Pasture Eggs & Dairy"
+        description="Explore organic farm produce at Kitonga Farm Villas: farm-fresh free-range eggs, cultured whole milk (mtindi), artisanal cheeses, natural yogurt, and tropical fruits."
+        canonical="/products"
+        og-image="/images/farm_egg_trays.webp"
+        :schema="productsSchema"
+    />
 
     <div class="min-h-screen bg-[#FAF8F5] text-[#2C3530] font-sans antialiased selection:bg-[#C98A3E] selection:text-white">
 

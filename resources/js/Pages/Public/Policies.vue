@@ -1,14 +1,42 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
 
-defineProps({
-    policy: String,
-    cms: Object,
+const props = defineProps({
+    policy: {
+        type: String,
+        default: 'terms'
+    },
+    cms: {
+        type: Object,
+        default: () => ({})
+    },
 });
+
+const policyTitle = computed(() => {
+    if (props.policy === 'privacy') return 'Privacy Policy';
+    if (props.policy === 'refund') return 'Refund & Cancellation Policy';
+    return 'Terms & Booking Policies';
+});
+
+const policySchema = computed(() => ({
+    '@context': 'https://schema.org',
+    '@type': props.policy === 'privacy' ? 'PrivacyPolicy' : 'TermsPage',
+    'name': policyTitle.value,
+    'description': `Official ${policyTitle.value} for Kitonga Farm Villas reservations, guest conduct, and privacy safeguards.`,
+    'url': `https://kitongafarm.com/policies/${props.policy || 'terms'}`
+}));
 </script>
 
 <template>
-    <Head title="Terms & Booking Policies" />
+    <SEOHead 
+        :title="policyTitle"
+        :description="`Review Kitonga Farm Villas ${policyTitle.toLowerCase()}. Learn about check-in/check-out guidelines, payment confirmations, and guest stay conditions.`"
+        :canonical="`/policies/${policy || 'terms'}`"
+        og-image="/images/luxury_villa_img.webp"
+        :schema="policySchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#2C3E2B] font-serif min-h-screen">
         

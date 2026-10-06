@@ -1,6 +1,16 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
+
+const gallerySchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    'name': 'Kitonga Farm Villas Visual Gallery',
+    'description': 'High-resolution photo gallery showcasing luxury private villas, pastoral farm grounds, pedigree dairy herds, apiaries, and agritourism moments at Kitonga Farm Villas.',
+    'url': 'https://kitongafarm.com/gallery',
+    'image': 'https://kitongafarm.com/images/luxury_villa_img.webp'
+};
 
 const props = defineProps({
     cms: Object,
@@ -137,7 +147,13 @@ const categories = [
 </script>
 
 <template>
-    <Head title="Visual Gallery — Kitonga Farm Villas" />
+    <SEOHead 
+        title="Visual Photo & Video Gallery — Estate, Villas & Farm Life"
+        description="Experience the visual beauty of Kitonga Farm Villas. Explore our luxury villa accommodations, verdant farming fields, dairy cattle, and scenic countryside vistas."
+        canonical="/gallery"
+        og-image="/images/luxury_villa_img.webp"
+        :schema="gallerySchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
 
 const props = defineProps({
     villas: Array,
@@ -173,7 +174,12 @@ const submitBooking = () => {
 </script>
 
 <template>
-    <Head title="Direct Villa Reservation — Kitonga Farm Villas" />
+    <SEOHead 
+        title="Direct Villa Reservation & Booking"
+        description="Book your luxury private villa or farm getaway directly at Kitonga Farm Villas. Best rate guarantee, instant booking confirmation, and bespoke concierge service."
+        canonical="/book"
+        og-image="/images/luxury_villa_img.webp"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

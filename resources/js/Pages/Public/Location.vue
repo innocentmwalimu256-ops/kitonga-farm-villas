@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
 
 defineProps({
     settings: {
@@ -8,16 +9,42 @@ defineProps({
         default: () => ({
             contact_phone: '+255 758 774 695',
             contact_email: 'kitongafarmvillas@gmail.com',
-            location_coordinates: '-5.0889, 39.0988',
+            location_coordinates: '-7.77, 35.69',
         }),
     },
 });
+
+const locationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    'name': 'Kitonga Farm Villas',
+    'description': 'Directions, road map, and geographic coordinates to Kitonga Farm Villas in Iringa, Tanzania.',
+    'url': 'https://kitongafarm.com/location',
+    'geo': {
+        '@type': 'GeoCoordinates',
+        'latitude': -7.77,
+        'longitude': 35.69
+    },
+    'address': {
+        '@type': 'PostalAddress',
+        'streetAddress': 'Kitonga Farm Estate',
+        'addressLocality': 'Iringa',
+        'addressRegion': 'Iringa',
+        'addressCountry': 'TZ'
+    }
+};
 
 const isMobileMenuOpen = ref(false);
 </script>
 
 <template>
-    <Head title="Directions & Location — Kitonga Farm Villas" />
+    <SEOHead 
+        title="Location & Directions — How to Get Here"
+        description="Find directions and map coordinates for Kitonga Farm Villas in Iringa, Tanzania. Easy driving instructions from Dar es Salaam, Dodoma, and Iringa town."
+        canonical="/location"
+        og-image="/images/luxury_villa_img.webp"
+        :schema="locationSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

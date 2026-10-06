@@ -9,9 +9,9 @@ import { Link } from '@inertiajs/vue3';
             — THE PHILOSOPHY —
         </span>
         
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#1F2420] tracking-tight leading-tight">
-            More Than a Farm Tour
-        </h2>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-[#1F2420] tracking-tight leading-tight">
+            More Than a Farm Tour: Agritourism & Countryside Experiences
+        </h1>
         
         <p class="text-base sm:text-lg text-[#3B4239] font-serif italic leading-relaxed max-w-2xl mx-auto">
             Kitonga is not simply a place to visit. It is a place to slow down, explore, and reconnect with the natural rhythm of countryside life.

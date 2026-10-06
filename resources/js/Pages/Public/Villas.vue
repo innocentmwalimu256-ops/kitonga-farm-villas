@@ -41,6 +41,29 @@ const filteredVillas = computed(() => {
     return props.villas;
 });
 
+import SEOHead from '@/Components/SEOHead.vue';
+
+const villasSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    'itemListElement': [
+        {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Luxury Villa',
+            'url': 'https://kitongafarm.com/villas/luxury-villa',
+            'description': 'Private luxury villa with bespoke plunge pool, king suite, and mountain views.'
+        },
+        {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Family Luxury Villa',
+            'url': 'https://kitongafarm.com/villas/family-villa',
+            'description': 'Expansive multi-bedroom family residence with private pool, interior kitchen, and countryside lawns.'
+        }
+    ]
+};
+
 const scrollToResidences = () => {
     const el = document.getElementById('residences-list');
     if (el) {
@@ -50,7 +73,14 @@ const scrollToResidences = () => {
 </script>
 
 <template>
-    <Head title="Private Residences & Villas — Kitonga Farm Villas" />
+    <SEOHead
+        title="Private Luxury Villas & Residences | Kitonga Farm Villas"
+        description="Discover private luxury villas and family residences in the lush Komkonga highlands, Tanga. Private plunge pools, farm-to-table breakfast, and peaceful seclusion."
+        canonical-url="/villas"
+        og-image="/images/luxury_villa_img.webp"
+        og-image-alt="Private Luxury Villas at Kitonga Farm Villas"
+        :schema="villasSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

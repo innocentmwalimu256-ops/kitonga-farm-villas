@@ -1,13 +1,43 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import SEOHead from '@/Components/SEOHead.vue';
 
 defineProps({
-    cms: Object,
+    cms: {
+        type: Object,
+        default: () => ({}),
+    },
 });
+
+const aboutSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    'name': 'About Kitonga Farm Villas',
+    'description': 'The story and heritage of Kitonga Farm Villas — an eco-luxury agritourism resort and sustainable organic farm in Tanzania.',
+    'url': 'https://kitongafarm.com/about',
+    'mainEntity': {
+        '@type': 'Resort',
+        'name': 'Kitonga Farm Villas',
+        'description': 'A sanctuary of ecological farming, luxury private villa retreats, and tranquil countryside living.',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Kitonga Farm Estate',
+            'addressLocality': 'Iringa',
+            'addressRegion': 'Iringa',
+            'addressCountry': 'TZ'
+        }
+    }
+};
 </script>
 
 <template>
-    <Head title="About Our Serene Countryside" />
+    <SEOHead 
+        title="Our Story & Sustainable Farm Heritage"
+        description="Learn the story of Kitonga Farm Villas: where organic agriculture, bespoke hospitality, and serene nature combine to create an unforgettable country escape."
+        canonical="/about"
+        og-image="/images/luxury_villa_img.webp"
+        :schema="aboutSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#2C3E2B] font-serif min-h-screen">
         

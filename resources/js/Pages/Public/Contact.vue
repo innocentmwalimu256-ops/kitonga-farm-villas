@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
 
 const props = defineProps({
     settings: {
@@ -8,10 +9,31 @@ const props = defineProps({
         default: () => ({
             contact_phone: '+255 758 774 695',
             contact_email: 'kitongafarmvillas@gmail.com',
-            location_coordinates: '-5.0889, 39.0988',
+            location_coordinates: '-7.77, 35.69',
         }),
     },
 });
+
+const contactSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    'name': 'Contact Kitonga Farm Villas',
+    'description': 'Contact Kitonga Farm Villas for villa reservations, agritourism tour bookings, farm produce inquiries, or private events.',
+    'url': 'https://kitongafarm.com/contact',
+    'mainEntity': {
+        '@type': 'Resort',
+        'name': 'Kitonga Farm Villas',
+        'telephone': '+255758774695',
+        'email': 'kitongafarmvillas@gmail.com',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Kitonga Farm Estate',
+            'addressLocality': 'Iringa',
+            'addressRegion': 'Iringa',
+            'addressCountry': 'TZ'
+        }
+    }
+};
 
 const isMobileMenuOpen = ref(false);
 const toggleMobileMenu = () => {
@@ -43,7 +65,13 @@ const submitContact = () => {
 </script>
 
 <template>
-    <Head title="Contact Us — Kitonga Farm Villas" />
+    <SEOHead 
+        title="Contact Concierge & Reservations"
+        description="Reach out to Kitonga Farm Villas concierge. Inquire about villa reservations, agritourism group bookings, farm visits, and special celebrations in Iringa."
+        canonical="/contact"
+        og-image="/images/luxury_villa_img.webp"
+        :schema="contactSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

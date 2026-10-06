@@ -86,6 +86,10 @@ Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
 Route::post('/contact', [PublicController::class, 'contactSubmit'])->name('contact.submit');
 Route::get('/policies/{policyName?}', [PublicController::class, 'policies'])->name('policies');
 
+// --- SEO Engine (Dynamic XML Sitemap & Robots.txt) ---
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots'])->name('robots');
+
 // --- Guest Booking Wizard ---
 Route::get('/book', [BookController::class, 'showForm'])->name('booking.form');
 Route::post('/book', [BookController::class, 'store'])->name('booking.store');

@@ -1,5 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import SEOHead from '@/Components/SEOHead.vue';
 import ExperienceBookingPanel from './Experiences/Components/ExperienceBookingPanel.vue';
 import VillaCrossSell from './Experiences/Components/VillaCrossSell.vue';
 
@@ -16,10 +18,44 @@ const getImageUrl = (path, slug) => {
     if (path.startsWith('http://') || path.startsWith('https://')) return path;
     return `/images/${path}`;
 };
+
+const experienceSchema = computed(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    'name': props.experience?.name || 'Farm Experience',
+    'description': props.experience?.seo_description || props.experience?.description || 'Authentic agritourism farm tour and experience at Kitonga Farm Villas.',
+    'url': `https://kitongafarm.com/experiences/${props.experience?.slug || ''}`,
+    'image': getImageUrl(props.experience?.featured_image, props.experience?.slug),
+    'isAccessibleForFree': false,
+    'offers': {
+        '@type': 'Offer',
+        'price': props.experience?.price || 0,
+        'priceCurrency': 'TZS',
+        'availability': 'https://schema.org/InStock'
+    },
+    'location': {
+        '@type': 'Place',
+        'name': 'Kitonga Farm Villas',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Kitonga Farm Estate',
+            'addressLocality': 'Iringa',
+            'addressRegion': 'Iringa',
+            'addressCountry': 'TZ'
+        }
+    }
+}));
 </script>
 
 <template>
-    <Head :title="experience.seo_title || experience.name" />
+    <SEOHead 
+        :title="experience.seo_title || `${experience.name} — Agritourism Tour`"
+        :description="experience.seo_description || `${experience.name} at Kitonga Farm Villas. Discover organic farming, hands-on agriculture, and peaceful countryside exploration.`"
+        :canonical="`/experiences/${experience.slug}`"
+        :og-image="getImageUrl(experience.featured_image, experience.slug)"
+        og-type="article"
+        :schema="experienceSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#2C3E2B] font-serif min-h-screen">
         

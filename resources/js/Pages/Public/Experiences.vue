@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import SEOHead from '@/Components/SEOHead.vue';
 import ExperienceHero from './Experiences/Components/ExperienceHero.vue';
 import ExperiencesIntro from './Experiences/Components/ExperiencesIntro.vue';
 import FeaturedExperiences from './Experiences/Components/FeaturedExperiences.vue';
@@ -14,10 +15,42 @@ const props = defineProps({
         default: () => [],
     },
 });
+
+const experiencesSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    'name': 'Agritourism Experiences & Tours at Kitonga Farm Villas',
+    'itemListElement': [
+        {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Organic Farming & Harvest Experience',
+            'url': 'https://kitongafarm.com/experiences'
+        },
+        {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'Artisanal Beekeeping & Honey Harvesting',
+            'url': 'https://kitongafarm.com/experiences'
+        },
+        {
+            '@type': 'ListItem',
+            'position': 3,
+            'name': 'Guided Farm Tours & Botanical Walks',
+            'url': 'https://kitongafarm.com/experiences'
+        }
+    ]
+};
 </script>
 
 <template>
-    <Head title="Experiences & Farm Tours — Kitonga Farm Villas" />
+    <SEOHead 
+        title="Agritourism Experiences & Guided Farm Tours"
+        description="Immerse in authentic agritourism at Kitonga Farm Villas. Guided organic farming tours, artisanal honey harvesting, botanical walks, and farm-to-table culinary activities."
+        canonical="/experiences"
+        og-image="/images/farm_experience_hero.webp"
+        :schema="experiencesSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#1F2420] font-sans min-h-screen selection:bg-[#C98A3E] selection:text-white">
         

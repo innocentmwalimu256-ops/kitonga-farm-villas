@@ -87,6 +87,53 @@ const getImageUrl = (path, fallback = 'https://images.unsplash.com/photo-1580587
     return `/images/${path}`;
 };
 
+import SEOHead from '@/Components/SEOHead.vue';
+
+const homeSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+        {
+            '@type': 'Resort',
+            '@id': 'https://kitongafarm.com/#resort',
+            'name': 'Kitonga Farm Villas Sanctuary',
+            'url': 'https://kitongafarm.com',
+            'logo': 'https://kitongafarm.com/images/logo_gold.webp',
+            'image': 'https://kitongafarm.com/images/hero_villa_render.webp',
+            'description': 'Luxury private villas nestled within a 150-acre organic agricultural sanctuary in Komkonga, Handeni, Tanga, Tanzania.',
+            'telephone': '+255758774695',
+            'priceRange': 'TZS 295,000 - 590,000',
+            'address': {
+                '@type': 'PostalAddress',
+                'streetAddress': 'Komkonga Village, Handeni District',
+                'addressLocality': 'Handeni',
+                'addressRegion': 'Tanga',
+                'addressCountry': 'TZ'
+            },
+            'geo': {
+                '@type': 'GeoCoordinates',
+                'latitude': -5.0889,
+                'longitude': 39.0988
+            },
+            'checkinTime': '14:00',
+            'checkoutTime': '11:00',
+            'amenityFeature': [
+                { '@type': 'LocationFeatureSpecification', 'name': 'Private Plunge Pool', 'value': true },
+                { '@type': 'LocationFeatureSpecification', 'name': 'Organic Farm-to-Table Dining', 'value': true },
+                { '@type': 'LocationFeatureSpecification', 'name': 'High-Speed Wi-Fi', 'value': true },
+                { '@type': 'LocationFeatureSpecification', 'name': 'Agro-Tourism & Farm Tours', 'value': true },
+                { '@type': 'LocationFeatureSpecification', 'name': 'Mountain Scenic Verandas', 'value': true }
+            ]
+        },
+        {
+            '@type': 'WebSite',
+            '@id': 'https://kitongafarm.com/#website',
+            'url': 'https://kitongafarm.com',
+            'name': 'Kitonga Farm Villas Sanctuary',
+            'publisher': { '@id': 'https://kitongafarm.com/#resort' }
+        }
+    ]
+};
+
 const handleLogoClick = (e) => {
     if (window.location.pathname === '/') {
         e.preventDefault();
@@ -96,7 +143,14 @@ const handleLogoClick = (e) => {
 </script>
 
 <template>
-    <Head title="Where Luxury Meets Farm Life" />
+    <SEOHead
+        :title="cms?.seo_title || 'Where Luxury Meets Farm Life | Luxury Private Villas in Tanga'"
+        :description="cms?.seo_description || 'Escape to Kitonga Farm Villas Sanctuary. 150 acres of organic countryside, luxury private pool villas, pasture dairy, and immersive agro-tourism in Handeni, Tanga, Tanzania.'"
+        canonical-url="/"
+        og-image="/images/hero_villa_render.webp"
+        og-image-alt="Kitonga Farm Villas Sanctuary Estate"
+        :schema="homeSchema"
+    />
 
     <div class="bg-[#FAF8F5] text-[#2C3E2B] font-serif min-h-screen">
         
