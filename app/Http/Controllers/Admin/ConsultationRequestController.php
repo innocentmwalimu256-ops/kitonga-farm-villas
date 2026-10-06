@@ -9,6 +9,8 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ConsultationRequestController extends Controller
 {
@@ -19,58 +21,99 @@ class ConsultationRequestController extends Controller
     {
         abort_if(!auth()->user()->hasAnyPermission(['view_bookings', 'manage_settings', 'view_revenue']), 403, 'Unauthorized access to consultation requests.');
 
-        $query = ConsultationRequest::with('assignedStaff')->latest();
-
-        // Search
-        if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('reference', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('customer_phone', 'like', "%{$search}%")
-                  ->orWhere('customer_email', 'like', "%{$search}%")
-                  ->orWhere('topic', 'like', "%{$search}%")
-                  ->orWhere('payment_reference', 'like', "%{$search}%");
-            });
-        }
-
-        // Filter by Status
-        if ($status = $request->input('status')) {
-            if ($status !== 'all') {
-                $query->where('status', $status);
-            }
-        }
-
-        // Filter by Format
-        if ($format = $request->input('format')) {
-            if ($format !== 'all') {
-                $query->where('format', $format);
-            }
-        }
-
-        // Filter by Date Range
-        if ($startDate = $request->input('start_date')) {
-            $query->whereDate('preferred_date', '>=', $startDate);
-        }
-        if ($endDate = $request->input('end_date')) {
-            $query->whereDate('preferred_date', '<=', $endDate);
-        }
-
-        $consultations = $query->paginate(15)->withQueryString();
-
-        // Metrics Summary
-        $all = ConsultationRequest::query();
-        $metrics = [
-            'total_requests' => (clone $all)->count(),
-            'pending_contact' => (clone $all)->whereIn('status', ['request_created', 'whatsapp_initiated'])->count(),
-            'awaiting_payment' => (clone $all)->where('status', 'awaiting_payment')->count(),
-            'confirmed' => (clone $all)->where('status', 'confirmed')->count(),
-            'completed' => (clone $all)->where('status', 'completed')->count(),
-            'cancelled' => (clone $all)->where('status', 'cancelled')->count(),
-            'total_revenue_potential' => (clone $all)->whereNotIn('status', ['cancelled'])->sum('fee'),
-            'verified_revenue' => (clone $all)->whereIn('status', ['payment_verified', 'confirmed', 'completed'])->sum('fee'),
-        ];
-
         $approvedWhatsAppNumber = Setting::get('contact_phone', '+255 758 774 695');
+
+        if (!Schema::hasTable('consultation_requests')) {
+            $emptyPaginator = new LengthAwarePaginator([], 0, 15, 1, [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]);
+
+            return Inertia::render('Admin/Consultations/Index', [
+                'consultations' => $emptyPaginator,
+                'metrics' => [
+                    'total_requests' => 0,
+                    'pending_contact' => 0,
+                    'awaiting_payment' => 0,
+                    'confirmed' => 0,
+                    'completed' => 0,
+                    'cancelled' => 0,
+                    'total_revenue_potential' => 0,
+                    'verified_revenue' => 0,
+                ],
+                'filters' => $request->only(['search', 'status', 'format', 'start_date', 'end_date']),
+                'whatsappNumber' => $approvedWhatsAppNumber,
+                'migrationPending' => true,
+            ]);
+        }
+
+        try {
+            $query = ConsultationRequest::with('assignedStaff')->latest();
+
+            // Search
+            if ($search = $request->input('search')) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('reference', 'like', "%{$search}%")
+                      ->orWhere('customer_name', 'like', "%{$search}%")
+                      ->orWhere('customer_phone', 'like', "%{$search}%")
+                      ->orWhere('customer_email', 'like', "%{$search}%")
+                      ->orWhere('topic', 'like', "%{$search}%")
+                      ->orWhere('payment_reference', 'like', "%{$search}%");
+                });
+            }
+
+            // Filter by Status
+            if ($status = $request->input('status')) {
+                if ($status !== 'all') {
+                    $query->where('status', $status);
+                }
+            }
+
+            // Filter by Format
+            if ($format = $request->input('format')) {
+                if ($format !== 'all') {
+                    $query->where('format', $format);
+                }
+            }
+
+            // Filter by Date Range
+            if ($startDate = $request->input('start_date')) {
+                $query->whereDate('preferred_date', '>=', $startDate);
+            }
+            if ($endDate = $request->input('end_date')) {
+                $query->whereDate('preferred_date', '<=', $endDate);
+            }
+
+            $consultations = $query->paginate(15)->withQueryString();
+
+            // Metrics Summary
+            $all = ConsultationRequest::query();
+            $metrics = [
+                'total_requests' => (clone $all)->count(),
+                'pending_contact' => (clone $all)->whereIn('status', ['request_created', 'whatsapp_initiated'])->count(),
+                'awaiting_payment' => (clone $all)->where('status', 'awaiting_payment')->count(),
+                'confirmed' => (clone $all)->where('status', 'confirmed')->count(),
+                'completed' => (clone $all)->where('status', 'completed')->count(),
+                'cancelled' => (clone $all)->where('status', 'cancelled')->count(),
+                'total_revenue_potential' => (clone $all)->whereNotIn('status', ['cancelled'])->sum('fee'),
+                'verified_revenue' => (clone $all)->whereIn('status', ['payment_verified', 'confirmed', 'completed'])->sum('fee'),
+            ];
+        } catch (\Throwable $e) {
+            $consultations = new LengthAwarePaginator([], 0, 15, 1, [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]);
+            $metrics = [
+                'total_requests' => 0,
+                'pending_contact' => 0,
+                'awaiting_payment' => 0,
+                'confirmed' => 0,
+                'completed' => 0,
+                'cancelled' => 0,
+                'total_revenue_potential' => 0,
+                'verified_revenue' => 0,
+            ];
+        }
 
         return Inertia::render('Admin/Consultations/Index', [
             'consultations' => $consultations,

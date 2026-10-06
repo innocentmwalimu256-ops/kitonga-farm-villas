@@ -8,6 +8,7 @@ use App\Models\VisitorEvent;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class VisitorAnalyticsService
@@ -17,6 +18,10 @@ class VisitorAnalyticsService
      */
     public function trackPageView(Request $request, array $data): array
     {
+        if (!Schema::hasTable('visitor_sessions') || !Schema::hasTable('visitor_page_views')) {
+            return ['session_id' => $data['session_id'] ?? '', 'tracked' => false];
+        }
+
         $now = Carbon::now();
         $sessionId = trim($data['session_id'] ?? '');
         $visitorId = trim($data['visitor_id'] ?? '');
@@ -110,6 +115,10 @@ class VisitorAnalyticsService
      */
     public function trackEvent(Request $request, array $data): array
     {
+        if (!Schema::hasTable('visitor_sessions') || !Schema::hasTable('visitor_events')) {
+            return ['success' => false, 'message' => 'Analytics tables not initialized'];
+        }
+
         $sessionId = trim($data['session_id'] ?? '');
         $eventName = trim($data['event_name'] ?? 'custom_event');
         $eventData = $data['event_data'] ?? [];
@@ -314,6 +323,31 @@ class VisitorAnalyticsService
         $range = $this->resolveDateRange($period, $customStart, $customEnd);
         $start = $range['start'];
         $end = $range['end'];
+
+        if (!Schema::hasTable('visitor_sessions') || !Schema::hasTable('visitor_page_views')) {
+            return [
+                'period' => $period,
+                'overview' => [
+                    'total_visitors' => 0,
+                    'total_page_views' => 0,
+                    'total_sessions' => 0,
+                    'live_visitors' => 0,
+                    'avg_duration_seconds' => 0,
+                    'avg_duration_formatted' => '0s',
+                    'bounce_rate' => 0,
+                ],
+                'chart_data' => ['labels' => [], 'visitors' => [], 'pageviews' => [], 'sessions' => []],
+                'top_pages' => [],
+                'traffic_sources' => [],
+                'devices' => [],
+                'browsers' => [],
+                'operating_systems' => [],
+                'locations' => [],
+                'events' => [],
+                'recent_sessions' => [],
+                'live_visitors' => [],
+            ];
+        }
 
         // 1. Overview KPIs
         $sessionsQuery = VisitorSession::whereBetween('created_at', [$start, $end]);
