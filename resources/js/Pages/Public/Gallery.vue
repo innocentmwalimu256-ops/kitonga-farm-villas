@@ -231,34 +231,45 @@ const categories = [
             </div>
         </div>
 
-        <!-- 2. HERO SECTION -->
-        <section class="bg-[#14231C] text-white pt-20 pb-20 md:pt-28 md:pb-24 px-6 md:px-12 relative overflow-hidden text-center">
-            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#C98A3E_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#C98A3E]/15 rounded-full blur-3xl pointer-events-none"></div>
+        <!-- 2. HERO SECTION WITH AUTHENTIC BACKGROUND -->
+        <section class="relative bg-[#14231C] text-white pt-24 pb-20 md:pt-32 md:pb-28 px-6 md:px-12 overflow-hidden text-center select-none">
+            <!-- Background Image -->
+            <img 
+                src="/images/dji_0298.webp" 
+                alt="Kitonga Farm Villas Estate Vista" 
+                class="absolute inset-0 w-full h-full object-cover object-center transform scale-105 filter brightness-85"
+            />
+            <!-- Layered Cinematic Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-[#14231C]/92 via-[#14231C]/80 to-[#14231C]/98 pointer-events-none"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#C98A3E]/20 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div class="relative max-w-4xl mx-auto space-y-6">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#C98A3E] text-xs uppercase tracking-[3px] font-semibold">
+            <div class="relative max-w-4xl mx-auto space-y-5 z-10">
+                <!-- Subtitle Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1F352A]/90 border border-[#C98A3E]/40 text-[#E6C387] text-[10px] sm:text-xs uppercase tracking-[3px] font-semibold backdrop-blur-xs shadow-xs">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#E6C387] animate-pulse"></span>
                     <span>The Visual Sanctuary</span>
                 </div>
 
-                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-light tracking-wide leading-tight text-[#FAF8F5]">
+                <!-- Main Heading -->
+                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-light tracking-wide leading-tight text-[#FAF8F5] drop-shadow-md">
                     A Glimpse Into <span class="text-[#E6C387] italic font-normal">Kitonga</span>
                 </h1>
 
-                <p class="font-sans text-sm sm:text-base md:text-lg text-[#FAF8F5]/80 font-normal leading-relaxed max-w-2xl mx-auto">
-                    Immerse yourself in the tranquility of Kitonga Farm Villas. Set in the lush highlands of Komkonga, Tanga, explore where bespoke private architecture meets authentic organic agriculture, open pastures, and serene countryside horizons.
+                <!-- Concise, Captivating Narrative -->
+                <p class="font-sans text-xs sm:text-sm md:text-base text-[#FAF8F5]/90 font-light leading-relaxed max-w-xl mx-auto drop-shadow-sm">
+                    Where bespoke architecture, fertile agricultural hills, and peaceful countryside horizons meet the eye.
                 </p>
 
                 <!-- Category Filter Pills -->
-                <div class="pt-6 flex flex-wrap items-center justify-center gap-2 font-sans">
+                <div class="pt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 font-sans">
                     <button 
                         v-for="cat in categories" 
                         :key="cat.id"
                         @click="activeCategory = cat.id"
-                        class="px-4 py-2 rounded-full text-xs uppercase tracking-wider font-bold transition duration-200 cursor-pointer"
+                        class="px-4 sm:px-5 py-2 rounded-full text-[11px] sm:text-xs uppercase tracking-wider font-semibold transition duration-300 cursor-pointer backdrop-blur-md"
                         :class="activeCategory === cat.id 
-                            ? 'bg-[#C98A3E] text-white shadow-lg' 
-                            : 'bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10'"
+                            ? 'bg-[#C98A3E] text-white shadow-lg border border-[#E6C387]/60' 
+                            : 'bg-black/30 hover:bg-[#1E3326] text-gray-200 border border-white/15 hover:border-[#C98A3E]/50'"
                     >
                         {{ cat.label }}
                     </button>

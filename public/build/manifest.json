@@ -736,7 +736,7 @@
     ]
   },
   "resources/js/Pages/Public/Gallery.vue": {
-    "file": "assets/Gallery-BWh99TtI.js",
+    "file": "assets/Gallery-CyCfE0lA.js",
     "name": "Gallery",
     "src": "resources/js/Pages/Public/Gallery.vue",
     "isDynamicEntry": true,
@@ -827,7 +827,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DHaycZfB.js",
+    "file": "assets/app-AyQoiiLv.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -908,7 +908,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-DAuZH79h.css"
+      "assets/app-BMjLhvJb.css"
     ]
   }
 }
