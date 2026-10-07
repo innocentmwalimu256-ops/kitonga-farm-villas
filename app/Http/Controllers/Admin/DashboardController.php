@@ -375,6 +375,8 @@ class DashboardController extends Controller
                 'adr' => $adr,
                 'outstanding_balance' => $outstandingBalance,
                 'low_stock_count' => $lowStockCount,
+                'live_visitors_count' => \Illuminate\Support\Facades\Schema::hasTable('visitor_sessions') ? \App\Models\VisitorSession::active(10)->count() : 0,
+                'total_website_visitors' => \Illuminate\Support\Facades\Schema::hasTable('visitor_sessions') ? \App\Models\VisitorSession::distinct('visitor_id')->count('visitor_id') : 0,
             ],
             'charts' => [
                 'labels' => $chartLabels,

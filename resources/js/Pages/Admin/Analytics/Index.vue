@@ -90,7 +90,8 @@ async function fetchLiveVisitors() {
 }
 
 onMounted(() => {
-    pollInterval = setInterval(fetchLiveVisitors, 10000); // 10 seconds
+    fetchLiveVisitors();
+    pollInterval = setInterval(fetchLiveVisitors, 4000); // Poll every 4 seconds for fast live updates
 });
 
 onUnmounted(() => {

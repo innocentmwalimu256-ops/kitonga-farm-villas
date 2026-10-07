@@ -257,11 +257,11 @@ const filteredRooms = computed(() => {
                             </svg>
                         </div>
                         <div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <h4 class="font-bold text-sm sm:text-base text-white">Website Visitor Analytics &amp; Live Traffic</h4>
                                 <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/30 flex items-center gap-1">
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                    Live Tracker
+                                    <span>{{ kpis.live_visitors_count ?? 0 }} Online Now</span>
                                 </span>
                             </div>
                             <p class="text-xs text-slate-300 mt-0.5">
@@ -269,15 +269,21 @@ const filteredRooms = computed(() => {
                             </p>
                         </div>
                     </div>
-                    <Link
-                        :href="route('admin.analytics.index')"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#C98A3E] hover:bg-[#b07833] text-white text-xs font-bold shadow-xs transition shrink-0 self-stretch sm:self-auto justify-center"
-                    >
-                        <span>Open Analytics Desk</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                        </svg>
-                    </Link>
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <div class="hidden md:block text-right pr-2">
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Total Visitors</span>
+                            <span class="font-mono font-bold text-sm text-white">{{ kpis.total_website_visitors ?? 0 }}</span>
+                        </div>
+                        <Link
+                            :href="route('admin.analytics.index')"
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#C98A3E] hover:bg-[#b07833] text-white text-xs font-bold shadow-xs transition shrink-0 self-stretch sm:self-auto justify-center"
+                        >
+                            <span>Open Analytics Desk</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </Link>
+                    </div>
                 </div>
 
                 <!-- ════════════════════════════════════════════════════════════════ -->

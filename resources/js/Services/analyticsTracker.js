@@ -82,17 +82,7 @@ function sendPayload(url, data) {
     const payload = JSON.stringify(data);
     const csrfToken = getCsrfToken();
     
-    // Prefer navigator.sendBeacon for non-blocking reliability
-    if (navigator.sendBeacon) {
-        try {
-            const blob = new Blob([payload], { type: 'application/json' });
-            if (navigator.sendBeacon(url, blob)) {
-                return;
-            }
-        } catch (e) {}
-    }
-
-    // Fallback to fetch keepalive
+    // Always use standard fetch first as it includes JSON Content-Type and headers properly!
     try {
         const headers = {
             'Content-Type': 'application/json',
@@ -109,8 +99,22 @@ function sendPayload(url, data) {
             headers: headers,
             body: payload,
             keepalive: true,
-        }).catch(() => {});
-    } catch (e) {}
+            credentials: 'same-origin',
+        }).catch(() => {
+            // Fallback to sendBeacon if fetch fails or on page leave
+            if (navigator.sendBeacon) {
+                const blob = new Blob([payload], { type: 'application/json' });
+                navigator.sendBeacon(url, blob);
+            }
+        });
+    } catch (e) {
+        if (navigator.sendBeacon) {
+            try {
+                const blob = new Blob([payload], { type: 'application/json' });
+                navigator.sendBeacon(url, blob);
+            } catch (err) {}
+        }
+    }
 }
 
 let currentPageStartTime = Date.now();

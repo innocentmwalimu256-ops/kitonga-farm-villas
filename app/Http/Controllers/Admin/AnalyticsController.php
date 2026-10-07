@@ -57,40 +57,50 @@ class AnalyticsController extends Controller
     /**
      * Live active visitors endpoint for real-time polling.
      */
-    public function live()
-    {
-        abort_if(!auth()->user()->hasAnyPermission(['view_bookings', 'manage_settings', 'view_revenue']), 403, 'Unauthorized.');
+     public function live()
+     {
+         abort_if(!auth()->user()->hasAnyPermission(['view_bookings', 'manage_settings', 'view_revenue']), 403, 'Unauthorized.');
 
-        $liveCount = VisitorSession::active(5)->count();
-        $liveList = VisitorSession::active(5)
-            ->latest('last_seen_at')
-            ->limit(20)
-            ->get()
-            ->map(function ($s) {
-                return [
-                    'id' => $s->id,
-                    'session_id' => $s->session_id,
-                    'short_id' => '#' . substr(hash('crc32', $s->visitor_id), 0, 4),
-                    'visitor_label' => '#' . substr(hash('crc32', $s->visitor_id), 0, 4),
-                    'country' => $s->country ?: 'Tanzania',
-                    'country_name' => $s->country ?: 'Tanzania',
-                    'country_code' => $s->country_code ?: 'TZ',
-                    'device' => ucfirst($s->device_type ?: 'mobile'),
-                    'device_type' => ucfirst($s->device_type ?: 'mobile'),
-                    'browser' => $s->browser ?: 'Chrome',
-                    'current_page' => $s->exit_page ?: $s->landing_page ?: '/',
-                    'last_activity' => $s->last_seen_at ? $s->last_seen_at->format('H:i:s') : 'Just now',
-                    'last_seen_ago' => $s->last_seen_at ? $s->last_seen_at->diffForHumans(null, true) . ' ago' : 'active',
-                ];
-            });
+         if (!\Illuminate\Support\Facades\Schema::hasTable('visitor_sessions')) {
+             return response()->json([
+                 'count' => 0,
+                 'live_count' => 0,
+                 'visitors' => [],
+                 'live_visitors' => [],
+             ]);
+         }
 
-        return response()->json([
-            'count' => $liveCount,
-            'live_count' => $liveCount,
-            'visitors' => $liveList,
-            'live_visitors' => $liveList,
-        ]);
-    }
+         $activeWindowMinutes = 10;
+         $liveCount = VisitorSession::active($activeWindowMinutes)->count();
+         $liveList = VisitorSession::active($activeWindowMinutes)
+             ->latest('last_seen_at')
+             ->limit(25)
+             ->get()
+             ->map(function ($s) {
+                 return [
+                     'id' => $s->id,
+                     'session_id' => $s->session_id,
+                     'short_id' => '#' . substr(hash('crc32', $s->visitor_id), 0, 4),
+                     'visitor_label' => '#' . substr(hash('crc32', $s->visitor_id), 0, 4),
+                     'country' => $s->country ?: 'Tanzania',
+                     'country_name' => $s->country ?: 'Tanzania',
+                     'country_code' => $s->country_code ?: 'TZ',
+                     'device' => ucfirst($s->device_type ?: 'mobile'),
+                     'device_type' => ucfirst($s->device_type ?: 'mobile'),
+                     'browser' => $s->browser ?: 'Chrome',
+                     'current_page' => $s->exit_page ?: $s->landing_page ?: '/',
+                     'last_activity' => $s->last_seen_at ? $s->last_seen_at->format('H:i:s') : 'Just now',
+                     'last_seen_ago' => $s->last_seen_at ? $s->last_seen_at->diffForHumans(null, true) . ' ago' : 'active',
+                 ];
+             });
+
+         return response()->json([
+             'count' => $liveCount,
+             'live_count' => $liveCount,
+             'visitors' => $liveList,
+             'live_visitors' => $liveList,
+         ]);
+     }
 
     /**
      * Export analytics data to CSV.
