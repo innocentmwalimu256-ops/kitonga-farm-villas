@@ -219,67 +219,22 @@ const consultationSchema = {
         <PublicNavbar current-page="meet-mr-kitonga" />
 
         <!-- ══════════════════════════════════════════════════════════════════════
-             2. HERO SECTION — PURE CINEMATIC VIDEO (NO TEXT OVERLAY)
+             2. HERO SECTION — 100% FULL SCREEN PURE CINEMATIC VIDEO
         ══════════════════════════════════════════════════════════════════════ -->
-        <section class="relative bg-black w-full overflow-hidden flex flex-col items-center justify-center pt-16 sm:pt-20">
+        <section class="relative w-full h-screen min-h-screen bg-black overflow-hidden flex items-center justify-center p-0 m-0">
             
-            <!-- Pure Video Player Container with 16:9 / cinematic framing -->
-            <div class="relative w-full max-w-7xl mx-auto overflow-hidden shadow-2xl bg-black rounded-b-3xl sm:rounded-3xl my-0 sm:my-4">
-                
-                <video
-                    ref="heroVideo"
-                    src="/videos/mr_kitonga_hero.mp4"
-                    autoplay
-                    loop
-                    playsinline
-                    controls
-                    preload="auto"
-                    class="w-full h-auto max-h-[82vh] object-contain sm:object-cover mx-auto bg-black"
-                ></video>
+            <video
+                ref="heroVideo"
+                src="/videos/mr_kitonga_hero.mp4"
+                autoplay
+                loop
+                playsinline
+                preload="auto"
+                class="absolute inset-0 w-full h-full object-cover bg-black"
+            ></video>
 
-                <!-- Sound Control Floating Pill (Top-Right of Video) -->
-                <button
-                    type="button"
-                    @click="toggleAudio"
-                    class="absolute top-4 right-4 z-20 px-3.5 py-2 rounded-full bg-black/70 hover:bg-black/90 text-white text-xs font-bold backdrop-blur-md border border-white/20 shadow-lg flex items-center gap-2 transition cursor-pointer"
-                    :title="isMuted ? 'Washa Sauti (Unmute)' : 'Zima Sauti (Mute)'"
-                >
-                    <span v-if="isMuted" class="flex items-center gap-1.5 text-amber-300">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
-                        <span>Unmute Audio</span>
-                    </span>
-                    <span v-else class="flex items-center gap-1.5 text-emerald-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-                        <span>Sound ON</span>
-                    </span>
-                </button>
-            </div>
-
-            <!-- Sleek Luxury Request Consultation Bar (Directly below video) -->
-            <div class="w-full max-w-5xl mx-auto px-4 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-gradient-to-r from-[#14231C] via-[#1A2E24] to-[#14231C] rounded-2xl sm:rounded-3xl border border-[#C98A3E]/40 shadow-xl my-4 text-white">
-                <div class="text-center sm:text-left space-y-1">
-                    <div class="flex items-center justify-center sm:justify-start gap-2">
-                        <span class="w-2 h-2 rounded-full bg-[#E6C387] animate-ping"></span>
-                        <span class="text-[11px] uppercase tracking-[3px] font-bold text-[#E6C387]">Direct 1-on-1 Consultation</span>
-                    </div>
-                    <h3 class="font-serif text-lg sm:text-xl font-light text-[#F5F1E8]">
-                        Ongea na Jifunze Moja kwa Moja Kutoka kwa Mr. Kitonga
-                    </h3>
-                </div>
-
-                <div class="flex items-center gap-3 w-full sm:w-auto">
-                    <button
-                        type="button"
-                        @click="scrollToForm"
-                        class="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-[#C98A3E] to-[#b07833] hover:from-[#b07833] hover:to-[#966528] text-white font-bold uppercase tracking-widest text-xs rounded-xl shadow-lg hover:shadow-2xl transition duration-300 flex items-center justify-center gap-2 cursor-pointer shrink-0"
-                    >
-                        <span>Request Consultation</span>
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+            <!-- Subtle bottom gradient for smooth transition to content -->
+            <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#FAF8F5] via-[#FAF8F5]/40 to-transparent pointer-events-none"></div>
 
         </section>
 
@@ -300,17 +255,17 @@ const consultationSchema = {
 
                     <!-- Main Section Title -->
                     <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-[#14231C] leading-[1.15]">
-                        Uongozi wa Vitendo na Mwongozo Sanifu wa <span class="font-normal italic text-[#8C5D23]">Kitonga Farm &amp; Villas</span>
+                        Hands-On Leadership &amp; Master Advisory from <span class="font-normal italic text-[#8C5D23]">Kitonga Farm &amp; Villas</span>
                     </h2>
 
-                    <!-- Descriptive Story -->
+                    <!-- Descriptive Story in English -->
                     <div class="space-y-4 text-gray-700 text-sm sm:text-base leading-relaxed">
                         <p>
-                            Karibu ujifunze moja kwa moja kutoka kwa <strong>Mr. Kitonga</strong>, mbunifu na mwanzilishi wa mfumo wa kipekee unaochanganya <strong>Kilimo Hai chenye tija kubwa</strong>, <strong>Ufugaji wa kisasa wa Kuku wa Mayai na Ng’ombe wa Maziwa</strong>, pamoja na <strong>Makazi ya Kifahari ya Utalii wa Kilimo (Agritourism Luxury Villas)</strong> mkoani Iringa.
+                            Gain direct insight and mentorship from <strong>Mr. Kitonga</strong>, the visionary designer and founder behind an integrated agricultural ecosystem that unites high-yield <strong>Organic Farming</strong>, modern <strong>Pasture-Raised Poultry &amp; Dairy Operations</strong>, and <strong>Luxury Agritourism Villas</strong> in Iringa, Tanzania.
                         </p>
                         
                         <p>
-                            Kupitia uzoefu wa miaka mingi wa vitendo shambani, Mr. Kitonga hutoa ushauri wa kimkakati unaowawezesha wakulima, wawekezaji, na wajasiriamali wa Kitanzania na Diaspora kuanzisha miradi ya kilimo biashara yenye faida endelevu, huku wakiepuka hasara na makosa ya gharama kubwa katika upangaji wa mashamba (Farm Master Planning), miundombinu ya umwagiliaji, na kuongeza thamani ya mazao.
+                            With years of hands-on field experience, Mr. Kitonga delivers tailored strategic roadmaps enabling farmers, investors, and diaspora entrepreneurs to establish highly profitable, sustainable agribusinesses—avoiding costly pitfalls in farm master planning, precision irrigation, and high-margin agro-processing.
                         </p>
                     </div>
 
@@ -321,7 +276,7 @@ const consultationSchema = {
                                 <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
                                 Agritourism &amp; Villa Resorts
                             </div>
-                            <p class="text-xs text-gray-500">Jinsi ya kuunganisha utalii, chakula asili, na malazi ya kifahari kwa mapato makubwa.</p>
+                            <p class="text-xs text-gray-500">Integrating countryside hospitality, organic farm-to-table dining, and luxury eco-villas for recurring high-yield revenue.</p>
                         </div>
 
                         <div class="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs space-y-1 hover:border-[#C98A3E]/60 transition">
@@ -329,15 +284,15 @@ const consultationSchema = {
                                 <span class="w-2 h-2 rounded-full bg-amber-600"></span>
                                 Commercial Poultry &amp; Layers
                             </div>
-                            <p class="text-xs text-gray-500">Ufugaji wa kuku wa mayai kwenye malisho asili na usimamizi wa soko la moja kwa moja.</p>
+                            <p class="text-xs text-gray-500">Pasture-raised layer housing, natural nutrition, disease prevention workflows, and direct-to-consumer distribution channels.</p>
                         </div>
 
                         <div class="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs space-y-1 hover:border-[#C98A3E]/60 transition">
                             <div class="font-bold text-[#14231C] text-xs uppercase tracking-wider flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                                Pasture Dairy &amp; Mtindi
+                                Pasture Dairy &amp; Artisanal Mtindi
                             </div>
-                            <p class="text-xs text-gray-500">Maziwa safi, usindikaji wa mtindi na mtindi mtamu (yogurt) bila kemikali.</p>
+                            <p class="text-xs text-gray-500">Hygienic milking operations, zero-chemical cultured sour milk (mtindi), drinking yogurts, and raw milk cold chain management.</p>
                         </div>
 
                         <div class="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs space-y-1 hover:border-[#C98A3E]/60 transition">
@@ -345,7 +300,7 @@ const consultationSchema = {
                                 <span class="w-2 h-2 rounded-full bg-purple-600"></span>
                                 Farm Master Planning
                             </div>
-                            <p class="text-xs text-gray-500">Mgawanyo sahihi wa ardhi, mifumo ya maji ya matone, na miundombinu ya kudumu.</p>
+                            <p class="text-xs text-gray-500">Strategic land zoning, drip irrigation networks, water reservoir design, and durable estate infrastructure.</p>
                         </div>
                     </div>
 
@@ -356,7 +311,7 @@ const consultationSchema = {
                             @click="scrollToForm"
                             class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#8C5D23] hover:text-[#6a4417] transition group cursor-pointer"
                         >
-                            <span>Weka Nafasi ya Ushauri Sasa (TSh 100,000 / Session)</span>
+                            <span>Book Your Consultation Now (TSh 100,000 / Session)</span>
                             <span class="group-hover:translate-x-1 transition-transform">➔</span>
                         </button>
                     </div>
@@ -377,24 +332,8 @@ const consultationSchema = {
                             <img 
                                 src="/images/mr_kitonga_profile.jpg" 
                                 alt="Mr. Kitonga — Founder & Mentor at Kitonga Farm & Villas" 
-                                class="w-full h-[460px] sm:h-[520px] object-cover object-top filter brightness-105 group-hover:scale-105 transition-transform duration-700 ease-out"
+                                class="w-full h-[460px] sm:h-[540px] object-cover object-top filter brightness-105 group-hover:scale-105 transition-transform duration-700 ease-out"
                             />
-
-                            <!-- Gradient Shadow Bottom Overlay -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-
-                            <!-- Floating Badge over Photo -->
-                            <div class="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-[#14231C]/90 backdrop-blur-md border border-[#C98A3E]/50 text-white shadow-lg space-y-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-serif text-lg font-bold text-[#F5F1E8]">Mr. Kitonga</span>
-                                    <span class="px-2 py-0.5 rounded-md bg-[#C98A3E] text-white text-[10px] font-bold uppercase tracking-wider">
-                                        Founder
-                                    </span>
-                                </div>
-                                <p class="text-[11px] text-gray-300 font-sans leading-tight">
-                                    Kitonga Farm &amp; Villas · Iringa, Tanzania
-                                </p>
-                            </div>
 
                         </div>
 

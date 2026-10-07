@@ -808,7 +808,7 @@
     ]
   },
   "resources/js/Pages/Public/MeetMrKitonga.vue": {
-    "file": "assets/MeetMrKitonga-w85Unv7Q.js",
+    "file": "assets/MeetMrKitonga-BY7f7vwU.js",
     "name": "MeetMrKitonga",
     "src": "resources/js/Pages/Public/MeetMrKitonga.vue",
     "isDynamicEntry": true,
@@ -882,7 +882,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CkA4oW4d.js",
+    "file": "assets/app-CQV6pswE.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -966,7 +966,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-rsF3TpVT.css"
+      "assets/app-miXlb1wZ.css"
     ]
   }
 }
