@@ -33,8 +33,8 @@ class VisitorAnalyticsService
             $visitorId = 'kfv_v_' . Str::random(24);
         }
 
-        $url = trim($data['url'] ?? $request->header('Referer') ?? '/');
-        $pageTitle = trim($data['page_title'] ?? '');
+        $url = trim($data['url'] ?? $data['path'] ?? $request->header('Referer') ?? '/');
+        $pageTitle = trim($data['page_title'] ?? $data['title'] ?? '');
         $routeName = trim($data['route_name'] ?? '');
         $rawReferrer = trim($data['referrer'] ?? $request->header('Referer') ?? '');
         
@@ -111,6 +111,41 @@ class VisitorAnalyticsService
     }
 
     /**
+     * Record session heartbeat to maintain live visitor tracking.
+     */
+    public function recordHeartbeat(Request $request, array $data): array
+    {
+        if (!Schema::hasTable('visitor_sessions')) {
+            return ['success' => false];
+        }
+
+        $sessionId = trim($data['session_id'] ?? '');
+        if (empty($sessionId)) {
+            return ['success' => false, 'message' => 'Missing session ID'];
+        }
+
+        $session = VisitorSession::where('session_id', $sessionId)->first();
+        if ($session) {
+            $now = Carbon::now();
+            $firstSeen = $session->first_seen_at ?? $now;
+            $duration = max(0, $now->diffInSeconds($firstSeen));
+
+            $updateData = [
+                'last_seen_at' => $now,
+                'duration_seconds' => $duration,
+            ];
+            if (!empty($data['path']) || !empty($data['url'])) {
+                $updateData['exit_page'] = trim($data['path'] ?? $data['url']);
+            }
+            $session->update($updateData);
+
+            return ['success' => true, 'online' => true];
+        }
+
+        return ['success' => false, 'message' => 'Session not found'];
+    }
+
+    /**
      * Record a business conversion or interaction event.
      */
     public function trackEvent(Request $request, array $data): array
@@ -120,9 +155,9 @@ class VisitorAnalyticsService
         }
 
         $sessionId = trim($data['session_id'] ?? '');
-        $eventName = trim($data['event_name'] ?? 'custom_event');
-        $eventData = $data['event_data'] ?? [];
-        $pageUrl = trim($data['page_url'] ?? $request->header('Referer') ?? '');
+        $eventName = trim($data['event_name'] ?? $data['name'] ?? 'custom_event');
+        $eventData = $data['event_data'] ?? $data['metadata'] ?? [];
+        $pageUrl = trim($data['page_url'] ?? $data['path'] ?? $request->header('Referer') ?? '/');
 
         if (empty($sessionId)) {
             return ['success' => false, 'message' => 'Missing session ID'];
@@ -135,6 +170,8 @@ class VisitorAnalyticsService
             VisitorEvent::create([
                 'visitor_session_id' => $session->id,
                 'event_name' => $eventName,
+                'event_category' => $data['event_category'] ?? 'interaction',
+                'event_label' => $data['event_label'] ?? null,
                 'event_data' => is_array($eventData) ? $eventData : ['raw' => $eventData],
                 'page_url' => $pageUrl,
                 'created_at' => Carbon::now(),

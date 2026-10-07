@@ -67,9 +67,20 @@ function getUtmParams() {
     };
 }
 
+function getCsrfToken() {
+    try {
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        if (meta && meta.content) return meta.content;
+        const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+        if (match) return decodeURIComponent(match[1]);
+    } catch (e) {}
+    return '';
+}
+
 function sendPayload(url, data) {
     updateSessionActivity();
     const payload = JSON.stringify(data);
+    const csrfToken = getCsrfToken();
     
     // Prefer navigator.sendBeacon for non-blocking reliability
     if (navigator.sendBeacon) {
@@ -83,12 +94,19 @@ function sendPayload(url, data) {
 
     // Fallback to fetch keepalive
     try {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        };
+        if (csrfToken) {
+            headers['X-CSRF-TOKEN'] = csrfToken;
+            headers['X-XSRF-TOKEN'] = csrfToken;
+        }
+
         fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
+            headers: headers,
             body: payload,
             keepalive: true,
         }).catch(() => {});

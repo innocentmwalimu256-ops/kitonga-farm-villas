@@ -92,7 +92,9 @@ Route::post('/meet-mr-kitonga/request', [\App\Http\Controllers\ConsultationContr
 Route::post('/meet-mr-kitonga/{reference}/track-click', [\App\Http\Controllers\ConsultationController::class, 'trackWhatsAppClick'])->name('meet.mr.kitonga.track');
 
 // --- Real-Time Website Visitor Analytics Public Tracking API ---
+Route::post('/api/analytics/pageview', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackPageView'])->name('api.analytics.pageview');
 Route::post('/api/analytics/track', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackPageView'])->name('api.analytics.track');
+Route::post('/api/analytics/heartbeat', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'heartbeat'])->name('api.analytics.heartbeat');
 Route::post('/api/analytics/event', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackEvent'])->name('api.analytics.event');
 
 // --- SEO Engine (Dynamic XML Sitemap & Robots.txt) ---

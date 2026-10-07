@@ -21,7 +21,7 @@ class AnalyticsTrackingController extends Controller
      */
     public function trackPageView(Request $request)
     {
-        // Simple rate limiting: 120 pageviews/minute per IP
+        // Rate limiting: 120 pageviews/minute per IP
         $key = 'analytics_pv:' . $request->ip();
         if (RateLimiter::tooManyAttempts($key, 120)) {
             return response()->json(['tracked' => false, 'rate_limited' => true], 429);
@@ -32,9 +32,13 @@ class AnalyticsTrackingController extends Controller
             'session_id' => 'nullable|string|max:64',
             'visitor_id' => 'nullable|string|max:64',
             'url' => 'nullable|string|max:2000',
+            'path' => 'nullable|string|max:2000',
             'route_name' => 'nullable|string|max:100',
+            'title' => 'nullable|string|max:255',
             'page_title' => 'nullable|string|max:255',
             'referrer' => 'nullable|string|max:2000',
+            'screen_width' => 'nullable|integer',
+            'screen_height' => 'nullable|integer',
             'utm_source' => 'nullable|string|max:100',
             'utm_medium' => 'nullable|string|max:100',
             'utm_campaign' => 'nullable|string|max:100',
@@ -46,8 +50,27 @@ class AnalyticsTrackingController extends Controller
             $result = $this->analyticsService->trackPageView($request, $payload);
             return response()->json($result);
         } catch (\Exception $e) {
-            // Never break client execution
             return response()->json(['tracked' => false, 'error' => $e->getMessage()], 200);
+        }
+    }
+
+    /**
+     * Record active session heartbeat.
+     */
+    public function heartbeat(Request $request)
+    {
+        $payload = $request->validate([
+            'session_id' => 'required|string|max:64',
+            'path' => 'nullable|string|max:2000',
+            'url' => 'nullable|string|max:2000',
+            'time_spent' => 'nullable|integer',
+        ]);
+
+        try {
+            $result = $this->analyticsService->recordHeartbeat($request, $payload);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false], 200);
         }
     }
 
@@ -58,8 +81,13 @@ class AnalyticsTrackingController extends Controller
     {
         $payload = $request->validate([
             'session_id' => 'required|string|max:64',
+            'visitor_id' => 'nullable|string|max:64',
             'event_name' => 'required|string|max:100',
+            'event_category' => 'nullable|string|max:100',
+            'event_label' => 'nullable|string|max:255',
+            'metadata' => 'nullable',
             'event_data' => 'nullable',
+            'path' => 'nullable|string|max:2000',
             'page_url' => 'nullable|string|max:2000',
         ]);
 
