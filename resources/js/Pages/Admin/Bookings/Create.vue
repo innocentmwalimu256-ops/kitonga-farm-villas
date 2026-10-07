@@ -21,7 +21,7 @@ const props = defineProps({
 const today = new Date().toISOString().split('T')[0];
 const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
 
-const bookingType = ref('villa'); // 'villa' or 'tour'
+const bookingType = ref('villa'); // 'villa', 'tour', or 'consultation'
 
 const form = useForm({
     booking_type: 'villa',
@@ -43,6 +43,12 @@ const form = useForm({
     farm_tour_id: props.experiences[0]?.id || '',
     tour_date: today,
     time_slot: '09:00 AM - 11:00 AM',
+
+    // Consultation fields
+    consultation_format: 'physical', // 'physical' or 'online'
+    consultation_topic: 'Agritourism & Farm Resort Setup',
+    consultation_date: today,
+    consultation_time: 'Morning Session (09:00 AM - 11:00 AM)',
     
     // Shared fields
     guests_count: 1,
@@ -120,14 +126,34 @@ const defaultTimeSlots = [
     '04:30 PM - 06:30 PM (Sunset Pasture Tour)',
 ];
 
+// ─── CONSULTATION LOGIC ──────────────────────────────────────────────────────
+const consultationTopics = [
+    'Agritourism & Farm Resort Setup',
+    'Commercial Poultry & Free-Range Layers',
+    'Pasture Dairy, Milking & Value Addition',
+    'Organic Horticulture & Fruit Orchards',
+    'Master Planning & Estate Infrastructure',
+    '1-on-1 Direct Strategic Roadmap',
+    'General Agricultural Consultation & Advisory',
+];
+
+const consultationTimeSlots = [
+    'Morning Session (09:00 AM - 11:00 AM)',
+    'Midday Session (11:30 AM - 01:30 PM)',
+    'Afternoon Session (02:30 PM - 04:30 PM)',
+    'Evening Session (05:00 PM - 07:00 PM)',
+];
+
 // ─── GUESTS CAPACITY & VALIDATION ────────────────────────────────────────────
 const guestError = ref('');
 
 const maxCapacity = computed(() => {
     if (bookingType.value === 'villa') {
         return selectedVilla.value ? Number(selectedVilla.value.capacity) || 2 : 10;
-    } else {
+    } else if (bookingType.value === 'tour') {
         return selectedTour.value ? Number(selectedTour.value.capacity_per_slot) || 20 : 30;
+    } else {
+        return 10;
     }
 });
 
@@ -205,16 +231,20 @@ const baseRate = computed(() => {
     }
     if (bookingType.value === 'villa') {
         return selectedVilla.value ? Number(selectedVilla.value.base_price) : 0;
-    } else {
+    } else if (bookingType.value === 'tour') {
         return selectedTour.value ? Number(selectedTour.value.price) : 0;
+    } else {
+        return 100000; // Standard Mr. Kitonga Consultation Fee: TZS 100,000
     }
 });
 
 const subtotal = computed(() => {
     if (bookingType.value === 'villa') {
         return baseRate.value * numberOfNights.value;
-    } else {
+    } else if (bookingType.value === 'tour') {
         return baseRate.value * (Number(form.guests_count) || 1);
+    } else {
+        return baseRate.value; // Consultation fee
     }
 });
 
@@ -228,7 +258,7 @@ const taxAmount = computed(() => {
         const taxable = Math.max(0, subtotal.value - discountAmount.value);
         return taxable * 0.18; // 18% VAT for accommodation
     }
-    return 0; // Day tours prices are VAT inclusive/exempt
+    return 0; // Day tours & Consultations are direct/VAT inclusive
 });
 
 const grandTotal = computed(() => {
@@ -279,11 +309,11 @@ const submitBooking = () => {
             <div class="mx-auto max-w-5xl sm:px-6 lg:px-8 space-y-6">
 
                 <!-- ── TYPE TOGGLE TABS ────────────────────────────────────── -->
-                <div class="bg-white p-2 rounded-2xl shadow-xs border border-gray-200 flex flex-col sm:flex-row gap-2">
+                <div class="bg-white p-2 rounded-2xl shadow-xs border border-gray-200 grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <button
                         type="button"
                         @click="bookingType = 'villa'"
-                        class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        class="py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                         :class="bookingType === 'villa' 
                             ? 'bg-[#14301F] text-white shadow-sm' 
                             : 'bg-gray-50 hover:bg-gray-100 text-gray-700'"
@@ -295,13 +325,26 @@ const submitBooking = () => {
                     <button
                         type="button"
                         @click="bookingType = 'tour'"
-                        class="flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        class="py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                         :class="bookingType === 'tour' 
                             ? 'bg-[#14301F] text-white shadow-sm' 
                             : 'bg-gray-50 hover:bg-gray-100 text-gray-700'"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span>Farm Tour / Day Experience</span>
+                        <span>Farm Tour / Experience</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="bookingType = 'consultation'"
+                        class="py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        :class="bookingType === 'consultation' 
+                            ? 'bg-[#14301F] text-white shadow-sm ring-2 ring-amber-400/50' 
+                            : 'bg-amber-50/60 hover:bg-amber-100/70 text-amber-950 border border-amber-200/60'"
+                    >
+                        <span class="text-amber-400">✦</span>
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        <span>Meet Mr. Kitonga</span>
                     </button>
                 </div>
 
@@ -393,7 +436,7 @@ const submitBooking = () => {
                     </div>
 
                     <!-- ── OPTION B: FARM TOUR DETAILS ────────────────────────── -->
-                    <div v-else class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200 space-y-4">
+                    <div v-else-if="bookingType === 'tour'" class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200 space-y-4">
                         <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                             <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
                                 <svg class="w-4 h-4 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -481,12 +524,90 @@ const submitBooking = () => {
                         </div>
                     </div>
 
-                    <!-- ── 2. GUEST PROFILE DETAILS ────────────────────────────── -->
+                    <!-- ── OPTION C: MEET MR. KITONGA CONSULTATION DETAILS ────── -->
+                    <div v-else-if="bookingType === 'consultation'" class="bg-white p-6 rounded-2xl shadow-xs border border-amber-200/80 bg-linear-to-b from-amber-50/20 to-white space-y-5">
+                        <div class="flex items-center justify-between border-b border-amber-100 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold text-sm">
+                                    ✦
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900 text-sm">
+                                        Meet Mr. Kitonga Consultation Session
+                                    </h3>
+                                    <p class="text-[11px] text-gray-500">1-on-1 Agri-Business Advisory, Estate Master Planning &amp; Poultry/Dairy Strategy.</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-lg border border-amber-300">
+                                Fee: {{ formatCurrency(baseRate) }} / Session
+                            </span>
+                        </div>
+
+                        <!-- Consultation Format Selector -->
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2">1. Consultation Format *</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <label 
+                                    @click="form.consultation_format = 'physical'"
+                                    class="flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition"
+                                    :class="form.consultation_format === 'physical' ? 'border-emerald-600 bg-emerald-50/50 shadow-xs ring-1 ring-emerald-600' : 'border-gray-200 hover:border-gray-300 bg-white'"
+                                >
+                                    <input type="radio" v-model="form.consultation_format" value="physical" class="mt-0.5 text-emerald-700 focus:ring-emerald-600" />
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-900">Physical at Kitonga Farm</div>
+                                        <div class="text-[11px] text-gray-500 mt-0.5">Iringa Farm Walkthrough + In-Person Meeting &amp; Refreshments</div>
+                                    </div>
+                                </label>
+
+                                <label 
+                                    @click="form.consultation_format = 'online'"
+                                    class="flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition"
+                                    :class="form.consultation_format === 'online' ? 'border-emerald-600 bg-emerald-50/50 shadow-xs ring-1 ring-emerald-600' : 'border-gray-200 hover:border-gray-300 bg-white'"
+                                >
+                                    <input type="radio" v-model="form.consultation_format" value="online" class="mt-0.5 text-emerald-700 focus:ring-emerald-600" />
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-900">Online Live Video Call</div>
+                                        <div class="text-[11px] text-gray-500 mt-0.5">Google Meet / Zoom / WhatsApp Live Video Consultation</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-1">
+                            <!-- Reason / Focus Topic -->
+                            <div class="sm:col-span-2 md:col-span-1">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Reason / Focus Topic *</label>
+                                <select v-model="form.consultation_topic" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5" required>
+                                    <option v-for="t in consultationTopics" :key="t" :value="t">
+                                        {{ t }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Preferred Appointment Date -->
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Appointment Date *</label>
+                                <input type="date" v-model="form.consultation_date" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5" required>
+                            </div>
+
+                            <!-- Preferred Time Slot -->
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Time Slot *</label>
+                                <select v-model="form.consultation_time" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5" required>
+                                    <option v-for="s in consultationTimeSlots" :key="s" :value="s">
+                                        {{ s }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── 2. GUEST / CLIENT DETAILS ───────────────────────────── -->
                     <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200 space-y-4">
                         <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                             <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
                                 <svg class="w-4 h-4 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                <span>Lead Guest / Visitor Details</span>
+                                <span>{{ bookingType === 'consultation' ? 'Client / Attendee Profile' : 'Lead Guest / Visitor Details' }}</span>
                             </h3>
                             <div class="inline-flex rounded-lg bg-gray-100 p-0.5 text-xs font-semibold">
                                 <button 
@@ -522,15 +643,15 @@ const submitBooking = () => {
                         <!-- New Customer Fields -->
                         <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
-                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Full Name *</label>
-                                <input type="text" v-model="form.customer_name" placeholder="e.g. John Doe" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5" required>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Full Name (Jina Kamili) *</label>
+                                <input type="text" v-model="form.customer_name" placeholder="e.g. John Doe / Amani Mwamba" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5" required>
                             </div>
                             <div>
-                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Phone / WhatsApp</label>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Phone / WhatsApp *</label>
                                 <input type="text" v-model="form.customer_phone" placeholder="+255 7..." class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
                             </div>
                             <div>
-                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Email Address</label>
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Email Address (Optional)</label>
                                 <input type="email" v-model="form.customer_email" placeholder="client@example.com" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
                             </div>
                         </div>
@@ -542,9 +663,9 @@ const submitBooking = () => {
                                     <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                                     </svg>
-                                    <span>Guest Identification Document (Digital Copy)</span>
+                                    <span>Client Identification Document (Optional)</span>
                                 </span>
-                                <span class="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded font-semibold">Optional at creation</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded font-semibold">Optional</span>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -572,7 +693,7 @@ const submitBooking = () => {
                                         <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        <span>Click to attach guest ID snapshot / scan file</span>
+                                        <span>Click to attach client ID snapshot / scan file</span>
                                     </div>
                                     <p class="text-[10px] text-gray-400 mt-0.5">Supports JPG, PNG, WEBP, or PDF (Max 10MB)</p>
                                 </div>
@@ -604,9 +725,10 @@ const submitBooking = () => {
                                 <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Initial Status</label>
                                 <select v-model="form.status" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
                                     <option value="confirmed">Confirmed</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="checked_in">{{ bookingType === 'villa' ? 'Checked In' : 'Tour Started' }}</option>
-                                    <option value="completed">{{ bookingType === 'villa' ? 'Checked Out' : 'Completed' }}</option>
+                                    <option value="pending">Pending / Awaiting Payment</option>
+                                    <option value="checked_in">{{ bookingType === 'villa' ? 'Checked In' : (bookingType === 'consultation' ? 'In Session' : 'Tour Started') }}</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
                                 </select>
                             </div>
                             <div>
@@ -621,7 +743,7 @@ const submitBooking = () => {
                             </div>
                             <div>
                                 <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                                    {{ bookingType === 'villa' ? 'Custom Rate / Night (TZS)' : 'Custom Rate / Person (TZS)' }}
+                                    {{ bookingType === 'villa' ? 'Custom Rate / Night (TZS)' : (bookingType === 'consultation' ? 'Custom Session Fee (TZS)' : 'Custom Rate / Person (TZS)') }}
                                 </label>
                                 <input type="number" v-model="form.rate_override" :placeholder="String(baseRate || 'Default')" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
                             </div>
@@ -654,7 +776,7 @@ const submitBooking = () => {
 
                         <div class="pt-2">
                             <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Internal Notes &amp; Special Requests</label>
-                            <textarea v-model="form.notes" rows="2" placeholder="Special requirements, dietary preferences, arrival notes..." class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600"></textarea>
+                            <textarea v-model="form.notes" rows="2" placeholder="Special requirements, project details, arrival notes..." class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600"></textarea>
                         </div>
 
                         <!-- Financial Calculation Card -->
@@ -663,8 +785,12 @@ const submitBooking = () => {
                                 <span>Subtotal ({{ numberOfNights }} nights @ {{ formatCurrency(baseRate) }}):</span>
                                 <span class="font-bold">{{ formatCurrency(subtotal) }}</span>
                             </div>
-                            <div v-else class="flex justify-between text-gray-600">
+                            <div v-else-if="bookingType === 'tour'" class="flex justify-between text-gray-600">
                                 <span>Subtotal ({{ form.guests_count }} visitors @ {{ formatCurrency(baseRate) }}/person):</span>
+                                <span class="font-bold">{{ formatCurrency(subtotal) }}</span>
+                            </div>
+                            <div v-else class="flex justify-between text-gray-600">
+                                <span>Subtotal (Consultation Session Fee):</span>
                                 <span class="font-bold">{{ formatCurrency(subtotal) }}</span>
                             </div>
                             <div v-if="discountAmount > 0" class="flex justify-between text-red-600">
@@ -701,7 +827,7 @@ const submitBooking = () => {
                             class="px-8 py-3 bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition cursor-pointer disabled:opacity-50 flex items-center gap-2"
                         >
                             <svg v-if="form.processing" class="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
-                            <span>{{ form.processing ? 'Creating Booking...' : (bookingType === 'tour' ? 'Save & Confirm Farm Tour' : 'Save & Confirm Villa Stay') }}</span>
+                            <span>{{ form.processing ? 'Creating Booking...' : (bookingType === 'consultation' ? 'Save & Schedule Consultation' : (bookingType === 'tour' ? 'Save & Confirm Farm Tour' : 'Save & Confirm Villa Stay')) }}</span>
                         </button>
                     </div>
 

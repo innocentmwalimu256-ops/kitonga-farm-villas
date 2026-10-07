@@ -10,6 +10,7 @@ use App\Models\AvailabilityBlock;
 use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\BookingStatusHistory;
+use App\Models\ConsultationRequest;
 use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -144,13 +145,113 @@ class BookingController extends Controller
     }
 
     /**
-     * Store new manual booking (Villa or Farm Tour).
+     * Store new manual booking (Villa, Farm Tour, or Mr. Kitonga Consultation).
      */
     public function store(Request $request)
     {
         abort_if(!auth()->user()->hasPermissionTo('create_bookings'), 403, 'Unauthorized access to store a booking.');
         
         $bookingType = $request->input('booking_type', 'villa');
+
+        // Meet Mr. Kitonga Consultation Flow
+        if ($bookingType === 'consultation') {
+            $rules = [
+                'consultation_format' => 'required|in:physical,online',
+                'consultation_topic' => 'required|string|max:255',
+                'consultation_date' => 'required|date',
+                'consultation_time' => 'required|string|max:100',
+                'status' => 'required|string',
+                'source' => 'nullable|string',
+                'notes' => 'nullable|string',
+                'rate_override' => 'nullable|numeric|min:0',
+                'discount' => 'nullable|numeric|min:0',
+                'amount_paid' => 'nullable|numeric|min:0',
+                'payment_method' => 'nullable|string|required_if:amount_paid,>0',
+                'payment_reference' => 'nullable|string|max:255',
+                'customer_mode' => 'required|in:new,existing',
+            ];
+
+            if ($request->input('customer_mode') === 'new') {
+                $rules['customer_name'] = 'required|string|max:255';
+                $rules['customer_phone'] = 'nullable|string|max:50';
+                $rules['customer_email'] = 'nullable|email|max:255';
+            } else {
+                $rules['customer_id'] = 'required|exists:customers,id';
+            }
+
+            $validated = $request->validate($rules);
+
+            try {
+                if ($request->input('customer_mode') === 'existing') {
+                    $customer = Customer::findOrFail($validated['customer_id']);
+                    $custName = $customer->name;
+                    $custPhone = $customer->phone ?? '';
+                    $custEmail = $customer->email ?? '';
+                } else {
+                    $custName = $validated['customer_name'];
+                    $custPhone = $validated['customer_phone'] ?? '';
+                    $custEmail = $validated['customer_email'] ?? '';
+
+                    // Automatically register or update customer record for CRM consistency
+                    Customer::firstOrCreate(
+                        ['phone' => $custPhone, 'email' => $custEmail],
+                        ['name' => $custName]
+                    );
+                }
+
+                // Standard consultation fee is 100,000 TZS
+                $baseFee = (float) ($validated['rate_override'] ?? 100000);
+                $discount = (float) ($validated['discount'] ?? 0);
+                $finalFee = max(0, $baseFee - $discount);
+
+                $statusMap = [
+                    'confirmed' => 'confirmed',
+                    'pending' => 'awaiting_payment',
+                    'checked_in' => 'confirmed',
+                    'completed' => 'completed',
+                    'cancelled' => 'cancelled',
+                ];
+                $consultStatus = $statusMap[$validated['status']] ?? 'confirmed';
+                if (!empty($validated['amount_paid']) && (float) $validated['amount_paid'] >= $finalFee && $finalFee > 0) {
+                    $consultStatus = 'payment_verified';
+                }
+
+                $reference = ConsultationRequest::generateReference();
+
+                $staffNotes = "Manual consultation reservation entered by staff: " . (auth()->user()->name ?? 'Admin Desk');
+                if (!empty($validated['payment_method']) || !empty($validated['amount_paid'])) {
+                    $staffNotes .= "\nPayment Received: TZS " . number_format((float) ($validated['amount_paid'] ?? 0), 0) . " via " . ($validated['payment_method'] ?? 'cash');
+                    if (!empty($validated['payment_reference'])) {
+                        $staffNotes .= " (Ref: " . $validated['payment_reference'] . ")";
+                    }
+                }
+
+                ConsultationRequest::create([
+                    'reference' => $reference,
+                    'customer_name' => $custName,
+                    'customer_phone' => $custPhone,
+                    'customer_email' => $custEmail,
+                    'format' => $validated['consultation_format'],
+                    'preferred_date' => $validated['consultation_date'],
+                    'preferred_time' => $validated['consultation_time'],
+                    'fee' => $finalFee,
+                    'topic' => $validated['consultation_topic'],
+                    'message' => $validated['notes'] ?? null,
+                    'status' => $consultStatus,
+                    'staff_notes' => $staffNotes,
+                    'payment_reference' => $validated['payment_reference'] ?? null,
+                    'assigned_staff_id' => auth()->id(),
+                    'confirmed_date_time' => $consultStatus === 'confirmed' || $consultStatus === 'payment_verified' ? Carbon::parse($validated['consultation_date']) : null,
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                ]);
+
+                return redirect()->route('admin.consultations.index')
+                    ->with('success', "Meet Mr. Kitonga consultation appointment ({$reference}) booked successfully.");
+            } catch (Exception $e) {
+                return back()->withErrors(['booking' => $e->getMessage()])->withInput();
+            }
+        }
 
         if ($bookingType === 'tour') {
             $rules = [
