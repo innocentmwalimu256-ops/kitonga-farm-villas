@@ -221,20 +221,23 @@ const consultationSchema = {
         <!-- ══════════════════════════════════════════════════════════════════════
              2. HERO SECTION — 100% FULL SCREEN PURE CINEMATIC VIDEO
         ══════════════════════════════════════════════════════════════════════ -->
-        <section class="relative w-full h-screen min-h-screen bg-black overflow-hidden flex items-center justify-center p-0 m-0">
+        <section class="relative w-full h-screen h-[100dvh] min-h-screen bg-black overflow-hidden flex items-center justify-center p-0 m-0">
             
             <video
                 ref="heroVideo"
-                src="/videos/mr_kitonga_hero.mp4"
                 autoplay
                 loop
                 playsinline
                 preload="auto"
-                class="absolute inset-0 w-full h-full object-cover bg-black"
-            ></video>
+                class="absolute inset-0 w-full h-full object-cover object-center bg-black select-none"
+                style="image-rendering: -webkit-optimize-contrast; transform: translateZ(0); backface-visibility: hidden; will-change: transform;"
+            >
+                <source src="/stream/mr-kitonga-hero" type="video/mp4" />
+                <source src="/videos/mr_kitonga_hero.mp4" type="video/mp4" />
+            </video>
 
             <!-- Subtle bottom gradient for smooth transition to content -->
-            <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#FAF8F5] via-[#FAF8F5]/40 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#FAF8F5] via-[#FAF8F5]/30 to-transparent pointer-events-none"></div>
 
         </section>
 

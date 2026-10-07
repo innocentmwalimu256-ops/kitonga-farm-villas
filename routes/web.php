@@ -71,6 +71,21 @@ Route::get('/stream/hero-video', function () {
     ]);
 })->name('stream.hero.video');
 
+// --- Ultra-Fast Mr. Kitonga Hero Video Streamer with Native Byte-Range ---
+Route::get('/stream/mr-kitonga-hero', function () {
+    $path = public_path('videos/mr_kitonga_hero.mp4');
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path, [
+        'Content-Type' => 'video/mp4',
+        'Cache-Control' => 'public, max-age=31536000, immutable',
+        'Accept-Ranges' => 'bytes',
+    ]);
+})->name('stream.mr.kitonga.hero');
+
 // --- Public Website ---
 Route::get('/', [PublicController::class, 'home'])->name('home');
 Route::get('/villas', [PublicController::class, 'villas'])->name('villas');
