@@ -14,8 +14,8 @@ const farmSchema = {
     'address': {
         '@type': 'PostalAddress',
         'streetAddress': 'Kitonga Farm Estate',
-        'addressLocality': 'Iringa',
-        'addressRegion': 'Iringa',
+        'addressLocality': 'Tanga',
+        'addressRegion': 'Tanga',
         'addressCountry': 'TZ'
     }
 };
@@ -131,7 +131,7 @@ const orderProduct = (product) => {
 <template>
     <SEOHead 
         title="Organic Farm Heritage, Dairy, Poultry & Honey Sanctuary"
-        description="Discover Kitonga Farm's regenerative agriculture in Iringa, Tanzania. Pedigree dairy cattle, modern layer poultry, beekeeping apiaries, and farm-fresh produce."
+        description="Discover Kitonga Farm's regenerative agriculture in Komkonga, Tanga, Tanzania. Pedigree dairy cattle, modern layer poultry, beekeeping apiaries, and farm-fresh produce."
         canonical="/farm"
         og-image="/images/IMG_0321.webp"
         :schema="farmSchema"

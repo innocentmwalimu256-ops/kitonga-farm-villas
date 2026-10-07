@@ -43,8 +43,8 @@ const villaSchema = computed(() => ({
         'address': {
             '@type': 'PostalAddress',
             'streetAddress': 'Kitonga Farm Estate',
-            'addressLocality': 'Iringa',
-            'addressRegion': 'Iringa',
+            'addressLocality': 'Tanga',
+            'addressRegion': 'Tanga',
             'addressCountry': 'TZ'
         }
     }
@@ -193,7 +193,7 @@ const getImageUrl = (path, slug) => {
 <template>
     <SEOHead 
         :title="villa.seo_title || `${villa.name} — Private Luxury Residence`"
-        :description="villa.seo_description || `${villa.name} at Kitonga Farm Villas. Enjoy boutique mountain views, handcrafted architecture, plunge pool, and bespoke hospitality in Iringa.`"
+        :description="villa.seo_description || `${villa.name} at Kitonga Farm Villas. Enjoy boutique countryside views, handcrafted architecture, plunge pool, and bespoke hospitality in Komkonga, Tanga.`"
         :canonical="`/villas/${villa.slug}`"
         :og-image="getImageUrl(villa.featured_image, villa.slug)"
         og-type="article"

@@ -24,8 +24,8 @@ const aboutSchema = {
         'address': {
             '@type': 'PostalAddress',
             'streetAddress': 'Kitonga Farm Estate',
-            'addressLocality': 'Iringa',
-            'addressRegion': 'Iringa',
+            'addressLocality': 'Tanga',
+            'addressRegion': 'Tanga',
             'addressCountry': 'TZ'
         }
     }

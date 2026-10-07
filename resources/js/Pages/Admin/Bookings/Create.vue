@@ -555,7 +555,7 @@ const submitBooking = () => {
                                     <input type="radio" v-model="form.consultation_format" value="physical" class="mt-0.5 text-emerald-700 focus:ring-emerald-600" />
                                     <div>
                                         <div class="text-xs font-bold text-gray-900">Physical at Kitonga Farm</div>
-                                        <div class="text-[11px] text-gray-500 mt-0.5">Iringa Farm Walkthrough + In-Person Meeting &amp; Refreshments</div>
+                                        <div class="text-[11px] text-gray-500 mt-0.5">Kitonga Farm Walkthrough + In-Person Meeting &amp; Refreshments</div>
                                     </div>
                                 </label>
 

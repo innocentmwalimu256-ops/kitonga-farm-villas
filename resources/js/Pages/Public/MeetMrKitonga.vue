@@ -187,8 +187,8 @@ const consultationSchema = {
     'address': {
         '@type': 'PostalAddress',
         'streetAddress': 'Kitonga Farm Estate',
-        'addressLocality': 'Iringa',
-        'addressRegion': 'Iringa',
+        'addressLocality': 'Tanga',
+        'addressRegion': 'Tanga',
         'addressCountry': 'TZ'
     },
     'telephone': '+255758774695',
@@ -264,7 +264,7 @@ const consultationSchema = {
                     <!-- Descriptive Story in English -->
                     <div class="space-y-4 text-gray-700 text-sm sm:text-base leading-relaxed">
                         <p>
-                            Gain direct insight and mentorship from <strong>Mr. Kitonga</strong>, the visionary designer and founder behind an integrated agricultural ecosystem that unites high-yield <strong>Organic Farming</strong>, modern <strong>Pasture-Raised Poultry &amp; Dairy Operations</strong>, and <strong>Luxury Agritourism Villas</strong> in Iringa, Tanzania.
+                            Gain direct insight and mentorship from <strong>Mr. Kitonga</strong>, the visionary designer and founder behind an integrated agricultural ecosystem that unites high-yield <strong>Organic Farming</strong>, modern <strong>Pasture-Raised Poultry &amp; Dairy Operations</strong>, and <strong>Luxury Agritourism Villas</strong> in Komkonga, Tanga, Tanzania.
                         </p>
                         
                         <p>
@@ -387,7 +387,7 @@ const consultationSchema = {
                         >
                             <div>
                                 <span class="font-bold block text-sm">Physical at Kitonga Farm</span>
-                                <span class="text-[10px] opacity-80">Iringa Farm Walkthrough + In-Person Meeting</span>
+                                <span class="text-[10px] opacity-80">Kitonga Farm Walkthrough + In-Person Meeting</span>
                             </div>
                             <span v-if="form.format === 'physical'" class="text-[#E6C387]">✓</span>
                         </button>

@@ -29,8 +29,8 @@ const contactSchema = {
         'address': {
             '@type': 'PostalAddress',
             'streetAddress': 'Kitonga Farm Estate',
-            'addressLocality': 'Iringa',
-            'addressRegion': 'Iringa',
+            'addressLocality': 'Tanga',
+            'addressRegion': 'Tanga',
             'addressCountry': 'TZ'
         }
     }
@@ -63,7 +63,7 @@ const submitContact = () => {
 <template>
     <SEOHead 
         title="Contact Concierge & Reservations"
-        description="Reach out to Kitonga Farm Villas concierge. Inquire about villa reservations, agritourism group bookings, farm visits, and special celebrations in Iringa."
+        description="Reach out to Kitonga Farm Villas concierge. Inquire about villa reservations, agritourism group bookings, farm visits, and special celebrations in Komkonga, Tanga."
         canonical="/contact"
         og-image="/images/luxury_villa_img.webp"
         :schema="contactSchema"

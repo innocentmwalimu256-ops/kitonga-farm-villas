@@ -19,18 +19,18 @@ const locationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Place',
     'name': 'Kitonga Farm Villas',
-    'description': 'Directions, road map, and geographic coordinates to Kitonga Farm Villas in Iringa, Tanzania.',
+    'description': 'Directions, road map, and geographic coordinates to Kitonga Farm Villas in Komkonga, Tanga, Tanzania.',
     'url': 'https://kitongafarm.com/location',
     'geo': {
         '@type': 'GeoCoordinates',
-        'latitude': -7.77,
-        'longitude': 35.69
+        'latitude': -5.0889,
+        'longitude': 39.0988
     },
     'address': {
         '@type': 'PostalAddress',
         'streetAddress': 'Kitonga Farm Estate',
-        'addressLocality': 'Iringa',
-        'addressRegion': 'Iringa',
+        'addressLocality': 'Tanga',
+        'addressRegion': 'Tanga',
         'addressCountry': 'TZ'
     }
 };
@@ -39,7 +39,7 @@ const locationSchema = {
 <template>
     <SEOHead 
         title="Location & Directions — How to Get Here"
-        description="Find directions and map coordinates for Kitonga Farm Villas in Iringa, Tanzania. Easy driving instructions from Dar es Salaam, Dodoma, and Iringa town."
+        description="Find directions and map coordinates for Kitonga Farm Villas in Komkonga, Tanga, Tanzania. Easy driving instructions from Dar es Salaam, Tanga city, and regional hubs."
         canonical="/location"
         og-image="/images/luxury_villa_img.webp"
         :schema="locationSchema"
