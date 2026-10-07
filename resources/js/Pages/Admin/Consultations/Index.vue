@@ -242,7 +242,8 @@ const getStatusBadge = (statusKey) => {
                             class="w-full text-xs rounded-xl border-gray-300 focus:border-[#14231C] focus:ring-1 focus:ring-[#14231C] p-2"
                         >
                             <option value="all">All Formats</option>
-                            <option value="physical">Physical at Farm</option>
+                            <option value="physical">Physical at Kitonga Farm</option>
+                            <option value="hq_dar">Head Office (Dar es Salaam)</option>
                             <option value="online">Online Video Call</option>
                         </select>
                     </div>
@@ -316,10 +317,10 @@ const getStatusBadge = (statusKey) => {
                                     <span 
                                         :class="[
                                             'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider inline-block mb-1 border',
-                                            item.format === 'online' ? 'bg-blue-50 text-blue-800 border-blue-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                            item.format === 'online' ? 'bg-blue-50 text-blue-800 border-blue-200' : (item.format === 'hq_dar' ? 'bg-amber-50 text-amber-900 border-amber-300' : 'bg-emerald-50 text-emerald-800 border-emerald-200')
                                         ]"
                                     >
-                                        {{ item.format === 'online' ? 'Online Call' : 'Physical Farm' }}
+                                        {{ item.format === 'online' ? 'Online Call' : (item.format === 'hq_dar' ? 'Dar HQ Office' : 'Physical Farm') }}
                                     </span>
                                     <span class="font-semibold text-gray-800 block truncate" :title="item.topic">
                                         {{ item.topic }}

@@ -156,7 +156,7 @@ class BookingController extends Controller
         // Meet Mr. Kitonga Consultation Flow
         if ($bookingType === 'consultation') {
             $rules = [
-                'consultation_format' => 'required|in:physical,online',
+                'consultation_format' => 'required|in:physical,online,hq_dar',
                 'consultation_topic' => 'required|string|max:255',
                 'consultation_date' => 'required|date',
                 'consultation_time' => 'required|string|max:100',

@@ -374,40 +374,62 @@ const consultationSchema = {
                 <!-- Format Toggle -->
                 <div class="space-y-2">
                     <label class="font-bold text-gray-700 uppercase text-[11px] block">1. Select Consultation Format *</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        
+                        <!-- Option 1: Physical at Kitonga Farm -->
                         <button 
                             type="button" 
                             @click="form.format = 'physical'"
                             :class="[
-                                'py-3 px-4 rounded-xl border text-left font-sans transition cursor-pointer flex items-center justify-between',
+                                'p-3.5 sm:p-4 rounded-xl border text-left font-sans transition cursor-pointer flex items-start justify-between gap-2',
                                 form.format === 'physical'
-                                    ? 'bg-[#14231C] text-white border-[#14231C] shadow-sm'
-                                    : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:bg-gray-100'
+                                    ? 'bg-[#14231C] text-white border-[#14231C] shadow-md ring-2 ring-[#C98A3E]'
+                                    : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:bg-gray-100 hover:border-gray-300'
                             ]"
                         >
                             <div>
-                                <span class="font-bold block text-sm">Physical at Kitonga Farm</span>
-                                <span class="text-[10px] opacity-80">Kitonga Farm Walkthrough + In-Person Meeting</span>
+                                <span class="font-bold block text-sm leading-snug">Physical at Kitonga Farm</span>
+                                <span class="text-[11px] opacity-80 block mt-1 leading-normal">Komkonga, Tanga · Farm Walkthrough + In-Person Meeting</span>
                             </div>
-                            <span v-if="form.format === 'physical'" class="text-[#E6C387]">✓</span>
+                            <span v-if="form.format === 'physical'" class="text-[#E6C387] font-bold text-base shrink-0">✓</span>
                         </button>
 
+                        <!-- Option 2: Head Office (Dar es Salaam) -->
+                        <button 
+                            type="button" 
+                            @click="form.format = 'hq_dar'"
+                            :class="[
+                                'p-3.5 sm:p-4 rounded-xl border text-left font-sans transition cursor-pointer flex items-start justify-between gap-2',
+                                form.format === 'hq_dar'
+                                    ? 'bg-[#14231C] text-white border-[#14231C] shadow-md ring-2 ring-[#C98A3E]'
+                                    : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:bg-gray-100 hover:border-gray-300'
+                            ]"
+                        >
+                            <div>
+                                <span class="font-bold block text-sm leading-snug">Head Office (Dar es Salaam)</span>
+                                <span class="text-[11px] opacity-80 block mt-1 leading-normal">Bunju / Mbezi Beach · Executive In-Person Meeting</span>
+                            </div>
+                            <span v-if="form.format === 'hq_dar'" class="text-[#E6C387] font-bold text-base shrink-0">✓</span>
+                        </button>
+
+                        <!-- Option 3: Online Live Video Call -->
                         <button 
                             type="button" 
                             @click="form.format = 'online'"
                             :class="[
-                                'py-3 px-4 rounded-xl border text-left font-sans transition cursor-pointer flex items-center justify-between',
+                                'p-3.5 sm:p-4 rounded-xl border text-left font-sans transition cursor-pointer flex items-start justify-between gap-2',
                                 form.format === 'online'
-                                    ? 'bg-[#14231C] text-white border-[#14231C] shadow-sm'
-                                    : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:bg-gray-100'
+                                    ? 'bg-[#14231C] text-white border-[#14231C] shadow-md ring-2 ring-[#C98A3E]'
+                                    : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:bg-gray-100 hover:border-gray-300'
                             ]"
                         >
                             <div>
-                                <span class="font-bold block text-sm">Online Live Video Call</span>
-                                <span class="text-[10px] opacity-80">Google Meet / Zoom / WhatsApp Video</span>
+                                <span class="font-bold block text-sm leading-snug">Online Live Video Call</span>
+                                <span class="text-[11px] opacity-80 block mt-1 leading-normal">Google Meet / Zoom / WhatsApp Video Call</span>
                             </div>
-                            <span v-if="form.format === 'online'" class="text-[#E6C387]">✓</span>
+                            <span v-if="form.format === 'online'" class="text-[#E6C387] font-bold text-base shrink-0">✓</span>
                         </button>
+
                     </div>
                 </div>
 

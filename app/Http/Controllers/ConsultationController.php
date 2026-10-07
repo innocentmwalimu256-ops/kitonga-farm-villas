@@ -52,7 +52,7 @@ class ConsultationController extends Controller
             'customer_name' => 'required|string|min:2|max:150',
             'customer_phone' => 'required|string|min:7|max:30',
             'customer_email' => 'nullable|email|max:150',
-            'format' => 'required|string|in:physical,online',
+            'format' => 'required|string|in:physical,online,hq_dar',
             'preferred_date' => 'required|date|after_or_equal:today',
             'preferred_time' => 'required|string|max:100',
             'topic' => 'required|string|max:200',

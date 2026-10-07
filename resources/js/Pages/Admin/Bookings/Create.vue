@@ -546,7 +546,9 @@ const submitBooking = () => {
                         <!-- Consultation Format Selector -->
                         <div>
                             <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2">1. Consultation Format *</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                
+                                <!-- Physical at Kitonga Farm -->
                                 <label 
                                     @click="form.consultation_format = 'physical'"
                                     class="flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition"
@@ -555,10 +557,24 @@ const submitBooking = () => {
                                     <input type="radio" v-model="form.consultation_format" value="physical" class="mt-0.5 text-emerald-700 focus:ring-emerald-600" />
                                     <div>
                                         <div class="text-xs font-bold text-gray-900">Physical at Kitonga Farm</div>
-                                        <div class="text-[11px] text-gray-500 mt-0.5">Kitonga Farm Walkthrough + In-Person Meeting &amp; Refreshments</div>
+                                        <div class="text-[11px] text-gray-500 mt-0.5">Komkonga, Tanga · Farm Walkthrough + In-Person Meeting</div>
                                     </div>
                                 </label>
 
+                                <!-- Head Office Dar es Salaam -->
+                                <label 
+                                    @click="form.consultation_format = 'hq_dar'"
+                                    class="flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition"
+                                    :class="form.consultation_format === 'hq_dar' ? 'border-emerald-600 bg-emerald-50/50 shadow-xs ring-1 ring-emerald-600' : 'border-gray-200 hover:border-gray-300 bg-white'"
+                                >
+                                    <input type="radio" v-model="form.consultation_format" value="hq_dar" class="mt-0.5 text-emerald-700 focus:ring-emerald-600" />
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-900">Head Office (Dar es Salaam)</div>
+                                        <div class="text-[11px] text-gray-500 mt-0.5">Bunju / Mbezi Beach · Executive In-Person Meeting</div>
+                                    </div>
+                                </label>
+
+                                <!-- Online Live Video Call -->
                                 <label 
                                     @click="form.consultation_format = 'online'"
                                     class="flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition"
@@ -567,7 +583,7 @@ const submitBooking = () => {
                                     <input type="radio" v-model="form.consultation_format" value="online" class="mt-0.5 text-emerald-700 focus:ring-emerald-600" />
                                     <div>
                                         <div class="text-xs font-bold text-gray-900">Online Live Video Call</div>
-                                        <div class="text-[11px] text-gray-500 mt-0.5">Google Meet / Zoom / WhatsApp Live Video Consultation</div>
+                                        <div class="text-[11px] text-gray-500 mt-0.5">Google Meet / Zoom / WhatsApp Video Consultation</div>
                                     </div>
                                 </label>
                             </div>

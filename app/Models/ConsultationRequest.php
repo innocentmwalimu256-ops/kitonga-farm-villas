@@ -104,7 +104,11 @@ class ConsultationRequest extends Model
      */
     public function generateWhatsAppMessage(): string
     {
-        $formatLabel = $this->format === 'online' ? 'Online Video Call' : 'Physical at Kitonga Farm';
+        $formatLabel = match($this->format) {
+            'online' => 'Online Live Video Call (Google Meet / Zoom / WhatsApp)',
+            'hq_dar' => 'Physical at Head Office (Bunju / Mbezi Beach, Dar es Salaam)',
+            default => 'Physical at Kitonga Farm (Komkonga, Tanga)',
+        };
         $formattedDate = $this->preferred_date ? Carbon::parse($this->preferred_date)->format('l, d M Y') : 'To be arranged';
         $feeFormatted = 'TZS ' . number_format($this->fee, 0);
 
