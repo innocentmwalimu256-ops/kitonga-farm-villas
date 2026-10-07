@@ -26,15 +26,28 @@ class AnalyticsController extends Controller
         abort_if(!auth()->user()->hasAnyPermission(['view_bookings', 'manage_settings', 'view_revenue']), 403, 'Unauthorized access to analytics desk.');
 
         $period = $request->input('period', '7d');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $startDate = $request->input('start_date') ?: $request->input('from');
+        $endDate = $request->input('end_date') ?: $request->input('to');
 
         $analytics = $this->analyticsService->getDashboardMetrics($period, $startDate, $endDate);
 
         return Inertia::render('Admin/Analytics/Index', [
+            'overview' => $analytics['overview'] ?? [],
+            'chartData' => $analytics['chart_data'] ?? [],
+            'topPages' => $analytics['top_pages'] ?? [],
+            'referrers' => $analytics['traffic_sources'] ?? [],
+            'locations' => $analytics['locations'] ?? [],
+            'devices' => $analytics['devices'] ?? [],
+            'browsers' => $analytics['browsers'] ?? [],
+            'operatingSystems' => $analytics['operating_systems'] ?? [],
+            'events' => $analytics['events'] ?? [],
+            'recentSessions' => $analytics['recent_sessions'] ?? $analytics['recent_visitors'] ?? [],
+            'liveVisitors' => $analytics['live_visitors'] ?? [],
             'analytics' => $analytics,
             'filters' => [
                 'period' => $period,
+                'from' => $startDate ?? ($analytics['range']['start'] ?? ''),
+                'to' => $endDate ?? ($analytics['range']['end'] ?? ''),
                 'start_date' => $startDate,
                 'end_date' => $endDate,
             ],
@@ -51,16 +64,20 @@ class AnalyticsController extends Controller
         $liveCount = VisitorSession::active(5)->count();
         $liveList = VisitorSession::active(5)
             ->latest('last_seen_at')
-            ->limit(10)
+            ->limit(20)
             ->get()
             ->map(function ($s) {
                 return [
                     'id' => $s->id,
+                    'session_id' => $s->session_id,
                     'short_id' => '#' . substr(hash('crc32', $s->visitor_id), 0, 4),
-                    'country' => $s->country,
-                    'country_code' => $s->country_code,
-                    'device_type' => $s->device_type,
-                    'browser' => $s->browser,
+                    'visitor_label' => '#' . substr(hash('crc32', $s->visitor_id), 0, 4),
+                    'country' => $s->country ?: 'Tanzania',
+                    'country_name' => $s->country ?: 'Tanzania',
+                    'country_code' => $s->country_code ?: 'TZ',
+                    'device' => ucfirst($s->device_type ?: 'mobile'),
+                    'device_type' => ucfirst($s->device_type ?: 'mobile'),
+                    'browser' => $s->browser ?: 'Chrome',
                     'current_page' => $s->exit_page ?: $s->landing_page ?: '/',
                     'last_activity' => $s->last_seen_at ? $s->last_seen_at->format('H:i:s') : 'Just now',
                     'last_seen_ago' => $s->last_seen_at ? $s->last_seen_at->diffForHumans(null, true) . ' ago' : 'active',
@@ -68,7 +85,9 @@ class AnalyticsController extends Controller
             });
 
         return response()->json([
+            'count' => $liveCount,
             'live_count' => $liveCount,
+            'visitors' => $liveList,
             'live_visitors' => $liveList,
         ]);
     }
