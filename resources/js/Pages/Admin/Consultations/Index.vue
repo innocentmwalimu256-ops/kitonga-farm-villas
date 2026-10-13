@@ -8,6 +8,10 @@ const props = defineProps({
     metrics: Object,
     filters: Object,
     whatsappNumber: String,
+    counts: {
+        type: Object,
+        default: () => ({ all: 0, villa: 0, tour: 0, consultation: 0 }),
+    },
 });
 
 const search = ref(props.filters?.search || '');
@@ -163,6 +167,95 @@ const getStatusBadge = (statusKey) => {
 
         <div class="py-6 sm:py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
             
+            <!-- ══════════════════════════════════════════════════════════════════
+                 0. CATEGORY TABS SWITCHER (Unified across all Booking Lists)
+            ══════════════════════════════════════════════════════════════════ -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <!-- Tab: All Bookings -->
+                <Link
+                    :href="route('admin.bookings.index')"
+                    class="p-4 rounded-2xl border text-left transition bg-white border-gray-200/90 hover:border-gray-300 text-gray-600 hover:bg-gray-50/50 cursor-pointer"
+                >
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">
+                            📋 Zote (All)
+                        </span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-gray-100 text-gray-600">
+                            {{ counts?.all || 0 }}
+                        </span>
+                    </div>
+                    <div class="text-lg font-bold mt-2 text-gray-700">
+                        All Bookings
+                    </div>
+                    <div class="text-[11px] text-gray-400 mt-0.5">
+                        Villa &amp; Farm Tours
+                    </div>
+                </Link>
+
+                <!-- Tab: Villa Reservations -->
+                <Link
+                    :href="route('admin.bookings.index', { type: 'villa' })"
+                    class="p-4 rounded-2xl border text-left transition bg-white border-gray-200/90 hover:border-gray-300 text-gray-600 hover:bg-gray-50/50 cursor-pointer"
+                >
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">
+                            🏡 Villa Stays
+                        </span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-gray-100 text-gray-600">
+                            {{ counts?.villa || 0 }}
+                        </span>
+                    </div>
+                    <div class="text-lg font-bold mt-2 text-gray-700">
+                        Villa Reservations
+                    </div>
+                    <div class="text-[11px] text-gray-400 mt-0.5">
+                        Wageni waliobook malazi
+                    </div>
+                </Link>
+
+                <!-- Tab: Farm Tour Bookings -->
+                <Link
+                    :href="route('admin.bookings.index', { type: 'tour' })"
+                    class="p-4 rounded-2xl border text-left transition bg-white border-gray-200/90 hover:border-gray-300 text-gray-600 hover:bg-gray-50/50 cursor-pointer"
+                >
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-500">
+                            🌿 Farm Tours
+                        </span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-gray-100 text-gray-600">
+                            {{ counts?.tour || 0 }}
+                        </span>
+                    </div>
+                    <div class="text-lg font-bold mt-2 text-gray-700">
+                        Farm Day Tours
+                    </div>
+                    <div class="text-[11px] text-gray-400 mt-0.5">
+                        Wageni waliobook shamba
+                    </div>
+                </Link>
+
+                <!-- Tab: Mr. Kitonga Consultations (Active) -->
+                <div
+                    class="p-4 rounded-2xl border text-left bg-gradient-to-br from-[#14231C] to-[#1c3227] text-white border-emerald-600 ring-2 ring-emerald-600/30 shadow-sm"
+                >
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider text-[#E6C387] flex items-center gap-1">
+                            <span>👔 Mr. Kitonga</span>
+                            <span class="text-[9px] bg-[#E6C387]/20 text-[#E6C387] px-1.5 py-0.2 rounded font-mono">ACTIVE</span>
+                        </span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-[#E6C387] text-[#14231C]">
+                            {{ counts?.consultation || 0 }}
+                        </span>
+                    </div>
+                    <div class="text-lg font-bold mt-2 text-white">
+                        Consultations Desk
+                    </div>
+                    <div class="text-[11px] text-gray-300 mt-0.5">
+                        Mashauriano &amp; mentorship
+                    </div>
+                </div>
+            </div>
+
             <!-- ══════════════════════════════════════════════════════════════════
                  1. METRICS OVERVIEW CARDS
             ══════════════════════════════════════════════════════════════════ -->

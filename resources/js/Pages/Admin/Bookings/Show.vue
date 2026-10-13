@@ -112,6 +112,12 @@ const quickApprove = () => {
     }
 };
 
+const isTour = computed(() => {
+    return !props.booking?.accommodation_unit_id || 
+           (props.booking?.reference && props.booking.reference.startsWith('KTG-EXP')) || 
+           props.booking?.source === 'online_experience';
+});
+
 const customerPhoneClean = computed(() => {
     const raw = props.booking?.customer?.phone || '';
     return String(raw).replace(/[^0-9]/g, '');
@@ -161,9 +167,9 @@ const submitPayment = () => {
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div class="flex items-center gap-3">
                     <Link 
-                        :href="route('admin.bookings.index')" 
+                        :href="isTour ? route('admin.bookings.index', { type: 'tour' }) : route('admin.bookings.index', { type: 'villa' })" 
                         class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
-                        title="Back to reservations"
+                        title="Back to bookings"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     </Link>
@@ -249,24 +255,26 @@ const submitPayment = () => {
                         <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/80 space-y-4">
                             <div class="flex items-center justify-between border-b pb-3">
                                 <h3 class="font-bold text-gray-900 flex items-center gap-2 text-sm">
-                                    <svg class="w-4 h-4 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <span v-if="isTour">🌿</span>
+                                    <svg v-else class="w-4 h-4 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
-                                    <span>Villa Accommodation &amp; Stay Schedule</span>
+                                    <span v-if="isTour">Farm Day Tour &amp; Agro-Experience Schedule</span>
+                                    <span v-else>Villa Accommodation &amp; Stay Schedule</span>
                                 </h3>
                                 <span class="capitalize bg-emerald-50 text-emerald-800 border border-emerald-200/70 px-2.5 py-0.5 rounded-full text-xs font-bold">
-                                    {{ booking?.unit?.name || booking?.unit?.type?.name || 'Villa Unit' }}
+                                    {{ isTour ? (booking?.items?.[0]?.description_snapshot || 'Farm Tour Experience') : (booking?.unit?.name || booking?.unit?.type?.name || 'Villa Unit') }}
                                 </span>
                             </div>
 
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
                                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <span class="text-[10px] text-gray-400 block uppercase font-bold">Check-In Date</span>
+                                    <span class="text-[10px] text-gray-400 block uppercase font-bold">{{ isTour ? 'Tour Date' : 'Check-In Date' }}</span>
                                     <span class="font-bold text-sm text-gray-900 mt-0.5 block">{{ formatDate(booking?.check_in) }}</span>
                                 </div>
                                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <span class="text-[10px] text-gray-400 block uppercase font-bold">Check-Out Date</span>
-                                    <span class="font-bold text-sm text-gray-900 mt-0.5 block">{{ formatDate(booking?.check_out) }}</span>
+                                    <span class="text-[10px] text-gray-400 block uppercase font-bold">{{ isTour ? 'Duration' : 'Check-Out Date' }}</span>
+                                    <span class="font-bold text-sm text-gray-900 mt-0.5 block">{{ isTour ? '1 Day (Tour)' : formatDate(booking?.check_out) }}</span>
                                 </div>
                                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
                                     <span class="text-[10px] text-gray-400 block uppercase font-bold">Total Guests</span>

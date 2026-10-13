@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\ConsultationRequest;
 use App\Models\ActivityLog;
 use App\Models\Setting;
@@ -116,11 +117,32 @@ class ConsultationRequestController extends Controller
             ];
         }
 
+        $villaCount = Booking::whereNotNull('accommodation_unit_id')
+            ->where('reference', 'not like', 'KTG-EXP%')
+            ->count();
+
+        $tourCount = Booking::where(function ($q) {
+            $q->whereNull('accommodation_unit_id')
+              ->orWhere('source', 'online_experience')
+              ->orWhere('reference', 'like', 'KTG-EXP%');
+        })->count();
+
+        $consultationCount = Schema::hasTable('consultation_requests')
+            ? ConsultationRequest::count()
+            : 0;
+
         return Inertia::render('Admin/Consultations/Index', [
             'consultations' => $consultations,
             'metrics' => $metrics,
             'filters' => $request->only(['search', 'status', 'format', 'start_date', 'end_date']),
             'whatsappNumber' => $approvedWhatsAppNumber,
+            'counts' => [
+                'all' => Booking::count(),
+                'villa' => $villaCount,
+                'tour' => $tourCount,
+                'consultation' => $consultationCount,
+            ],
+            'activeType' => 'consultation',
         ]);
     }
 

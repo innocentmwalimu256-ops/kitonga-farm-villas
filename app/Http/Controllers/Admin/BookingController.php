@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Exception;
 
 class BookingController extends Controller
@@ -35,7 +36,21 @@ class BookingController extends Controller
     {
         abort_if(!auth()->user()->hasPermissionTo('view_bookings'), 403, 'Unauthorized access to view bookings list.');
 
-        $query = Booking::with(['customer', 'unit.type']);
+        $type = $request->input('type', 'all');
+
+        $query = Booking::with(['customer', 'unit.type', 'items']);
+
+        // Filter by booking type (villa vs tour)
+        if ($type === 'villa') {
+            $query->whereNotNull('accommodation_unit_id')
+                  ->where('reference', 'not like', 'KTG-EXP%');
+        } elseif ($type === 'tour') {
+            $query->where(function ($q) {
+                $q->whereNull('accommodation_unit_id')
+                  ->orWhere('source', 'online_experience')
+                  ->orWhere('reference', 'like', 'KTG-EXP%');
+            });
+        }
 
         // Filter by search term
         if ($request->filled('search')) {
@@ -45,6 +60,9 @@ class BookingController extends Controller
                   ->orWhereHas('customer', function ($cq) use ($search) {
                       $cq->where('name', 'like', "%{$search}%")
                         ->orWhere('phone', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('items', function ($iq) use ($search) {
+                      $iq->where('description_snapshot', 'like', "%{$search}%");
                   });
             });
         }
@@ -61,9 +79,30 @@ class BookingController extends Controller
 
         $bookings = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
+        $villaCount = Booking::whereNotNull('accommodation_unit_id')
+            ->where('reference', 'not like', 'KTG-EXP%')
+            ->count();
+
+        $tourCount = Booking::where(function ($q) {
+            $q->whereNull('accommodation_unit_id')
+              ->orWhere('source', 'online_experience')
+              ->orWhere('reference', 'like', 'KTG-EXP%');
+        })->count();
+
+        $consultationCount = Schema::hasTable('consultation_requests')
+            ? ConsultationRequest::count()
+            : 0;
+
         return Inertia::render('Admin/Bookings/Index', [
             'bookings' => $bookings,
-            'filters' => $request->only(['search', 'status', 'start_date', 'end_date']),
+            'filters' => $request->only(['search', 'status', 'start_date', 'end_date', 'type']),
+            'counts' => [
+                'all' => Booking::count(),
+                'villa' => $villaCount,
+                'tour' => $tourCount,
+                'consultation' => $consultationCount,
+            ],
+            'activeType' => $type,
         ]);
     }
 

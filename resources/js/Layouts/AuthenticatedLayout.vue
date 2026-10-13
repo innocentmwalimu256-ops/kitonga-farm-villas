@@ -44,7 +44,7 @@ const showingNavigationDropdown = ref(false);
                                 
                                 <!-- Bookings Dropdown -->
                                 <div class="relative">
-                                    <Dropdown align="left" width="56">
+                                    <Dropdown align="left" width="60">
                                         <template #trigger>
                                             <button type="button" class="inline-flex items-center px-2.5 py-2 text-xs font-bold uppercase tracking-wider text-gray-600 hover:text-gray-900 focus:outline-none transition cursor-pointer">
                                                 <span>Bookings</span>
@@ -52,11 +52,32 @@ const showingNavigationDropdown = ref(false);
                                             </button>
                                         </template>
                                         <template #content>
-                                            <div class="py-1">
-                                                <DropdownLink :href="route('admin.bookings.calendar')">Calendar Grid</DropdownLink>
-                                                <DropdownLink :href="route('admin.bookings.index')">Reservations List</DropdownLink>
-                                                <DropdownLink :href="route('admin.consultations.index')" class="text-emerald-800 font-semibold bg-emerald-50/50">✦ Meet Mr. Kitonga</DropdownLink>
-                                                <DropdownLink :href="route('admin.bookings.create')">New Booking</DropdownLink>
+                                            <div class="py-1 text-xs">
+                                                <DropdownLink :href="route('admin.bookings.index', { type: 'villa' })" class="flex items-center gap-2">
+                                                    <span>🏡</span>
+                                                    <span>Villa Reservations</span>
+                                                </DropdownLink>
+                                                <DropdownLink :href="route('admin.bookings.index', { type: 'tour' })" class="flex items-center gap-2">
+                                                    <span>🌿</span>
+                                                    <span>Farm Tour Bookings</span>
+                                                </DropdownLink>
+                                                <DropdownLink :href="route('admin.consultations.index')" class="text-emerald-900 font-bold bg-emerald-50/70 flex items-center gap-2">
+                                                    <span>👔</span>
+                                                    <span>Meet Mr. Kitonga</span>
+                                                </DropdownLink>
+                                                <DropdownLink :href="route('admin.bookings.index')" class="flex items-center gap-2 text-gray-600">
+                                                    <span>📋</span>
+                                                    <span>All Bookings (Zote)</span>
+                                                </DropdownLink>
+                                                <div class="border-t border-gray-100 my-1"></div>
+                                                <DropdownLink :href="route('admin.bookings.calendar')" class="flex items-center gap-2">
+                                                    <span>📅</span>
+                                                    <span>Calendar Grid</span>
+                                                </DropdownLink>
+                                                <DropdownLink :href="route('admin.bookings.create')" class="text-emerald-800 font-bold bg-gray-50 flex items-center gap-2">
+                                                    <span>➕</span>
+                                                    <span>New Booking</span>
+                                                </DropdownLink>
                                             </div>
                                         </template>
                                     </Dropdown>
@@ -216,10 +237,12 @@ const showingNavigationDropdown = ref(false);
                             Bookings & Reservations
                         </div>
                         <div class="grid grid-cols-2 gap-1.5 mt-2">
-                            <Link :href="route('admin.bookings.calendar')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Calendar Grid</Link>
-                            <Link :href="route('admin.bookings.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Reservations</Link>
-                            <Link :href="route('admin.consultations.index')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-[#14231C] text-[#E6C387] font-bold text-center">✦ Meet Mr. Kitonga Requests</Link>
-                            <Link :href="route('admin.bookings.create')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-center">+ New Reservation</Link>
+                            <Link :href="route('admin.bookings.index', { type: 'villa' })" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700 text-xs flex items-center gap-1">🏡 Villas</Link>
+                            <Link :href="route('admin.bookings.index', { type: 'tour' })" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700 text-xs flex items-center gap-1">🌿 Farm Tours</Link>
+                            <Link :href="route('admin.bookings.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700 text-xs flex items-center gap-1">📋 All Bookings</Link>
+                            <Link :href="route('admin.bookings.calendar')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700 text-xs flex items-center gap-1">📅 Calendar</Link>
+                            <Link :href="route('admin.consultations.index')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2.5 rounded-lg bg-[#14231C] text-[#E6C387] font-bold text-center text-xs">👔 Meet Mr. Kitonga Requests</Link>
+                            <Link :href="route('admin.bookings.create')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-center text-xs">➕ New Reservation</Link>
                         </div>
                     </div>
 
