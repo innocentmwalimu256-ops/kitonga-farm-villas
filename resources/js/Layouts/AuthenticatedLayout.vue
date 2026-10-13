@@ -314,67 +314,62 @@ const showingNavigationDropdown = ref(false);
         </div>
 
         <!-- Sticky Mobile Bottom App Bar -->
-        <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200/80 shadow-lg px-2 py-1.5 flex items-center justify-around">
+        <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200/90 shadow-lg px-2 py-1.5 flex items-center justify-around">
             <!-- Dashboard -->
             <Link 
                 :href="route('dashboard')" 
                 class="flex flex-col items-center justify-center p-1.5 rounded-xl transition min-w-[56px]"
-                :class="route().current('dashboard') ? 'text-emerald-800 font-bold bg-emerald-50/80' : 'text-gray-500 hover:text-gray-900'"
+                :class="route().current('dashboard') ? 'text-emerald-800 font-bold bg-emerald-50/90' : 'text-gray-500 hover:text-gray-900'"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
-                <span class="text-[9px] mt-0.5">Home</span>
-            </Link>
-
-            <!-- POS Register -->
-            <Link 
-                :href="route('admin.pos.terminal')" 
-                class="flex flex-col items-center justify-center p-1.5 rounded-xl transition min-w-[56px]"
-                :class="route().current('admin.pos.terminal') ? 'text-emerald-800 font-bold bg-emerald-50/80' : 'text-gray-500 hover:text-gray-900'"
-            >
-                <div class="relative">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                </div>
-                <span class="text-[9px] mt-0.5">POS</span>
+                <span class="text-[10px] font-semibold mt-0.5">Home</span>
             </Link>
 
             <!-- Bookings -->
             <Link 
                 :href="route('admin.bookings.index')" 
                 class="flex flex-col items-center justify-center p-1.5 rounded-xl transition min-w-[56px]"
-                :class="route().current('admin.bookings.*') ? 'text-emerald-800 font-bold bg-emerald-50/80' : 'text-gray-500 hover:text-gray-900'"
+                :class="route().current('admin.bookings.*') ? 'text-emerald-800 font-bold bg-emerald-50/90' : 'text-gray-500 hover:text-gray-900'"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
-                <span class="text-[9px] mt-0.5">Bookings</span>
+                <span class="text-[10px] font-semibold mt-0.5">Bookings</span>
             </Link>
 
-            <!-- Products & Stock -->
+            <!-- POS Register (Center Highlighted Button) -->
             <Link 
-                :href="route('admin.products.index')" 
-                class="flex flex-col items-center justify-center p-1.5 rounded-xl transition min-w-[56px]"
-                :class="route().current('admin.products.*') ? 'text-emerald-800 font-bold bg-emerald-50/80' : 'text-gray-500 hover:text-gray-900'"
+                :href="route('admin.pos.terminal')" 
+                class="flex flex-col items-center justify-center -mt-3 px-3 py-1.5 rounded-2xl bg-emerald-700 active:bg-emerald-800 text-white shadow-md transition hover:scale-105"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                 </svg>
-                <span class="text-[9px] mt-0.5">Stock</span>
+                <span class="text-[9px] font-extrabold uppercase tracking-wider text-emerald-100">POS</span>
+            </Link>
+
+            <!-- Mr. Kitonga Consultations -->
+            <Link 
+                :href="route('admin.consultations.index')" 
+                class="flex flex-col items-center justify-center p-1.5 rounded-xl transition min-w-[56px]"
+                :class="route().current('admin.consultations.*') ? 'text-emerald-800 font-bold bg-emerald-50/90' : 'text-gray-500 hover:text-gray-900'"
+            >
+                <span class="text-base leading-none">👔</span>
+                <span class="text-[10px] font-semibold mt-0.5">Kitonga</span>
             </Link>
 
             <!-- Menu Drawer Button -->
             <button 
                 @click="showingNavigationDropdown = !showingNavigationDropdown" 
-                class="flex flex-col items-center justify-center p-1.5 rounded-xl transition min-w-[56px] text-gray-500 hover:text-gray-900"
-                :class="showingNavigationDropdown ? 'text-emerald-800 font-bold bg-emerald-50/80' : ''"
+                class="flex flex-col items-center justify-center p-1.5 rounded-xl transition min-w-[56px] text-gray-500 hover:text-gray-900 cursor-pointer"
+                :class="showingNavigationDropdown ? 'text-emerald-800 font-bold bg-emerald-50/90' : ''"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
-                <span class="text-[9px] mt-0.5">Menu</span>
+                <span class="text-[10px] font-semibold mt-0.5">Menu</span>
             </button>
         </div>
     </div>

@@ -21,6 +21,7 @@ const status = ref(props.filters?.status || '');
 const startDate = ref(props.filters?.start_date || '');
 const endDate = ref(props.filters?.end_date || '');
 const currentType = ref(props.activeType || 'all');
+const showMobileFilters = ref(false);
 
 // Modals state
 const isStatusModalOpen = ref(false);
@@ -147,6 +148,14 @@ const formatDate = (dateStr) => {
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 };
 
+const cleanPhone = (phone) => {
+    if (!phone) return '';
+    let p = String(phone).replace(/[^0-9]/g, '');
+    if (p.startsWith('0')) p = '255' + p.substring(1);
+    else if (!p.startsWith('255') && p.length === 9) p = '255' + p;
+    return p;
+};
+
 const isTour = (booking) => {
     return !booking.accommodation_unit_id || 
            (booking.reference && booking.reference.startsWith('KTG-EXP')) || 
@@ -178,19 +187,19 @@ const calculateNights = (booking) => {
         <template #header>
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h2 class="text-xl sm:text-2xl font-serif font-bold text-[#14231C]">
+                    <h2 class="text-lg sm:text-2xl font-serif font-bold text-[#14231C]">
                         Bookings &amp; Reservations
                     </h2>
                     <p class="text-xs text-gray-500 mt-0.5">
                         Dhibiti wageni waliobook Villa, Farm Tours, na Mashauriano ya Mr. Kitonga.
                     </p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <Link :href="route('admin.bookings.calendar')" class="px-3.5 py-2 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold rounded-lg border border-gray-300 shadow-xs transition flex items-center gap-1.5">
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <Link :href="route('admin.bookings.calendar')" class="flex-1 sm:flex-none justify-center px-3.5 py-2 bg-white hover:bg-gray-50 active:bg-gray-100 text-gray-700 text-xs font-bold rounded-xl border border-gray-300 shadow-2xs transition flex items-center gap-1.5">
                         <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span>Calendar Grid</span>
+                        <span>Calendar</span>
                     </Link>
-                    <Link :href="route('admin.bookings.create')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg shadow transition flex items-center gap-1.5">
+                    <Link :href="route('admin.bookings.create')" class="flex-1 sm:flex-none justify-center px-4 py-2 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-xs font-bold rounded-xl shadow-xs transition flex items-center gap-1.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                         <span>New Booking</span>
                     </Link>
@@ -198,12 +207,68 @@ const calculateNights = (booking) => {
             </div>
         </template>
 
-        <div class="py-6 sm:py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="py-4 sm:py-6 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
 
             <!-- ══════════════════════════════════════════════════════════════════
-                 1. CATEGORY TABS SWITCHER (Villas vs Farm Tours vs Mr Kitonga)
+                 1. CATEGORY TABS SWITCHER
+                 - On Mobile: Sleek horizontal swipeable pill bar
+                 - On Desktop: Full 4-column rich metric cards
             ══════════════════════════════════════════════════════════════════ -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+            <!-- Mobile Swipeable Ribbon (lg:hidden) -->
+            <div class="lg:hidden flex items-center gap-2 overflow-x-auto pb-1 -mx-3 px-3 no-scrollbar">
+                <button
+                    type="button"
+                    @click="switchType('all')"
+                    class="px-3.5 py-2 rounded-full text-xs font-bold shrink-0 transition flex items-center gap-1.5 border shadow-2xs cursor-pointer"
+                    :class="currentType === 'all' ? 'bg-emerald-800 text-white border-emerald-900' : 'bg-white text-gray-700 border-gray-200'"
+                >
+                    <span>📋 Zote</span>
+                    <span class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold"
+                        :class="currentType === 'all' ? 'bg-emerald-900 text-emerald-100' : 'bg-gray-100 text-gray-600'">
+                        {{ counts?.all || 0 }}
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    @click="switchType('villa')"
+                    class="px-3.5 py-2 rounded-full text-xs font-bold shrink-0 transition flex items-center gap-1.5 border shadow-2xs cursor-pointer"
+                    :class="currentType === 'villa' ? 'bg-emerald-800 text-white border-emerald-900' : 'bg-white text-gray-700 border-gray-200'"
+                >
+                    <span>🏡 Villas</span>
+                    <span class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold"
+                        :class="currentType === 'villa' ? 'bg-emerald-900 text-emerald-100' : 'bg-gray-100 text-gray-600'">
+                        {{ counts?.villa || 0 }}
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    @click="switchType('tour')"
+                    class="px-3.5 py-2 rounded-full text-xs font-bold shrink-0 transition flex items-center gap-1.5 border shadow-2xs cursor-pointer"
+                    :class="currentType === 'tour' ? 'bg-emerald-800 text-white border-emerald-900' : 'bg-white text-gray-700 border-gray-200'"
+                >
+                    <span>🌿 Farm Tours</span>
+                    <span class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold"
+                        :class="currentType === 'tour' ? 'bg-emerald-900 text-emerald-100' : 'bg-gray-100 text-gray-600'">
+                        {{ counts?.tour || 0 }}
+                    </span>
+                </button>
+
+                <Link
+                    :href="route('admin.consultations.index')"
+                    class="px-3.5 py-2 rounded-full text-xs font-bold shrink-0 transition flex items-center gap-1.5 bg-[#14231C] text-[#E6C387] border border-[#14231C] shadow-2xs"
+                >
+                    <span>👔 Mr. Kitonga</span>
+                    <span class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold bg-[#E6C387] text-[#14231C]">
+                        {{ counts?.consultation || 0 }}
+                    </span>
+                </Link>
+            </div>
+
+            <!-- Desktop Full Grid (hidden lg:grid) -->
+            <div class="hidden lg:grid lg:grid-cols-4 gap-3">
                 <!-- Tab: All Bookings -->
                 <button
                     type="button"
@@ -307,69 +372,248 @@ const calculateNights = (booking) => {
             </div>
 
             <!-- ══════════════════════════════════════════════════════════════════
-                 2. FILTERS BAR
+                 2. SEARCH & FILTERS BAR
+                 - On Mobile: Quick search + toggleable advanced filters drawer
+                 - On Desktop: Full grid
             ══════════════════════════════════════════════════════════════════ -->
-            <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-xs border border-gray-200/80 grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tafuta Mteja / Ref / Tour</label>
-                    <input 
-                        type="text" 
-                        v-model="search" 
-                        @input="handleFilter" 
-                        placeholder="e.g. KTG-EXP, Juma, Suite..." 
-                        class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 mt-1"
-                    />
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hali ya Booking (Status)</label>
-                    <select 
-                        v-model="status" 
-                        @change="handleFilter" 
-                        class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 mt-1"
-                    >
-                        <option value="">Hali Zote (All Statuses)</option>
-                        <option value="pending">Pending (Inasubiri)</option>
-                        <option value="confirmed">Confirmed (Imethibitishwa)</option>
-                        <option value="checked_in">Checked In (Amewasili)</option>
-                        <option value="checked_out">Checked Out (Ameondoka)</option>
-                        <option value="cancelled">Cancelled (Imeghairiwa)</option>
-                        <option value="no_show">No Show</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tarehe ya Kuanzia</label>
-                    <input 
-                        type="date" 
-                        v-model="startDate" 
-                        @change="handleFilter" 
-                        class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 mt-1"
-                    />
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tarehe ya Mwisho</label>
-                    <input 
-                        type="date" 
-                        v-model="endDate" 
-                        @change="handleFilter" 
-                        class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 mt-1"
-                    />
-                </div>
+            <div class="bg-white p-3.5 sm:p-5 rounded-2xl shadow-xs border border-gray-200/80 space-y-3">
                 <div class="flex items-center gap-2">
+                    <div class="relative flex-1">
+                        <svg class="w-4 h-4 absolute left-3 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input 
+                            type="text" 
+                            v-model="search" 
+                            @input="handleFilter" 
+                            placeholder="Tafuta mteja, namba ya simu, au Ref (e.g. KFV...)..." 
+                            class="w-full pl-9 pr-3 py-2 text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                        />
+                    </div>
+                    <!-- Toggle Filter on Mobile -->
                     <button 
-                        @click="clearFilters" 
-                        type="button" 
-                        class="w-full py-2.5 text-xs border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                        type="button"
+                        @click="showMobileFilters = !showMobileFilters"
+                        class="lg:hidden px-3 py-2 text-xs font-bold border rounded-xl flex items-center gap-1.5 transition cursor-pointer"
+                        :class="(status || startDate || endDate || showMobileFilters) ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-gray-50 text-gray-600 border-gray-200'"
                     >
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                        <span>Futa Vichungi</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                        <span>Vichungi</span>
+                        <span v-if="status || startDate || endDate" class="w-2 h-2 rounded-full bg-emerald-600"></span>
                     </button>
+                </div>
+
+                <!-- Advanced Filters Grid (Desktop always visible, Mobile toggleable) -->
+                <div 
+                    :class="showMobileFilters ? 'grid' : 'hidden lg:grid'" 
+                    class="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-gray-100 items-end"
+                >
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hali ya Booking (Status)</label>
+                        <select 
+                            v-model="status" 
+                            @change="handleFilter" 
+                            class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 mt-1"
+                        >
+                            <option value="">Hali Zote (All Statuses)</option>
+                            <option value="pending">Pending (Inasubiri)</option>
+                            <option value="confirmed">Confirmed (Imethibitishwa)</option>
+                            <option value="checked_in">Checked In (Amewasili)</option>
+                            <option value="checked_out">Checked Out (Ameondoka)</option>
+                            <option value="cancelled">Cancelled (Imeghairiwa)</option>
+                            <option value="no_show">No Show</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tarehe ya Kuanzia</label>
+                        <input 
+                            type="date" 
+                            v-model="startDate" 
+                            @change="handleFilter" 
+                            class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 mt-1"
+                        />
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tarehe ya Mwisho</label>
+                        <input 
+                            type="date" 
+                            v-model="endDate" 
+                            @change="handleFilter" 
+                            class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 mt-1"
+                        />
+                    </div>
+                    <div>
+                        <button 
+                            @click="clearFilters" 
+                            type="button" 
+                            class="w-full py-2.5 text-xs border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 active:bg-gray-100 font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <span>Futa Vichungi</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <!-- ══════════════════════════════════════════════════════════════════
-                 3. BOOKINGS TABLE
+                 3A. NATIVE MOBILE BOOKINGS LIST (Visible ONLY on Mobile: lg:hidden)
+                 - Thumb-friendly, fast, zero horizontal scrolling
             ══════════════════════════════════════════════════════════════════ -->
-            <div class="bg-white rounded-2xl shadow-xs border border-gray-200/80 overflow-hidden">
+            <div class="block lg:hidden space-y-3">
+                <div 
+                    v-for="booking in bookings.data" 
+                    :key="'mob-' + booking.id" 
+                    class="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-xs space-y-3"
+                >
+                    <!-- Card Top: Ref + Status Pill -->
+                    <div class="flex items-start justify-between gap-2 border-b border-gray-100 pb-2.5">
+                        <div>
+                            <Link :href="route('admin.bookings.show', booking.id)" class="text-xs font-mono font-bold text-emerald-800 hover:underline flex items-center gap-1">
+                                <span>{{ booking.reference }}</span>
+                            </Link>
+                            <span class="text-[10px] text-gray-400 uppercase font-mono block mt-0.5">{{ booking.source || 'direct' }}</span>
+                        </div>
+
+                        <!-- Tappable Status Pill -->
+                        <button
+                            type="button"
+                            @click="openStatusModal(booking)"
+                            class="px-2.5 py-1 rounded-full text-[11px] font-bold capitalize border inline-flex items-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer"
+                            :class="{
+                                'bg-amber-50 text-amber-800 border-amber-300': booking.status === 'pending',
+                                'bg-emerald-50 text-emerald-800 border-emerald-300': booking.status === 'confirmed',
+                                'bg-blue-50 text-blue-800 border-blue-300': booking.status === 'checked_in',
+                                'bg-gray-100 text-gray-800 border-gray-300': booking.status === 'checked_out',
+                                'bg-red-50 text-red-800 border-red-300': booking.status === 'cancelled',
+                                'bg-purple-50 text-purple-800 border-purple-300': booking.status === 'no_show',
+                            }"
+                            title="Bofya kubadilisha status ya booking hii"
+                        >
+                            <span>{{ booking.status }}</span>
+                            <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                    </div>
+
+                    <!-- Type & Experience / Room Info -->
+                    <div class="space-y-1">
+                        <div v-if="isTour(booking)" class="flex items-start gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 shrink-0">
+                                🌿 Tour
+                            </span>
+                            <div class="text-xs font-bold text-gray-800 leading-snug">
+                                {{ getExperienceTitle(booking) }}
+                                <span class="text-[10px] font-normal text-gray-400 block">Wageni: {{ booking.guests_count || 1 }}</span>
+                            </div>
+                        </div>
+                        <div v-else class="flex items-start gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0">
+                                🏡 Villa
+                            </span>
+                            <div class="text-xs font-bold text-gray-800 leading-snug">
+                                {{ booking.unit?.name || 'Villa Room' }}
+                                <span class="text-[10px] font-normal text-gray-400 block">{{ booking.unit?.type?.name || 'Accommodation' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guest Info with Direct Phone & WhatsApp Actions -->
+                    <div class="bg-gray-50/80 p-2.5 rounded-xl border border-gray-100 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="font-bold text-xs text-gray-900">{{ booking.customer?.name || 'Mteja' }}</div>
+                            <div class="text-[11px] text-gray-500 font-mono">{{ booking.customer?.phone || 'N/A' }}</div>
+                        </div>
+                        <div v-if="booking.customer?.phone" class="flex items-center gap-1.5 shrink-0">
+                            <a 
+                                :href="`tel:${cleanPhone(booking.customer.phone)}`" 
+                                class="p-2 rounded-xl bg-white border border-gray-200 text-gray-700 active:bg-gray-100 shadow-2xs text-xs"
+                                title="Piga Simu Moja kwa Moja"
+                            >
+                                📞
+                            </a>
+                            <a 
+                                :href="`https://wa.me/${cleanPhone(booking.customer.phone)}`" 
+                                target="_blank" 
+                                class="p-2 rounded-xl bg-[#25D366] text-white active:bg-emerald-600 shadow-2xs text-xs"
+                                title="Tuma Ujumbe WhatsApp"
+                            >
+                                💬
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Dates & Duration Strip -->
+                    <div class="flex items-center justify-between text-xs text-gray-600">
+                        <div class="flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span v-if="isTour">{{ formatDate(booking.check_in) }} (Day Tour)</span>
+                            <span v-else>{{ formatDate(booking.check_in) }} - {{ formatDate(booking.check_out) }}</span>
+                        </div>
+                        <span class="font-bold text-gray-700 bg-gray-100 px-2 py-0.5 rounded text-[10px]">
+                            {{ isTour ? '1 Siku' : `${calculateNights(booking)} Nights` }}
+                        </span>
+                    </div>
+
+                    <!-- Financial 3-Box Strip -->
+                    <div class="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-gray-50/90 border border-gray-100 text-center">
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-gray-400 block">Jumla</span>
+                            <span class="text-xs font-bold block mt-0.5" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? 'text-gray-900' : 'text-gray-400 italic'">
+                                {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.total) : '—' }}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-emerald-700 block">Imelipwa</span>
+                            <span class="text-xs font-bold block mt-0.5" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? 'text-emerald-700' : 'text-gray-400 italic'">
+                                {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.amount_paid) : '—' }}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] uppercase font-bold text-gray-400 block">Salio</span>
+                            <span class="text-xs font-bold block mt-0.5" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) && parseFloat(booking.balance) > 0 ? 'text-red-600' : 'text-gray-600'">
+                                {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? (parseFloat(booking.balance) > 0 ? formatCurrency(booking.balance) : 'TSh 0') : '—' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Thumb-Friendly Action Row -->
+                    <div class="grid grid-cols-3 gap-2 pt-1 border-t border-gray-100">
+                        <button
+                            type="button"
+                            @click="openFinancialsModal(booking)"
+                            class="py-2 px-2 bg-emerald-50 active:bg-emerald-100 text-emerald-800 border border-emerald-200/80 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer shadow-2xs"
+                        >
+                            <span>💰 Pesa</span>
+                        </button>
+                        <button
+                            type="button"
+                            @click="openStatusModal(booking)"
+                            class="py-2 px-2 bg-gray-50 active:bg-gray-100 text-gray-700 border border-gray-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer shadow-2xs"
+                        >
+                            <span>🔄 Status</span>
+                        </button>
+                        <Link
+                            :href="route('admin.bookings.show', booking.id)"
+                            class="py-2 px-2 bg-[#14231C] active:bg-black text-[#E6C387] rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-2xs"
+                        >
+                            <span>👁️ Tazama</span>
+                        </Link>
+                    </div>
+                </div>
+
+                <!-- Empty State on Mobile -->
+                <div v-if="!bookings.data || bookings.data.length === 0" class="bg-white rounded-2xl p-8 text-center border border-gray-200/80 space-y-2">
+                    <div class="text-3xl">📭</div>
+                    <div class="font-bold text-gray-700 text-sm">
+                        <span v-if="currentType === 'villa'">Hakuna booking za Villa zilizopatikana.</span>
+                        <span v-else-if="currentType === 'tour'">Hakuna booking za Farm Tours zilizopatikana.</span>
+                        <span v-else>Hakuna booking zilizopatikana.</span>
+                    </div>
+                    <p class="text-xs text-gray-400">Jaribu kubadilisha vichungi au jina la mteja.</p>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════════
+                 3B. DESKTOP BOOKINGS TABLE (Visible ONLY on Desktop: hidden lg:block)
+            ══════════════════════════════════════════════════════════════════ -->
+            <div class="hidden lg:block bg-white rounded-2xl shadow-xs border border-gray-200/80 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-gray-600">
                         <thead>
@@ -387,7 +631,7 @@ const calculateNights = (booking) => {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
-                            <tr v-for="booking in bookings.data" :key="booking.id" class="hover:bg-gray-50/60 transition">
+                            <tr v-for="booking in bookings.data" :key="'desk-' + booking.id" class="hover:bg-gray-50/60 transition">
                                 <!-- Reference -->
                                 <td class="py-3.5 px-4 font-bold text-gray-900">
                                     <Link :href="route('admin.bookings.show', booking.id)" class="hover:underline text-emerald-800 font-mono text-xs flex items-center gap-1.5">
@@ -406,7 +650,6 @@ const calculateNights = (booking) => {
 
                                 <!-- Type & Unit / Tour -->
                                 <td class="py-3.5 px-4">
-                                    <!-- Farm Tour Booking -->
                                     <div v-if="isTour(booking)" class="space-y-1">
                                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
                                             🌿 Farm Tour
@@ -419,7 +662,6 @@ const calculateNights = (booking) => {
                                         </span>
                                     </div>
 
-                                    <!-- Villa Stay Booking -->
                                     <div v-else class="space-y-1">
                                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                                             🏡 Villa Stay
@@ -506,17 +748,15 @@ const calculateNights = (booking) => {
                                 <!-- Action Buttons -->
                                 <td class="py-3.5 px-4 text-right whitespace-nowrap">
                                     <div class="flex items-center justify-end gap-1.5">
-                                        <!-- Edit Financials Button -->
                                         <button
                                             type="button"
                                             @click="openFinancialsModal(booking)"
                                             class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/70 rounded-lg text-xs font-bold transition inline-flex items-center gap-1 cursor-pointer"
-                                            title="Hariri kiasi alicholipa mteja na salio (Total & Paid Amount)"
+                                            title="Hariri kiasi alicholipa mteja na salio"
                                         >
                                             <span>💰 Pesa</span>
                                         </button>
 
-                                        <!-- View Details Button -->
                                         <Link 
                                             :href="route('admin.bookings.show', booking.id)" 
                                             class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-bold transition inline-flex items-center gap-0.5"
@@ -529,7 +769,7 @@ const calculateNights = (booking) => {
                                 </td>
                             </tr>
 
-                            <!-- Empty State -->
+                            <!-- Empty State Desktop -->
                             <tr v-if="!bookings.data || bookings.data.length === 0">
                                 <td colspan="10" class="py-12 text-center">
                                     <div class="max-w-xs mx-auto space-y-2">
@@ -548,48 +788,50 @@ const calculateNights = (booking) => {
                         </tbody>
                     </table>
                 </div>
+            </div>
 
-                <!-- Pagination -->
-                <div v-if="bookings.links && bookings.links.length > 3" class="p-4 bg-gray-50/60 border-t border-gray-100 flex items-center justify-between">
-                    <div class="text-xs text-gray-500">
-                        Inaonyesha <span class="font-bold">{{ bookings.from || 0 }}</span> hadi <span class="font-bold">{{ bookings.to || 0 }}</span> kati ya <span class="font-bold">{{ bookings.total || 0 }}</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <template v-for="(link, i) in bookings.links" :key="i">
-                            <Link 
-                                v-if="link.url"
-                                :href="link.url" 
-                                class="px-3 py-1 text-xs rounded-lg font-semibold transition"
-                                :class="link.active ? 'bg-emerald-700 text-white font-bold' : 'bg-white border text-gray-700 hover:bg-gray-100'"
-                                v-html="link.label"
-                            />
-                            <span 
-                                v-else 
-                                class="px-2 py-1 text-xs text-gray-300"
-                                v-html="link.label"
-                            />
-                        </template>
-                    </div>
+            <!-- ══════════════════════════════════════════════════════════════════
+                 PAGINATION (Works on both Mobile and Desktop)
+            ══════════════════════════════════════════════════════════════════ -->
+            <div v-if="bookings.links && bookings.links.length > 3" class="p-3.5 bg-white rounded-2xl border border-gray-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
+                <div class="text-xs text-gray-500 order-2 sm:order-1 text-center sm:text-left">
+                    Inaonyesha <span class="font-bold">{{ bookings.from || 0 }}</span> hadi <span class="font-bold">{{ bookings.to || 0 }}</span> kati ya <span class="font-bold">{{ bookings.total || 0 }}</span>
+                </div>
+                <div class="flex items-center gap-1 order-1 sm:order-2 flex-wrap justify-center">
+                    <template v-for="(link, i) in bookings.links" :key="i">
+                        <Link 
+                            v-if="link.url"
+                            :href="link.url" 
+                            class="px-3 py-1.5 text-xs rounded-xl font-semibold transition"
+                            :class="link.active ? 'bg-emerald-700 text-white font-bold' : 'bg-gray-50 border border-gray-200 text-gray-700 hover:bg-gray-100'"
+                            v-html="link.label"
+                        />
+                        <span 
+                            v-else 
+                            class="px-2 py-1 text-xs text-gray-300"
+                            v-html="link.label"
+                        />
+                    </template>
                 </div>
             </div>
 
             <!-- ══════════════════════════════════════════════════════════════════
                  4. QUICK STATUS CHANGER MODAL
             ══════════════════════════════════════════════════════════════════ -->
-            <div v-if="isStatusModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-                <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div v-if="isStatusModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+                <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-gray-100 space-y-4 sm:space-y-5 animate-in fade-in zoom-in-95 duration-150">
                     <div class="flex items-center justify-between border-b pb-3">
                         <div>
                             <h3 class="font-bold text-gray-900 text-base">Badilisha Hali ya Booking</h3>
                             <span class="text-xs font-mono text-emerald-800 font-bold">{{ selectedBooking?.reference }} — {{ selectedBooking?.customer?.name }}</span>
                         </div>
-                        <button @click="closeStatusModal" type="button" class="text-gray-400 hover:text-gray-600 text-lg cursor-pointer">&times;</button>
+                        <button @click="closeStatusModal" type="button" class="text-gray-400 hover:text-gray-600 text-2xl p-1 cursor-pointer">&times;</button>
                     </div>
 
                     <form @submit.prevent="submitStatusChange" class="space-y-4">
                         <div>
                             <label class="text-xs font-bold text-gray-700 block mb-1">Chagua Status Mpya</label>
-                            <select v-model="statusForm.status" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                            <select v-model="statusForm.status" class="w-full text-xs sm:text-sm rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 py-2.5">
                                 <option value="pending">🟡 Pending (Inasubiri uthibitisho - Haitasoma kwenye mapato)</option>
                                 <option value="confirmed">🟢 Confirmed (Imethibitishwa - Inasoma kwenye mapato ya Dashboard)</option>
                                 <option value="checked_in">🔵 Checked In (Amewasili hotelini)</option>
@@ -597,7 +839,7 @@ const calculateNights = (booking) => {
                                 <option value="cancelled">🔴 Cancelled (Imeghairiwa - Haitasoma kwenye mapato)</option>
                                 <option value="no_show">🟣 No Show (Hakutokea)</option>
                             </select>
-                            <p class="text-[11px] text-gray-500 mt-1">
+                            <p class="text-[11px] text-gray-500 mt-1.5 leading-snug">
                                 <span v-if="['pending', 'cancelled'].includes(statusForm.status)" class="text-amber-700 font-semibold">
                                     ⚠️ Ukichagua <strong>{{ statusForm.status }}</strong>, booking hii haitahesabiwa kwenye mapato ya Dashboard mpaka iwe confirmed.
                                 </span>
@@ -621,14 +863,14 @@ const calculateNights = (booking) => {
                             <button 
                                 @click="closeStatusModal" 
                                 type="button" 
-                                class="px-4 py-2 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                                class="flex-1 sm:flex-none px-4 py-2.5 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 active:bg-gray-100 transition cursor-pointer"
                             >
                                 Ghairi
                             </button>
                             <button 
                                 type="submit" 
                                 :disabled="statusForm.processing"
-                                class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
+                                class="flex-1 sm:flex-none px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
                             >
                                 <span v-if="statusForm.processing">Inasasisha...</span>
                                 <span v-else>Sasisha Status Sasa</span>
@@ -641,21 +883,21 @@ const calculateNights = (booking) => {
             <!-- ══════════════════════════════════════════════════════════════════
                  5. FINANCIAL ADJUSTMENT MODAL (Total, Amount Paid, Balance)
             ══════════════════════════════════════════════════════════════════ -->
-            <div v-if="isFinancialsModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-                <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div v-if="isFinancialsModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+                <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-gray-100 space-y-4 sm:space-y-5 animate-in fade-in zoom-in-95 duration-150">
                     <div class="flex items-center justify-between border-b pb-3">
                         <div>
-                            <h3 class="font-bold text-gray-900 text-base">💰 Hariri Malipo &amp; Salio (Financials Desk)</h3>
-                            <span class="text-xs font-mono text-emerald-800 font-bold">
+                            <h3 class="font-bold text-gray-900 text-base">💰 Hariri Malipo &amp; Salio</h3>
+                            <span class="text-xs font-mono text-emerald-800 font-bold block mt-0.5">
                                 {{ selectedBooking?.reference }} — {{ selectedBooking?.customer?.name }}
                             </span>
                         </div>
-                        <button @click="closeFinancialsModal" type="button" class="text-gray-400 hover:text-gray-600 text-lg cursor-pointer">&times;</button>
+                        <button @click="closeFinancialsModal" type="button" class="text-gray-400 hover:text-gray-600 text-2xl p-1 cursor-pointer">&times;</button>
                     </div>
 
                     <form @submit.prevent="submitFinancialsChange" class="space-y-4">
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <!-- Total Price -->
                             <div>
                                 <label class="text-xs font-bold text-gray-700 block mb-1">Jumla Kuu (Total Amount)</label>
@@ -666,7 +908,7 @@ const calculateNights = (booking) => {
                                         step="1" 
                                         min="0"
                                         v-model="financialsForm.total" 
-                                        class="w-full pl-11 text-xs rounded-xl border-gray-300 font-bold text-gray-900 focus:border-emerald-500 focus:ring-emerald-500"
+                                        class="w-full pl-11 pr-3 py-2 text-xs sm:text-sm rounded-xl border-gray-300 font-bold text-gray-900 focus:border-emerald-500 focus:ring-emerald-500"
                                         placeholder="0"
                                     />
                                 </div>
@@ -683,7 +925,7 @@ const calculateNights = (booking) => {
                                         step="1" 
                                         min="0"
                                         v-model="financialsForm.amount_paid" 
-                                        class="w-full pl-11 text-xs rounded-xl border-emerald-300 bg-emerald-50/20 font-bold text-emerald-800 focus:border-emerald-500 focus:ring-emerald-500"
+                                        class="w-full pl-11 pr-3 py-2 text-xs sm:text-sm rounded-xl border-emerald-300 bg-emerald-50/20 font-bold text-emerald-800 focus:border-emerald-500 focus:ring-emerald-500"
                                         placeholder="0"
                                     />
                                 </div>
@@ -701,25 +943,25 @@ const calculateNights = (booking) => {
                             <div class="flex items-center justify-between text-xs">
                                 <span class="font-bold">Hali ya Salio / Hesabu:</span>
                                 <span v-if="calculatedBalance > 0" class="font-extrabold text-red-700">
-                                    Salio Linalodaiwa (Outstanding): {{ formatCurrency(calculatedBalance) }}
+                                    Salio Linalodaiwa: {{ formatCurrency(calculatedBalance) }}
                                 </span>
                                 <span v-else-if="calculatedOverpaid > 0" class="font-extrabold text-purple-700">
-                                    Amelipa Zaidi (Overpaid): {{ formatCurrency(calculatedOverpaid) }} (Salio: TSh 0)
+                                    Amelipa Zaidi: {{ formatCurrency(calculatedOverpaid) }} (Salio: TSh 0)
                                 </span>
                                 <span v-else class="font-extrabold text-emerald-700">
                                     ✓ Limelipwa Kamili: Salio TSh 0
                                 </span>
                             </div>
                             <p class="text-[11px] opacity-80 mt-1">
-                                Hesabu hii itarekodiwa moja kwa moja kwenye ripoti za fedha, risiti za wateja, na Dashboard ya mapato.
+                                Hesabu hii itarekodiwa mara moja kwenye ripoti za fedha na Dashboard ya mapato.
                             </p>
                         </div>
 
                         <!-- Payment Method & Reference -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <div>
                                 <label class="text-xs font-bold text-gray-700 block mb-1">Njia ya Malipo</label>
-                                <select v-model="financialsForm.payment_method" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                                <select v-model="financialsForm.payment_method" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 py-2">
                                     <option value="mobile_money">📱 Mobile Money (M-Pesa, Tigopesa, Airtel)</option>
                                     <option value="cash">💵 Cash (Taslimu)</option>
                                     <option value="bank_transfer">🏦 Bank Transfer</option>
@@ -734,7 +976,7 @@ const calculateNights = (booking) => {
                                     type="text" 
                                     v-model="financialsForm.payment_reference" 
                                     placeholder="e.g. QX98127391 / Risiti No" 
-                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 py-2"
                                 />
                             </div>
                         </div>
@@ -753,14 +995,14 @@ const calculateNights = (booking) => {
                             <button 
                                 @click="closeFinancialsModal" 
                                 type="button" 
-                                class="px-4 py-2 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                                class="flex-1 sm:flex-none px-4 py-2.5 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 active:bg-gray-100 transition cursor-pointer"
                             >
                                 Ghairi
                             </button>
                             <button 
                                 type="submit" 
                                 :disabled="financialsForm.processing"
-                                class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
+                                class="flex-1 sm:flex-none px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
                             >
                                 <span v-if="financialsForm.processing">Inahifadhi...</span>
                                 <span v-else>Hifadhi Taarifa za Malipo</span>
