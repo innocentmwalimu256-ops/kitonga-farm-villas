@@ -28,10 +28,14 @@
         <table style="width: 100%;" class="metric-table">
             <tr>
                 <td class="metric-label">Total Reservations Logged</td>
-                <td class="metric-val">{{ $bookingsCount }} Bookings</td>
+                <td class="metric-val">{{ $bookingsCount }} Bookings ({{ $guestsCount }} Guests)</td>
             </tr>
             <tr>
-                <td class="metric-label">Total Expense Slips File</td>
+                <td class="metric-label">Mr. Kitonga Mentorship Sessions</td>
+                <td class="metric-val">{{ $kitongaCount ?? 0 }} Consultations</td>
+            </tr>
+            <tr>
+                <td class="metric-label">Total Expense Slips Filed</td>
                 <td class="metric-val">{{ $expensesCount }} Expenses</td>
             </tr>
         </table>
@@ -43,6 +47,14 @@
             <tr>
                 <td class="metric-label">Villa Stays Accommodation Revenue</td>
                 <td class="metric-val">TZS {{ number_format($accommodationRevenue) }}</td>
+            </tr>
+            <tr>
+                <td class="metric-label">Farm Tours & Experiences Revenue</td>
+                <td class="metric-val">TZS {{ number_format($tourRevenue) }}</td>
+            </tr>
+            <tr>
+                <td class="metric-label">Mr. Kitonga Mentorship & Consultations</td>
+                <td class="metric-val">TZS {{ number_format($kitongaRevenue ?? 0) }}</td>
             </tr>
             <tr>
                 <td class="metric-label">POS Terminal & Cafe Revenue</td>

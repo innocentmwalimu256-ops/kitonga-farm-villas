@@ -241,6 +241,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/excel/bookings', [\App\Http\Controllers\Admin\ReportController::class, 'exportBookings'])->name('reports.excel.bookings');
     Route::get('/reports/excel/tours', [\App\Http\Controllers\Admin\ReportController::class, 'exportTours'])->name('reports.excel.tours');
+    Route::get('/reports/excel/kitonga', [\App\Http\Controllers\Admin\ReportController::class, 'exportKitonga'])->name('reports.excel.kitonga');
     Route::get('/reports/excel/farming', [\App\Http\Controllers\Admin\ReportController::class, 'exportFarming'])->name('reports.excel.farming');
     Route::get('/reports/excel/expenses', [\App\Http\Controllers\Admin\ReportController::class, 'exportExpenses'])->name('reports.excel.expenses');
     Route::get('/reports/pdf', [\App\Http\Controllers\Admin\ReportController::class, 'downloadPdfReport'])->name('reports.pdf');
