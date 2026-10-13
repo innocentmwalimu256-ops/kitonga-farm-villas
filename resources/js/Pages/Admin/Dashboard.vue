@@ -731,7 +731,9 @@ const filteredRooms = computed(() => {
                             </div>
                             <div class="text-[11px] text-gray-600 flex justify-between">
                                 <span>{{ booking.unit && booking.unit.type ? booking.unit.type.name : 'Villa' }}</span>
-                                <span class="font-mono font-bold text-emerald-800">{{ formatCurrency(booking.total) }}</span>
+                                <span class="font-mono font-bold" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? 'text-emerald-800' : 'text-gray-400 italic'">
+                                    {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.total) : '—' }}
+                                </span>
                             </div>
                             <div class="text-[10px] text-gray-400 border-t border-gray-200/60 pt-1.5 flex justify-between">
                                 <span>In: {{ formatDate(booking.check_in) }}</span>
@@ -761,7 +763,9 @@ const filteredRooms = computed(() => {
                                     <td class="p-3 text-gray-600">{{ b.unit && b.unit.type ? b.unit.type.name : 'Villa' }}</td>
                                     <td class="p-3 text-gray-500">{{ formatDate(b.check_in) }}</td>
                                     <td class="p-3 text-gray-500">{{ formatDate(b.check_out) }}</td>
-                                    <td class="p-3 font-mono font-bold text-emerald-800">{{ formatCurrency(b.total) }}</td>
+                                    <td class="p-3 font-mono font-bold" :class="['confirmed', 'checked_in', 'checked_out'].includes(b.status) ? 'text-emerald-800' : 'text-gray-400 italic'">
+                                        {{ ['confirmed', 'checked_in', 'checked_out'].includes(b.status) ? formatCurrency(b.total) : '—' }}
+                                    </td>
                                     <td class="p-3 text-right">
                                         <span 
                                             class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase inline-block"

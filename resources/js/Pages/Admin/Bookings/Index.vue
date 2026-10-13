@@ -132,9 +132,15 @@ const formatDate = (dateStr) => {
                                     <td class="p-4 text-center font-bold text-xs text-gray-500">
                                         {{ Math.max(1, Math.round((new Date(booking.check_out) - new Date(booking.check_in)) / (1000 * 60 * 60 * 24))) }}
                                     </td>
-                                    <td class="p-4 font-bold text-gray-800">{{ formatCurrency(booking.total) }}</td>
-                                    <td class="p-4 text-emerald-700 font-semibold">{{ formatCurrency(booking.amount_paid) }}</td>
-                                    <td class="p-4 font-semibold" :class="parseFloat(booking.balance) > 0 ? 'text-red-500' : 'text-gray-400'">{{ formatCurrency(booking.balance) }}</td>
+                                    <td class="p-4 font-bold" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? 'text-gray-800' : 'text-gray-400 italic'">
+                                        {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.total) : '—' }}
+                                    </td>
+                                    <td class="p-4 font-semibold" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? 'text-emerald-700' : 'text-gray-400 italic'">
+                                        {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.amount_paid) : '—' }}
+                                    </td>
+                                    <td class="p-4 font-semibold" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) && parseFloat(booking.balance) > 0 ? 'text-red-500' : 'text-gray-400'">
+                                        {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.balance) : '—' }}
+                                    </td>
                                     <td class="p-4 text-right">
                                         <span class="px-2.5 py-0.5 rounded-full text-xs font-bold"
                                             :class="{

@@ -230,8 +230,8 @@ class DashboardController extends Controller
 
         $adr = $occupiedNights > 0 ? round($accommodationRevenue / $occupiedNights, 2) : 0.00;
 
-        // 6. Outstanding balances
-        $outstandingBalance = Booking::whereIn('status', ['pending', 'confirmed', 'checked_in'])
+        // 6. Outstanding balances (Only for confirmed/in-house stays with pending balances)
+        $outstandingBalance = Booking::whereIn('status', ['confirmed', 'checked_in'])
             ->with(['payments' => function ($q) {
                 $q->where('status', 'completed');
             }])
@@ -359,7 +359,7 @@ class DashboardController extends Controller
         $liveRooms = AccommodationUnit::with([
             'type',
             'bookings' => function ($q) use ($todayStr) {
-                $q->whereIn('status', ['confirmed', 'checked_in', 'pending'])
+                $q->whereIn('status', ['confirmed', 'checked_in'])
                   ->where('check_in', '<=', $todayStr)
                   ->where('check_out', '>=', $todayStr)
                   ->with('customer');

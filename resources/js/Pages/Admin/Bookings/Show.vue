@@ -445,11 +445,11 @@ const submitPayment = () => {
                                     </div>
                                     <div class="flex justify-between text-emerald-700 font-bold border-b pb-2">
                                         <span>Amount Paid:</span>
-                                        <span>{{ formatCurrency(booking?.amount_paid) }}</span>
+                                        <span>{{ ['confirmed', 'checked_in', 'checked_out'].includes(booking?.status) ? formatCurrency(booking?.amount_paid) : 'TSh 0 (Pending)' }}</span>
                                     </div>
                                     <div class="flex justify-between text-sm font-extrabold text-red-600 pt-1">
                                         <span>Balance Due:</span>
-                                        <span>{{ formatCurrency(booking?.balance) }}</span>
+                                        <span>{{ ['confirmed', 'checked_in', 'checked_out'].includes(booking?.status) ? formatCurrency(booking?.balance) : '—' }}</span>
                                     </div>
                                 </div>
                             </div>

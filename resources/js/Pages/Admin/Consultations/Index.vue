@@ -337,8 +337,8 @@ const getStatusBadge = (statusKey) => {
                                 </td>
 
                                 <!-- Fee -->
-                                <td class="py-3.5 px-4 whitespace-nowrap font-bold text-gray-900">
-                                    {{ formatCurrency(item.fee) }}
+                                <td class="py-3.5 px-4 whitespace-nowrap font-bold" :class="['payment_verified', 'confirmed', 'completed'].includes(item.status) ? 'text-gray-900' : 'text-gray-400 italic'">
+                                    {{ ['payment_verified', 'confirmed', 'completed'].includes(item.status) ? formatCurrency(item.fee) : '—' }}
                                 </td>
 
                                 <!-- Status Badge -->
