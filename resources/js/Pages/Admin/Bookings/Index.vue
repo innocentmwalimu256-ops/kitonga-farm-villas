@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
     bookings: Object,
@@ -21,6 +21,91 @@ const status = ref(props.filters?.status || '');
 const startDate = ref(props.filters?.start_date || '');
 const endDate = ref(props.filters?.end_date || '');
 const currentType = ref(props.activeType || 'all');
+
+// Modals state
+const isStatusModalOpen = ref(false);
+const isFinancialsModalOpen = ref(false);
+const selectedBooking = ref(null);
+
+const statusForm = useForm({
+    status: 'pending',
+    notes: '',
+    record_payment: false,
+    payment_amount: 0,
+    payment_method: 'mobile_money',
+    payment_reference: '',
+});
+
+const financialsForm = useForm({
+    total: 0,
+    amount_paid: 0,
+    payment_method: 'mobile_money',
+    payment_reference: '',
+    notes: '',
+});
+
+const openStatusModal = (booking) => {
+    selectedBooking.value = booking;
+    statusForm.status = booking.status;
+    statusForm.notes = '';
+    statusForm.record_payment = false;
+    statusForm.payment_amount = Math.max(0, Number(booking.balance) || 0);
+    statusForm.payment_method = 'mobile_money';
+    statusForm.payment_reference = '';
+    isStatusModalOpen.value = true;
+};
+
+const closeStatusModal = () => {
+    isStatusModalOpen.value = false;
+    selectedBooking.value = null;
+};
+
+const submitStatusChange = () => {
+    if (!selectedBooking.value) return;
+    statusForm.post(route('admin.bookings.status', selectedBooking.value.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            closeStatusModal();
+        },
+    });
+};
+
+const openFinancialsModal = (booking) => {
+    selectedBooking.value = booking;
+    financialsForm.total = Number(booking.total) || 0;
+    financialsForm.amount_paid = Number(booking.amount_paid) || 0;
+    financialsForm.payment_method = 'mobile_money';
+    financialsForm.payment_reference = '';
+    financialsForm.notes = '';
+    isFinancialsModalOpen.value = true;
+};
+
+const closeFinancialsModal = () => {
+    isFinancialsModalOpen.value = false;
+    selectedBooking.value = null;
+};
+
+const calculatedBalance = computed(() => {
+    const total = Number(financialsForm.total) || 0;
+    const paid = Number(financialsForm.amount_paid) || 0;
+    return Math.max(0, total - paid);
+});
+
+const calculatedOverpaid = computed(() => {
+    const total = Number(financialsForm.total) || 0;
+    const paid = Number(financialsForm.amount_paid) || 0;
+    return Math.max(0, paid - total);
+});
+
+const submitFinancialsChange = () => {
+    if (!selectedBooking.value) return;
+    financialsForm.post(route('admin.bookings.financials', selectedBooking.value.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            closeFinancialsModal();
+        },
+    });
+};
 
 const switchType = (typeKey) => {
     currentType.value = typeKey;
@@ -295,10 +380,10 @@ const calculateNights = (booking) => {
                                 <th class="py-3.5 px-4">Tarehe (Dates)</th>
                                 <th class="py-3.5 px-4 text-center">Muda</th>
                                 <th class="py-3.5 px-4">Jumla (Total)</th>
-                                <th class="py-3.5 px-4">Imelipwa</th>
-                                <th class="py-3.5 px-4">Salio</th>
+                                <th class="py-3.5 px-4">Imelipwa (Paid)</th>
+                                <th class="py-3.5 px-4">Salio (Balance)</th>
                                 <th class="py-3.5 px-4 text-center">Status</th>
-                                <th class="py-3.5 px-4 text-right">Kitendo</th>
+                                <th class="py-3.5 px-4 text-right">Vitendo</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -376,39 +461,71 @@ const calculateNights = (booking) => {
                                 </td>
 
                                 <!-- Paid -->
-                                <td class="py-3.5 px-4 font-semibold text-xs" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? 'text-emerald-700' : 'text-gray-400 italic'">
-                                    {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.amount_paid) : '—' }}
+                                <td class="py-3.5 px-4 font-semibold text-xs whitespace-nowrap">
+                                    <div v-if="['confirmed', 'checked_in', 'checked_out'].includes(booking.status)">
+                                        <span class="text-emerald-700 font-bold">{{ formatCurrency(booking.amount_paid) }}</span>
+                                        <span v-if="Number(booking.amount_paid) > Number(booking.total)" class="ml-1 px-1.5 py-0.2 rounded text-[9px] bg-purple-100 text-purple-800 font-bold" title="Kuna ziada ya malipo">+Ziada</span>
+                                    </div>
+                                    <span v-else class="text-gray-400 italic">—</span>
                                 </td>
 
                                 <!-- Balance -->
-                                <td class="py-3.5 px-4 font-semibold text-xs" :class="['confirmed', 'checked_in', 'checked_out'].includes(booking.status) && parseFloat(booking.balance) > 0 ? 'text-red-500' : 'text-gray-400'">
-                                    {{ ['confirmed', 'checked_in', 'checked_out'].includes(booking.status) ? formatCurrency(booking.balance) : '—' }}
+                                <td class="py-3.5 px-4 font-semibold text-xs whitespace-nowrap">
+                                    <div v-if="['confirmed', 'checked_in', 'checked_out'].includes(booking.status)">
+                                        <span v-if="parseFloat(booking.balance) > 0" class="text-red-600 font-bold">
+                                            {{ formatCurrency(booking.balance) }}
+                                        </span>
+                                        <span v-else class="text-emerald-700 font-bold flex items-center gap-1">
+                                            <span>✓ TSh 0</span>
+                                        </span>
+                                    </div>
+                                    <span v-else class="text-gray-400 italic">—</span>
                                 </td>
 
-                                <!-- Status Badge -->
+                                <!-- Status Badge (Interactive Click to Change) -->
                                 <td class="py-3.5 px-4 text-center">
-                                    <span class="px-2.5 py-1 rounded-full text-[11px] font-bold capitalize border inline-block"
+                                    <button
+                                        type="button"
+                                        @click="openStatusModal(booking)"
+                                        class="px-2.5 py-1 rounded-full text-[11px] font-bold capitalize border inline-flex items-center gap-1 transition hover:opacity-80 cursor-pointer shadow-2xs"
                                         :class="{
-                                            'bg-amber-50 text-amber-800 border-amber-200': booking.status === 'pending',
-                                            'bg-emerald-50 text-emerald-800 border-emerald-200': booking.status === 'confirmed',
-                                            'bg-blue-50 text-blue-800 border-blue-200': booking.status === 'checked_in',
-                                            'bg-gray-100 text-gray-800 border-gray-200': booking.status === 'checked_out',
-                                            'bg-red-50 text-red-800 border-red-200': booking.status === 'cancelled',
-                                            'bg-purple-50 text-purple-800 border-purple-200': booking.status === 'no_show',
-                                        }">
-                                        {{ booking.status }}
-                                    </span>
+                                            'bg-amber-50 text-amber-800 border-amber-300': booking.status === 'pending',
+                                            'bg-emerald-50 text-emerald-800 border-emerald-300': booking.status === 'confirmed',
+                                            'bg-blue-50 text-blue-800 border-blue-300': booking.status === 'checked_in',
+                                            'bg-gray-100 text-gray-800 border-gray-300': booking.status === 'checked_out',
+                                            'bg-red-50 text-red-800 border-red-300': booking.status === 'cancelled',
+                                            'bg-purple-50 text-purple-800 border-purple-300': booking.status === 'no_show',
+                                        }"
+                                        title="Bofya hapa kubadilisha status ya booking hii moja kwa moja"
+                                    >
+                                        <span>{{ booking.status }}</span>
+                                        <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
                                 </td>
 
-                                <!-- Action -->
-                                <td class="py-3.5 px-4 text-right">
-                                    <Link 
-                                        :href="route('admin.bookings.show', booking.id)" 
-                                        class="px-2.5 py-1 bg-gray-100 hover:bg-emerald-50 hover:text-emerald-800 text-gray-700 rounded-lg text-xs font-bold transition inline-flex items-center gap-1"
-                                    >
-                                        <span>Tazama</span>
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                                    </Link>
+                                <!-- Action Buttons -->
+                                <td class="py-3.5 px-4 text-right whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-1.5">
+                                        <!-- Edit Financials Button -->
+                                        <button
+                                            type="button"
+                                            @click="openFinancialsModal(booking)"
+                                            class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/70 rounded-lg text-xs font-bold transition inline-flex items-center gap-1 cursor-pointer"
+                                            title="Hariri kiasi alicholipa mteja na salio (Total & Paid Amount)"
+                                        >
+                                            <span>💰 Pesa</span>
+                                        </button>
+
+                                        <!-- View Details Button -->
+                                        <Link 
+                                            :href="route('admin.bookings.show', booking.id)" 
+                                            class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-bold transition inline-flex items-center gap-0.5"
+                                            title="Tazama maelezo yote ya booking"
+                                        >
+                                            <span>Tazama</span>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        </Link>
+                                    </div>
                                 </td>
                             </tr>
 
@@ -453,6 +570,203 @@ const calculateNights = (booking) => {
                             />
                         </template>
                     </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════════
+                 4. QUICK STATUS CHANGER MODAL
+            ══════════════════════════════════════════════════════════════════ -->
+            <div v-if="isStatusModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+                <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                    <div class="flex items-center justify-between border-b pb-3">
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-base">Badilisha Hali ya Booking</h3>
+                            <span class="text-xs font-mono text-emerald-800 font-bold">{{ selectedBooking?.reference }} — {{ selectedBooking?.customer?.name }}</span>
+                        </div>
+                        <button @click="closeStatusModal" type="button" class="text-gray-400 hover:text-gray-600 text-lg cursor-pointer">&times;</button>
+                    </div>
+
+                    <form @submit.prevent="submitStatusChange" class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block mb-1">Chagua Status Mpya</label>
+                            <select v-model="statusForm.status" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                                <option value="pending">🟡 Pending (Inasubiri uthibitisho - Haitasoma kwenye mapato)</option>
+                                <option value="confirmed">🟢 Confirmed (Imethibitishwa - Inasoma kwenye mapato ya Dashboard)</option>
+                                <option value="checked_in">🔵 Checked In (Amewasili hotelini)</option>
+                                <option value="checked_out">⚪ Checked Out (Ameondoka hotelini)</option>
+                                <option value="cancelled">🔴 Cancelled (Imeghairiwa - Haitasoma kwenye mapato)</option>
+                                <option value="no_show">🟣 No Show (Hakutokea)</option>
+                            </select>
+                            <p class="text-[11px] text-gray-500 mt-1">
+                                <span v-if="['pending', 'cancelled'].includes(statusForm.status)" class="text-amber-700 font-semibold">
+                                    ⚠️ Ukichagua <strong>{{ statusForm.status }}</strong>, booking hii haitahesabiwa kwenye mapato ya Dashboard mpaka iwe confirmed.
+                                </span>
+                                <span v-else-if="statusForm.status === 'confirmed'" class="text-emerald-700 font-semibold">
+                                    ✅ Ukichagua <strong>Confirmed</strong>, booking hii itasoma rasmi kwenye mapato halisi ya Dashboard.
+                                </span>
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block mb-1">Maelezo ya Ziada / Sababu (Hiari)</label>
+                            <textarea 
+                                v-model="statusForm.notes" 
+                                rows="2" 
+                                placeholder="Mfano: Mteja amelipia kwa M-Pesa / Amepiga simu kughairi..." 
+                                class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                            ></textarea>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-2 pt-2 border-t">
+                            <button 
+                                @click="closeStatusModal" 
+                                type="button" 
+                                class="px-4 py-2 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                            >
+                                Ghairi
+                            </button>
+                            <button 
+                                type="submit" 
+                                :disabled="statusForm.processing"
+                                class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
+                            >
+                                <span v-if="statusForm.processing">Inasasisha...</span>
+                                <span v-else>Sasisha Status Sasa</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════════
+                 5. FINANCIAL ADJUSTMENT MODAL (Total, Amount Paid, Balance)
+            ══════════════════════════════════════════════════════════════════ -->
+            <div v-if="isFinancialsModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+                <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                    <div class="flex items-center justify-between border-b pb-3">
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-base">💰 Hariri Malipo &amp; Salio (Financials Desk)</h3>
+                            <span class="text-xs font-mono text-emerald-800 font-bold">
+                                {{ selectedBooking?.reference }} — {{ selectedBooking?.customer?.name }}
+                            </span>
+                        </div>
+                        <button @click="closeFinancialsModal" type="button" class="text-gray-400 hover:text-gray-600 text-lg cursor-pointer">&times;</button>
+                    </div>
+
+                    <form @submit.prevent="submitFinancialsChange" class="space-y-4">
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Total Price -->
+                            <div>
+                                <label class="text-xs font-bold text-gray-700 block mb-1">Jumla Kuu (Total Amount)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-2.5 text-xs text-gray-400 font-bold">TSh</span>
+                                    <input 
+                                        type="number" 
+                                        step="1" 
+                                        min="0"
+                                        v-model="financialsForm.total" 
+                                        class="w-full pl-11 text-xs rounded-xl border-gray-300 font-bold text-gray-900 focus:border-emerald-500 focus:ring-emerald-500"
+                                        placeholder="0"
+                                    />
+                                </div>
+                                <span class="text-[10px] text-gray-400 mt-0.5 block">Jumla ya gharama za chumba/huduma.</span>
+                            </div>
+
+                            <!-- Amount Paid -->
+                            <div>
+                                <label class="text-xs font-bold text-emerald-800 block mb-1">Kiasi Alicholipa Mteja (Paid)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-2.5 text-xs text-emerald-600 font-bold">TSh</span>
+                                    <input 
+                                        type="number" 
+                                        step="1" 
+                                        min="0"
+                                        v-model="financialsForm.amount_paid" 
+                                        class="w-full pl-11 text-xs rounded-xl border-emerald-300 bg-emerald-50/20 font-bold text-emerald-800 focus:border-emerald-500 focus:ring-emerald-500"
+                                        placeholder="0"
+                                    />
+                                </div>
+                                <span class="text-[10px] text-gray-400 mt-0.5 block">Pesa halisi iliyoingia (hata ikiwa zaidi au kidogo).</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Calculation Preview Card -->
+                        <div class="p-3.5 rounded-2xl border" 
+                            :class="{
+                                'bg-red-50/70 border-red-200 text-red-900': calculatedBalance > 0,
+                                'bg-purple-50/70 border-purple-200 text-purple-900': calculatedOverpaid > 0,
+                                'bg-emerald-50/70 border-emerald-200 text-emerald-900': calculatedBalance === 0 && calculatedOverpaid === 0
+                            }">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold">Hali ya Salio / Hesabu:</span>
+                                <span v-if="calculatedBalance > 0" class="font-extrabold text-red-700">
+                                    Salio Linalodaiwa (Outstanding): {{ formatCurrency(calculatedBalance) }}
+                                </span>
+                                <span v-else-if="calculatedOverpaid > 0" class="font-extrabold text-purple-700">
+                                    Amelipa Zaidi (Overpaid): {{ formatCurrency(calculatedOverpaid) }} (Salio: TSh 0)
+                                </span>
+                                <span v-else class="font-extrabold text-emerald-700">
+                                    ✓ Limelipwa Kamili: Salio TSh 0
+                                </span>
+                            </div>
+                            <p class="text-[11px] opacity-80 mt-1">
+                                Hesabu hii itarekodiwa moja kwa moja kwenye ripoti za fedha, risiti za wateja, na Dashboard ya mapato.
+                            </p>
+                        </div>
+
+                        <!-- Payment Method & Reference -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-700 block mb-1">Njia ya Malipo</label>
+                                <select v-model="financialsForm.payment_method" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                                    <option value="mobile_money">📱 Mobile Money (M-Pesa, Tigopesa, Airtel)</option>
+                                    <option value="cash">💵 Cash (Taslimu)</option>
+                                    <option value="bank_transfer">🏦 Bank Transfer</option>
+                                    <option value="card">💳 Card (Visa / Mastercard)</option>
+                                    <option value="other">Kwingineko</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-bold text-gray-700 block mb-1">Kumbukumbu ya Muamala</label>
+                                <input 
+                                    type="text" 
+                                    v-model="financialsForm.payment_reference" 
+                                    placeholder="e.g. QX98127391 / Risiti No" 
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-bold text-gray-700 block mb-1">Sababu / Maelezo ya Mabadiliko (Hiari)</label>
+                            <textarea 
+                                v-model="financialsForm.notes" 
+                                rows="2" 
+                                placeholder="Mfano: Mteja ameongeza tip / Tulikubaliana punguzo maalum la TSh..." 
+                                class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                            ></textarea>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-2 pt-2 border-t">
+                            <button 
+                                @click="closeFinancialsModal" 
+                                type="button" 
+                                class="px-4 py-2 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                            >
+                                Ghairi
+                            </button>
+                            <button 
+                                type="submit" 
+                                :disabled="financialsForm.processing"
+                                class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
+                            >
+                                <span v-if="financialsForm.processing">Inahifadhi...</span>
+                                <span v-else>Hifadhi Taarifa za Malipo</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

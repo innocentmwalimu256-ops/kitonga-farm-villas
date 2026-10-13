@@ -469,9 +469,9 @@ class BookingController extends Controller
         $booking = Booking::findOrFail($id);
 
         if ($validated['status'] === 'cancelled') {
-            abort_if(!auth()->user()->hasPermissionTo('cancel_bookings'), 403, 'Unauthorized to cancel bookings.');
+            abort_if(!auth()->user()->hasAnyPermission(['cancel_bookings', 'edit_bookings', 'view_bookings']), 403, 'Unauthorized to cancel bookings.');
         } else {
-            abort_if(!auth()->user()->hasPermissionTo('edit_bookings'), 403, 'Unauthorized to update booking status.');
+            abort_if(!auth()->user()->hasAnyPermission(['edit_bookings', 'create_bookings', 'view_bookings']), 403, 'Unauthorized to update booking status.');
         }
 
         try {
@@ -498,38 +498,127 @@ class BookingController extends Controller
                     // Restore previously recorded payments to completed
                     $booking->payments()->whereIn('status', ['cancelled', 'pending'])->update(['status' => 'completed']);
                     $activePaymentsSum = (float) $booking->payments()->where('status', 'completed')->sum('amount');
+
+                    // If payments existed in amount_paid column but not in payments table
+                    if ($activePaymentsSum == 0 && (float) $booking->amount_paid > 0) {
+                        $activePaymentsSum = (float) $booking->amount_paid;
+                    }
+
+                    // If payment recording is requested with status update, only add what is remaining
+                    if (!empty($validated['record_payment'])) {
+                        $remaining = max(0.00, (float) $booking->total - $activePaymentsSum);
+                        $amountToAdd = !empty($validated['payment_amount']) ? min($remaining, (float) $validated['payment_amount']) : $remaining;
+                        if ($amountToAdd > 0) {
+                            \App\Models\Payment::create([
+                                'booking_id' => $booking->id,
+                                'amount' => $amountToAdd,
+                                'method' => $validated['payment_method'] ?? 'mobile_money',
+                                'reference' => $validated['payment_reference'] ?? 'Status Confirmation Auto-Payment',
+                                'status' => 'completed',
+                                'recorded_by' => auth()->id(),
+                                'paid_at' => Carbon::now(),
+                            ]);
+                            $activePaymentsSum += $amountToAdd;
+                        }
+                    }
+
                     $booking->update([
                         'amount_paid' => $activePaymentsSum,
                         'balance' => max(0.00, (float) $booking->total - $activePaymentsSum),
                     ]);
                 }
+            });
 
-                // If payment recording is requested with status update
-                if (!empty($validated['record_payment'])) {
-                    $amount = !empty($validated['payment_amount']) ? (float) $validated['payment_amount'] : (float) $booking->balance;
-                    if ($amount > 0) {
-                        \App\Models\Payment::create([
+            return back()->with('success', "Hali ya booking imebadilishwa kuwa {$validated['status']}.");
+        } catch (\Exception $e) {
+            return back()->withErrors(['booking' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Directly update booking financials (total, amount_paid, balance, notes, payment sync).
+     */
+    public function updateFinancials(Request $request, $id)
+    {
+        abort_if(!auth()->user()->hasAnyPermission(['edit_bookings', 'view_revenue', 'view_bookings', 'manage_settings']), 403, 'Unauthorized to update booking financials.');
+
+        $validated = $request->validate([
+            'total' => 'required|numeric|min:0',
+            'amount_paid' => 'required|numeric|min:0',
+            'payment_method' => 'nullable|string|max:50',
+            'payment_reference' => 'nullable|string|max:255',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        $booking = Booking::findOrFail($id);
+
+        try {
+            DB::transaction(function () use ($booking, $validated) {
+                $oldTotal = (float) $booking->total;
+                $oldPaid = (float) $booking->amount_paid;
+                $oldBalance = (float) $booking->balance;
+
+                $newTotal = (float) $validated['total'];
+                $newPaid = (float) $validated['amount_paid'];
+                $newBalance = max(0.00, $newTotal - $newPaid);
+
+                $booking->update([
+                    'total' => $newTotal,
+                    'amount_paid' => $newPaid,
+                    'balance' => $newBalance,
+                    'notes' => !empty($validated['notes']) 
+                        ? ($booking->notes ? $booking->notes . "\n[Malipo Yalirekebishwa]: " . $validated['notes'] : $validated['notes'])
+                        : $booking->notes,
+                    'updated_by' => auth()->id(),
+                ]);
+
+                // Synchronize Payment records with new amount_paid
+                if ($newPaid > 0) {
+                    $existingPayment = $booking->payments()->where('status', 'completed')->first();
+                    if ($existingPayment) {
+                        $existingPayment->update([
+                            'amount' => $newPaid,
+                            'method' => $validated['payment_method'] ?? $existingPayment->method ?? 'cash',
+                            'reference' => $validated['payment_reference'] ?? $existingPayment->reference ?? 'Manual Financial Adjustment',
+                            'recorded_by' => auth()->id(),
+                            'paid_at' => Carbon::now(),
+                        ]);
+                        // Clean up redundant duplicate payments
+                        $booking->payments()
+                            ->where('status', 'completed')
+                            ->where('id', '!=', $existingPayment->id)
+                            ->update(['status' => 'cancelled']);
+                    } else {
+                        Payment::create([
                             'booking_id' => $booking->id,
-                            'amount' => $amount,
-                            'method' => $validated['payment_method'] ?? 'mobile_money',
-                            'reference' => $validated['payment_reference'] ?? 'Status Confirmation Auto-Payment',
+                            'amount' => $newPaid,
+                            'method' => $validated['payment_method'] ?? 'cash',
+                            'reference' => $validated['payment_reference'] ?? 'Manual Financial Adjustment',
                             'status' => 'completed',
                             'recorded_by' => auth()->id(),
                             'paid_at' => Carbon::now(),
                         ]);
-
-                        $newPaid = (float) $booking->payments()->where('status', 'completed')->sum('amount');
-                        $newBalance = max(0.00, (float) $booking->total - $newPaid);
-
-                        $booking->update([
-                            'amount_paid' => $newPaid,
-                            'balance' => $newBalance,
-                        ]);
                     }
+                } else {
+                    $booking->payments()->where('status', 'completed')->update(['status' => 'cancelled']);
                 }
+
+                \App\Models\ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'booking_financials_updated',
+                    'entity_type' => 'Booking',
+                    'entity_id' => $booking->id,
+                    'old_values' => ['total' => $oldTotal, 'amount_paid' => $oldPaid, 'balance' => $oldBalance],
+                    'new_values' => ['total' => $newTotal, 'amount_paid' => $newPaid, 'balance' => $newBalance],
+                    'metadata' => [
+                        'notes' => $validated['notes'] ?? null,
+                        'reference' => $booking->reference,
+                    ],
+                    'created_at' => Carbon::now(),
+                ]);
             });
 
-            return back()->with('success', "Booking status updated to {$validated['status']}.");
+            return back()->with('success', 'Kiasi cha malipo, jumla kuu, na salio vimesasishwa kikamilifu.');
         } catch (\Exception $e) {
             return back()->withErrors(['booking' => $e->getMessage()]);
         }

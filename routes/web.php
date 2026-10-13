@@ -155,6 +155,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('/bookings', [AdminBookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/{id}', [AdminBookingController::class, 'show'])->name('bookings.show');
     Route::post('/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.status');
+    Route::post('/bookings/{id}/financials', [AdminBookingController::class, 'updateFinancials'])->name('bookings.financials');
     Route::post('/bookings/{id}/payment', [AdminBookingController::class, 'addPayment'])->name('bookings.payment');
     Route::post('/bookings/{id}/reschedule', [AdminBookingController::class, 'reschedule'])->name('bookings.reschedule');
 

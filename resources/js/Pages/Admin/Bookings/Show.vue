@@ -35,6 +35,50 @@ const paymentForm = useForm({
 
 const isPaymentModalOpen = ref(false);
 const isIdModalOpen = ref(false);
+const isFinancialsModalOpen = ref(false);
+
+const financialsForm = useForm({
+    total: Number(props.booking?.total) || 0,
+    amount_paid: Number(props.booking?.amount_paid) || 0,
+    payment_method: 'mobile_money',
+    payment_reference: '',
+    notes: '',
+});
+
+const openFinancialsModal = () => {
+    financialsForm.total = Number(props.booking?.total) || 0;
+    financialsForm.amount_paid = Number(props.booking?.amount_paid) || 0;
+    financialsForm.payment_method = 'mobile_money';
+    financialsForm.payment_reference = '';
+    financialsForm.notes = '';
+    isFinancialsModalOpen.value = true;
+};
+
+const closeFinancialsModal = () => {
+    isFinancialsModalOpen.value = false;
+};
+
+const calculatedBalance = computed(() => {
+    const total = Number(financialsForm.total) || 0;
+    const paid = Number(financialsForm.amount_paid) || 0;
+    return Math.max(0, total - paid);
+});
+
+const calculatedOverpaid = computed(() => {
+    const total = Number(financialsForm.total) || 0;
+    const paid = Number(financialsForm.amount_paid) || 0;
+    return Math.max(0, paid - total);
+});
+
+const submitFinancialsChange = () => {
+    if (!props.booking?.id) return;
+    financialsForm.post(route('admin.bookings.financials', props.booking.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            closeFinancialsModal();
+        },
+    });
+};
 
 const idTypeLabels = {
     nida: 'National ID (NIDA) / Kitambulisho cha Taifa',
@@ -459,6 +503,15 @@ const submitPayment = () => {
                                         <span>Balance Due:</span>
                                         <span>{{ ['confirmed', 'checked_in', 'checked_out'].includes(booking?.status) ? formatCurrency(booking?.balance) : '—' }}</span>
                                     </div>
+                                    <div class="pt-3 border-t">
+                                        <button
+                                            @click="openFinancialsModal"
+                                            type="button"
+                                            class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+                                        >
+                                            <span>💰 Badilisha Kiasi cha Malipo &amp; Jumla (Edit Financials)</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -607,6 +660,138 @@ const submitPayment = () => {
                                 Close Preview
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- ══════════════════════════════════════════════════════════════════
+                     FINANCIAL ADJUSTMENT MODAL (Total, Amount Paid, Balance)
+                ══════════════════════════════════════════════════════════════════ -->
+                <div v-if="isFinancialsModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                        <div class="flex items-center justify-between border-b pb-3">
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-base">💰 Hariri Malipo &amp; Salio (Financials Desk)</h3>
+                                <span class="text-xs font-mono text-emerald-800 font-bold">
+                                    {{ booking?.reference }} — {{ booking?.customer?.name }}
+                                </span>
+                            </div>
+                            <button @click="closeFinancialsModal" type="button" class="text-gray-400 hover:text-gray-600 text-lg cursor-pointer">&times;</button>
+                        </div>
+
+                        <form @submit.prevent="submitFinancialsChange" class="space-y-4">
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Total Price -->
+                                <div>
+                                    <label class="text-xs font-bold text-gray-700 block mb-1">Jumla Kuu (Total Amount)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-2.5 text-xs text-gray-400 font-bold">TSh</span>
+                                        <input 
+                                            type="number" 
+                                            step="1" 
+                                            min="0"
+                                            v-model="financialsForm.total" 
+                                            class="w-full pl-11 text-xs rounded-xl border-gray-300 font-bold text-gray-900 focus:border-emerald-500 focus:ring-emerald-500"
+                                            placeholder="0"
+                                        />
+                                    </div>
+                                    <span class="text-[10px] text-gray-400 mt-0.5 block">Jumla ya gharama zote za booking.</span>
+                                </div>
+
+                                <!-- Amount Paid -->
+                                <div>
+                                    <label class="text-xs font-bold text-emerald-800 block mb-1">Kiasi Alicholipa Mteja (Paid)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-2.5 text-xs text-emerald-600 font-bold">TSh</span>
+                                        <input 
+                                            type="number" 
+                                            step="1" 
+                                            min="0"
+                                            v-model="financialsForm.amount_paid" 
+                                            class="w-full pl-11 text-xs rounded-xl border-emerald-300 bg-emerald-50/20 font-bold text-emerald-800 focus:border-emerald-500 focus:ring-emerald-500"
+                                            placeholder="0"
+                                        />
+                                    </div>
+                                    <span class="text-[10px] text-gray-400 mt-0.5 block">Kiasi halisi kilichoingia (hata kikiwa zaidi au pungufu).</span>
+                                </div>
+                            </div>
+
+                            <!-- Live Calculation Preview Card -->
+                            <div class="p-3.5 rounded-2xl border" 
+                                :class="{
+                                    'bg-red-50/70 border-red-200 text-red-900': calculatedBalance > 0,
+                                    'bg-purple-50/70 border-purple-200 text-purple-900': calculatedOverpaid > 0,
+                                    'bg-emerald-50/70 border-emerald-200 text-emerald-900': calculatedBalance === 0 && calculatedOverpaid === 0
+                                }">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="font-bold">Hali ya Salio / Hesabu:</span>
+                                    <span v-if="calculatedBalance > 0" class="font-extrabold text-red-700">
+                                        Salio Linalodaiwa (Outstanding): {{ formatCurrency(calculatedBalance) }}
+                                    </span>
+                                    <span v-else-if="calculatedOverpaid > 0" class="font-extrabold text-purple-700">
+                                        Amelipa Zaidi (Overpaid): {{ formatCurrency(calculatedOverpaid) }} (Salio: TSh 0)
+                                    </span>
+                                    <span v-else class="font-extrabold text-emerald-700">
+                                        ✓ Limelipwa Kamili: Salio TSh 0
+                                    </span>
+                                </div>
+                                <p class="text-[11px] opacity-80 mt-1">
+                                    Hesabu hii itarekodiwa moja kwa moja kwenye ripoti za fedha, risiti za wateja, na Dashboard ya mapato.
+                                </p>
+                            </div>
+
+                            <!-- Payment Method & Reference -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-bold text-gray-700 block mb-1">Njia ya Malipo</label>
+                                    <select v-model="financialsForm.payment_method" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500">
+                                        <option value="mobile_money">📱 Mobile Money (M-Pesa, Tigopesa, Airtel)</option>
+                                        <option value="cash">💵 Cash (Taslimu)</option>
+                                        <option value="bank_transfer">🏦 Bank Transfer</option>
+                                        <option value="card">💳 Card (Visa / Mastercard)</option>
+                                        <option value="other">Kwingineko</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="text-xs font-bold text-gray-700 block mb-1">Kumbukumbu ya Muamala</label>
+                                    <input 
+                                        type="text" 
+                                        v-model="financialsForm.payment_reference" 
+                                        placeholder="e.g. QX98127391 / Risiti No" 
+                                        class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-bold text-gray-700 block mb-1">Sababu / Maelezo ya Mabadiliko (Hiari)</label>
+                                <textarea 
+                                    v-model="financialsForm.notes" 
+                                    rows="2" 
+                                    placeholder="Mfano: Mteja amelipia nusu, salio atamalizia tarehe... / Amelipa ziada..." 
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                ></textarea>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-2 pt-2 border-t">
+                                <button 
+                                    @click="closeFinancialsModal" 
+                                    type="button" 
+                                    class="px-4 py-2 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                                >
+                                    Ghairi
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    :disabled="financialsForm.processing"
+                                    class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
+                                >
+                                    <span v-if="financialsForm.processing">Inahifadhi...</span>
+                                    <span v-else>Hifadhi Taarifa za Malipo</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 

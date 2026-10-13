@@ -85,7 +85,7 @@ class DashboardController extends Controller
                           $pq->where('status', 'completed')
                              ->whereBetween('created_at', [$from, $to]);
                       });
-                })->sum('total');
+                })->sum(DB::raw('CASE WHEN amount_paid > 0 THEN amount_paid ELSE total END'));
         };
 
         $calcTourRevenue = function ($from, $to, $fromStr, $toStr) {
@@ -103,7 +103,7 @@ class DashboardController extends Controller
                           $pq->where('status', 'completed')
                              ->whereBetween('created_at', [$from, $to]);
                       });
-                })->sum('total');
+                })->sum(DB::raw('CASE WHEN amount_paid > 0 THEN amount_paid ELSE total END'));
 
             $tourSales = (float) Sale::where('status', 'completed')
                 ->where('category', 'tour')
@@ -268,7 +268,7 @@ class DashboardController extends Controller
                       ->orWhereHas('payments', function ($pq) use ($dayStart, $dayEnd) {
                           $pq->where('status', 'completed')->whereBetween('created_at', [$dayStart, $dayEnd]);
                       });
-                })->sum('total');
+                })->sum(DB::raw('CASE WHEN amount_paid > 0 THEN amount_paid ELSE total END'));
 
             // Daily Tour
             $dayTour = (float) Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
@@ -283,7 +283,7 @@ class DashboardController extends Controller
                       ->orWhereHas('payments', function ($pq) use ($dayStart, $dayEnd) {
                           $pq->where('status', 'completed')->whereBetween('created_at', [$dayStart, $dayEnd]);
                       });
-                })->sum('total')
+                })->sum(DB::raw('CASE WHEN amount_paid > 0 THEN amount_paid ELSE total END'))
                 + (float) Sale::where('status', 'completed')->where('category', 'tour')->whereBetween('created_at', [$dayStart, $dayEnd])->sum('total');
 
             // Daily Consultation
@@ -319,7 +319,7 @@ class DashboardController extends Controller
             ->join('accommodation_types', 'accommodation_units.accommodation_type_id', '=', 'accommodation_types.id')
             ->whereIn('bookings.status', ['confirmed', 'checked_in', 'checked_out'])
             ->whereBetween('bookings.check_in', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->select('accommodation_types.name', DB::raw('SUM(bookings.total) as total_revenue'))
+            ->select('accommodation_types.name', DB::raw('SUM(CASE WHEN bookings.amount_paid > 0 THEN bookings.amount_paid ELSE bookings.total END) as total_revenue'))
             ->groupBy('accommodation_types.id', 'accommodation_types.name')
             ->get();
 
