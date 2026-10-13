@@ -9,6 +9,8 @@ use App\Models\Expense;
 use App\Models\Product;
 use App\Models\AccommodationUnit;
 use App\Models\AvailabilityBlock;
+use App\Models\ConsultationRequest;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Inertia\Inertia;
@@ -65,66 +67,123 @@ class DashboardController extends Controller
         // Days count in selected range
         $daysInRange = max(1, $startDate->diffInDays($endDate) + 1);
 
-        // 2. Global Static Intervals (Cards Headlines)
+        // 2. Revenue calculation helpers across all streams:
+        //    - Villa Accommodation: Bookings with accommodation units
+        //    - Farm Tours & Experiences: Bookings with tours or POS tour sales
+        //    - Mr. Kitonga Mentorship: Verified/Confirmed consultation sessions
+        //    - POS Sales: Bar, Farm Produce, etc.
+
+        $calcVillaRevenue = function ($from, $to, $fromStr, $toStr) {
+            return (float) Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
+                ->whereNotNull('accommodation_unit_id')
+                ->where('reference', 'not like', 'KTG-EXP%')
+                ->where(function ($q) use ($from, $to, $fromStr, $toStr) {
+                    $q->whereBetween('check_in', [$fromStr, $toStr])
+                      ->orWhereBetween('created_at', [$from, $to])
+                      ->orWhereBetween('updated_at', [$from, $to])
+                      ->orWhereHas('payments', function ($pq) use ($from, $to) {
+                          $pq->where('status', 'completed')
+                             ->whereBetween('created_at', [$from, $to]);
+                      });
+                })->sum('total');
+        };
+
+        $calcTourRevenue = function ($from, $to, $fromStr, $toStr) {
+            $tourBookings = (float) Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
+                ->where(function ($q) {
+                    $q->whereNull('accommodation_unit_id')
+                      ->orWhere('source', 'online_experience')
+                      ->orWhere('reference', 'like', 'KTG-EXP%');
+                })
+                ->where(function ($q) use ($from, $to, $fromStr, $toStr) {
+                    $q->whereBetween('check_in', [$fromStr, $toStr])
+                      ->orWhereBetween('created_at', [$from, $to])
+                      ->orWhereBetween('updated_at', [$from, $to])
+                      ->orWhereHas('payments', function ($pq) use ($from, $to) {
+                          $pq->where('status', 'completed')
+                             ->whereBetween('created_at', [$from, $to]);
+                      });
+                })->sum('total');
+
+            $tourSales = (float) Sale::where('status', 'completed')
+                ->where('category', 'tour')
+                ->whereBetween('created_at', [$from, $to])
+                ->sum('total');
+
+            return $tourBookings + $tourSales;
+        };
+
+        $calcConsultationRevenue = function ($from, $to, $fromStr, $toStr) {
+            return (float) ConsultationRequest::whereIn('status', ['payment_verified', 'confirmed', 'completed'])
+                ->where(function ($q) use ($from, $to, $fromStr, $toStr) {
+                    $q->whereBetween('created_at', [$from, $to])
+                      ->orWhereBetween('preferred_date', [$fromStr, $toStr])
+                      ->orWhereBetween('confirmed_date_time', [$from, $to]);
+                })->sum('fee');
+        };
+
+        $calcPosSales = function ($from, $to) {
+            return (float) Sale::where('status', 'completed')
+                ->whereBetween('created_at', [$from, $to])
+                ->where('category', '!=', 'tour')
+                ->sum('total');
+        };
+
+        // 3. Global Static Intervals (Cards Headlines)
         $todayStr = Carbon::today()->format('Y-m-d');
         $todayStart = Carbon::today()->startOfDay();
         $todayEnd = Carbon::today()->endOfDay();
+        $upcomingLimitStr = Carbon::now()->addDays(60)->format('Y-m-d');
 
         // Today's Revenue
-        $todayAcc = Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
-            ->where('check_in', $todayStr)
-            ->sum('total');
-        $todaySales = Sale::where('status', 'completed')
-            ->whereBetween('created_at', [$todayStart, $todayEnd])
-            ->sum('total');
-        $todayRevenue = $todayAcc + $todaySales;
+        $todayVilla = $calcVillaRevenue($todayStart, $todayEnd, $todayStr, $upcomingLimitStr);
+        $todayTour = $calcTourRevenue($todayStart, $todayEnd, $todayStr, $upcomingLimitStr);
+        $todayConsult = $calcConsultationRevenue($todayStart, $todayEnd, $todayStr, $upcomingLimitStr);
+        $todaySales = $calcPosSales($todayStart, $todayEnd);
+        $todayRevenue = $todayVilla + $todayTour + $todayConsult + $todaySales;
 
         // 7-Day Revenue
         $sevenDaysAgo = Carbon::now()->subDays(7)->startOfDay();
-        $sevenDaysAcc = Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
-            ->whereBetween('check_in', [$sevenDaysAgo->format('Y-m-d'), $todayStr])
-            ->sum('total');
-        $sevenDaysSales = Sale::where('status', 'completed')
-            ->whereBetween('created_at', [$sevenDaysAgo, Carbon::now()->endOfDay()])
-            ->sum('total');
-        $sevenDaysRevenue = $sevenDaysAcc + $sevenDaysSales;
+        $sevenDaysVilla = $calcVillaRevenue($sevenDaysAgo, Carbon::now()->endOfDay(), $sevenDaysAgo->format('Y-m-d'), $upcomingLimitStr);
+        $sevenDaysTour = $calcTourRevenue($sevenDaysAgo, Carbon::now()->endOfDay(), $sevenDaysAgo->format('Y-m-d'), $upcomingLimitStr);
+        $sevenDaysConsult = $calcConsultationRevenue($sevenDaysAgo, Carbon::now()->endOfDay(), $sevenDaysAgo->format('Y-m-d'), $upcomingLimitStr);
+        $sevenDaysSales = $calcPosSales($sevenDaysAgo, Carbon::now()->endOfDay());
+        $sevenDaysRevenue = $sevenDaysVilla + $sevenDaysTour + $sevenDaysConsult + $sevenDaysSales;
 
         // 30-Day Revenue
         $thirtyDaysAgo = Carbon::now()->subDays(30)->startOfDay();
-        $thirtyDaysAcc = Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
-            ->whereBetween('check_in', [$thirtyDaysAgo->format('Y-m-d'), $todayStr])
-            ->sum('total');
-        $thirtyDaysSales = Sale::where('status', 'completed')
-            ->whereBetween('created_at', [$thirtyDaysAgo, Carbon::now()->endOfDay()])
-            ->sum('total');
-        $thirtyDaysRevenue = $thirtyDaysAcc + $thirtyDaysSales;
+        $thirtyDaysVilla = $calcVillaRevenue($thirtyDaysAgo, Carbon::now()->endOfDay(), $thirtyDaysAgo->format('Y-m-d'), $upcomingLimitStr);
+        $thirtyDaysTour = $calcTourRevenue($thirtyDaysAgo, Carbon::now()->endOfDay(), $thirtyDaysAgo->format('Y-m-d'), $upcomingLimitStr);
+        $thirtyDaysConsult = $calcConsultationRevenue($thirtyDaysAgo, Carbon::now()->endOfDay(), $thirtyDaysAgo->format('Y-m-d'), $upcomingLimitStr);
+        $thirtyDaysSales = $calcPosSales($thirtyDaysAgo, Carbon::now()->endOfDay());
+        $thirtyDaysRevenue = $thirtyDaysVilla + $thirtyDaysTour + $thirtyDaysConsult + $thirtyDaysSales;
 
         // Monthly Revenue (This Calendar Month)
         $monthStart = Carbon::now()->startOfMonth()->startOfDay();
         $monthEnd = Carbon::now()->endOfMonth()->endOfDay();
-        $monthAcc = Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
-            ->whereBetween('check_in', [$monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d')])
-            ->sum('total');
-        $monthSales = Sale::where('status', 'completed')
-            ->whereBetween('created_at', [$monthStart, $monthEnd])
-            ->sum('total');
-        $monthlyRevenue = $monthAcc + $monthSales;
+        $monthVilla = $calcVillaRevenue($monthStart, $monthEnd, $monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d'));
+        $monthTour = $calcTourRevenue($monthStart, $monthEnd, $monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d'));
+        $monthConsult = $calcConsultationRevenue($monthStart, $monthEnd, $monthStart->format('Y-m-d'), $monthEnd->format('Y-m-d'));
+        $monthSales = $calcPosSales($monthStart, $monthEnd);
+        $monthlyRevenue = $monthVilla + $monthTour + $monthConsult + $monthSales;
 
-        // 3. Filter-specific aggregates (for charts & profit summaries)
-        $accommodationRevenue = Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
-            ->whereBetween('check_in', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->sum('total');
+        // 4. Filter-specific aggregates (for charts & profit summaries)
+        $startDateStr = $startDate->format('Y-m-d');
+        $endDateStr = $endDate->format('Y-m-d');
+
+        $accommodationRevenue = $calcVillaRevenue($startDate, $endDate, $startDateStr, $upcomingLimitStr);
+        $tourRevenue = $calcTourRevenue($startDate, $endDate, $startDateStr, $upcomingLimitStr);
+        $consultationRevenue = $calcConsultationRevenue($startDate, $endDate, $startDateStr, $upcomingLimitStr);
 
         $salesRevenue = Sale::where('status', 'completed')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
 
-        $tourRevenue = $salesRevenue->where('category', 'tour')->sum('total');
-        $barRevenue = $salesRevenue->where('category', 'bar')->sum('total');
-        $productRevenue = $salesRevenue->where('category', 'product')->sum('total');
-        $otherSalesRevenue = $salesRevenue->where('category', 'other')->sum('total');
+        $barRevenue = (float) $salesRevenue->where('category', 'bar')->sum('total');
+        $productRevenue = (float) $salesRevenue->where('category', 'product')->sum('total');
+        $otherSalesRevenue = (float) $salesRevenue->where('category', 'other')->sum('total');
 
-        $totalRevenue = $accommodationRevenue + $salesRevenue->sum('total');
+        $totalRevenue = $accommodationRevenue + $tourRevenue + $consultationRevenue + $barRevenue + $productRevenue + $otherSalesRevenue;
 
         $expenses = Expense::where('status', 'approved')
             ->whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
@@ -192,30 +251,63 @@ class DashboardController extends Controller
 
         for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
             $formattedDate = $date->format('Y-m-d');
+            $dayStart = $date->copy()->startOfDay();
+            $dayEnd = $date->copy()->endOfDay();
             $chartLabels[] = $date->format('M d');
 
-            // Daily Accommodation
-            $dayAcc = Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
-                ->where('check_in', $formattedDate)
-                ->sum('total');
+            // Daily Villa
+            $dayAcc = (float) Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
+                ->whereNotNull('accommodation_unit_id')
+                ->where('reference', 'not like', 'KTG-EXP%')
+                ->where(function ($q) use ($dayStart, $dayEnd, $formattedDate) {
+                    $q->where('check_in', $formattedDate)
+                      ->orWhereBetween('created_at', [$dayStart, $dayEnd])
+                      ->orWhereHas('payments', function ($pq) use ($dayStart, $dayEnd) {
+                          $pq->where('status', 'completed')->whereBetween('created_at', [$dayStart, $dayEnd]);
+                      });
+                })->sum('total');
 
-            // Daily Sales
-            $daySales = Sale::where('status', 'completed')
-                ->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+            // Daily Tour
+            $dayTour = (float) Booking::whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
+                ->where(function ($q) {
+                    $q->whereNull('accommodation_unit_id')
+                      ->orWhere('source', 'online_experience')
+                      ->orWhere('reference', 'like', 'KTG-EXP%');
+                })
+                ->where(function ($q) use ($dayStart, $dayEnd, $formattedDate) {
+                    $q->where('check_in', $formattedDate)
+                      ->orWhereBetween('created_at', [$dayStart, $dayEnd])
+                      ->orWhereHas('payments', function ($pq) use ($dayStart, $dayEnd) {
+                          $pq->where('status', 'completed')->whereBetween('created_at', [$dayStart, $dayEnd]);
+                      });
+                })->sum('total')
+                + (float) Sale::where('status', 'completed')->where('category', 'tour')->whereBetween('created_at', [$dayStart, $dayEnd])->sum('total');
+
+            // Daily Consultation
+            $dayConsult = (float) ConsultationRequest::whereIn('status', ['payment_verified', 'confirmed', 'completed'])
+                ->where(function ($q) use ($dayStart, $dayEnd, $formattedDate) {
+                    $q->where('preferred_date', $formattedDate)
+                      ->orWhereBetween('created_at', [$dayStart, $dayEnd]);
+                })->sum('fee');
+
+            // Daily POS Sales (excluding tours)
+            $daySales = (float) Sale::where('status', 'completed')
+                ->where('category', '!=', 'tour')
+                ->whereBetween('created_at', [$dayStart, $dayEnd])
                 ->sum('total');
 
             // Daily Expenses
-            $dayExp = Expense::where('status', 'approved')
+            $dayExp = (float) Expense::where('status', 'approved')
                 ->where('date', $formattedDate)
                 ->sum('amount');
 
-            $rev = $dayAcc + $daySales;
+            $rev = $dayAcc + $dayTour + $dayConsult + $daySales;
             $dailyRevenue[] = $rev;
             $dailyExpenses[] = $dayExp;
             $dailyProfit[] = $rev - $dayExp;
 
             // Daily Bookings created
-            $dailyBookings[] = Booking::whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])->count();
+            $dailyBookings[] = Booking::whereBetween('created_at', [$dayStart, $dayEnd])->count();
         }
 
         // 9. Villa performance
@@ -364,6 +456,7 @@ class DashboardController extends Controller
                 'total_revenue' => $totalRevenue,
                 'accommodation_revenue' => $accommodationRevenue,
                 'tour_revenue' => $tourRevenue,
+                'consultation_revenue' => $consultationRevenue,
                 'bar_revenue' => $barRevenue,
                 'product_revenue' => $productRevenue,
                 'other_revenue' => $otherSalesRevenue,

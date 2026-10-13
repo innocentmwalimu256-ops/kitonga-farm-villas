@@ -658,6 +658,24 @@ const filteredRooms = computed(() => {
                                         <div class="bg-sky-500 h-full rounded-full transition-all duration-500" :style="{ width: `${kpis.total_revenue > 0 ? (kpis.product_revenue / kpis.total_revenue) * 100 : 0}%` }"></div>
                                     </div>
                                 </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-bold text-gray-700">
+                                        <span>Mr. Kitonga Mentorship & Consultations</span>
+                                        <span class="font-mono text-purple-700">{{ formatCurrency(kpis.consultation_revenue) }}</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 h-2 rounded-full mt-1.5 overflow-hidden">
+                                        <div class="bg-purple-600 h-full rounded-full transition-all duration-500" :style="{ width: `${kpis.total_revenue > 0 ? (kpis.consultation_revenue / kpis.total_revenue) * 100 : 0}%` }"></div>
+                                    </div>
+                                </div>
+                                <div v-if="kpis.other_revenue > 0">
+                                    <div class="flex justify-between text-xs font-bold text-gray-700">
+                                        <span>Other Sales</span>
+                                        <span class="font-mono text-gray-700">{{ formatCurrency(kpis.other_revenue) }}</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 h-2 rounded-full mt-1.5 overflow-hidden">
+                                        <div class="bg-gray-500 h-full rounded-full transition-all duration-500" :style="{ width: `${kpis.total_revenue > 0 ? (kpis.other_revenue / kpis.total_revenue) * 100 : 0}%` }"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

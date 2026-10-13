@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ConsultationRequest;
 use App\Models\ActivityLog;
 use App\Models\Setting;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -149,6 +150,27 @@ class ConsultationRequestController extends Controller
             'confirmed_date_time' => !empty($validated['confirmed_date_time']) ? Carbon::parse($validated['confirmed_date_time']) : $consultation->confirmed_date_time,
             'assigned_staff_id' => $validated['assigned_staff_id'] ?? auth()->id(),
         ]);
+
+        // Auto-record completed payment when payment is verified or confirmed
+        if (in_array($validated['status'], ['payment_verified', 'confirmed', 'completed'])) {
+            $existingPayment = Payment::where('reference', 'like', "%{$consultation->reference}%")->first();
+            if (!$existingPayment && (float) $consultation->fee > 0) {
+                Payment::create([
+                    'booking_id' => null,
+                    'sale_id' => null,
+                    'method' => 'mobile_money',
+                    'reference' => "{$consultation->reference} - " . ($validated['payment_reference'] ?? 'Consultation Fee'),
+                    'amount' => (float) $consultation->fee,
+                    'status' => 'completed',
+                    'paid_at' => Carbon::now(),
+                    'recorded_by' => auth()->id(),
+                ]);
+            }
+        } elseif ($validated['status'] === 'cancelled') {
+            Payment::where('reference', 'like', "%{$consultation->reference}%")
+                ->where('status', 'completed')
+                ->update(['status' => 'cancelled']);
+        }
 
         // Audit Trail
         ActivityLog::create([
