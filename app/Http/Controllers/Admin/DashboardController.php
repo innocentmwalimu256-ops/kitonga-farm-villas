@@ -232,9 +232,12 @@ class DashboardController extends Controller
 
         // 6. Outstanding balances
         $outstandingBalance = Booking::whereIn('status', ['pending', 'confirmed', 'checked_in'])
+            ->with(['payments' => function ($q) {
+                $q->where('status', 'completed');
+            }])
             ->get()
             ->sum(function ($b) {
-                return max(0, $b->total - $b->payments->sum('amount'));
+                return max(0, (float) $b->total - (float) $b->payments->sum('amount'));
             });
 
         // 7. Stock alerts
@@ -332,12 +335,17 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // 11. Payment Methods
+        // 11. Payment Methods (Only completed payments from active sales, verified consultations, or active confirmed bookings)
         $paymentMethods = DB::table('payments')
-            ->where('status', 'completed')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->select('method', DB::raw('SUM(amount) as total_amount'))
-            ->groupBy('method')
+            ->leftJoin('bookings', 'payments.booking_id', '=', 'bookings.id')
+            ->where('payments.status', 'completed')
+            ->where(function ($q) {
+                $q->whereNull('payments.booking_id')
+                  ->orWhereIn('bookings.status', ['confirmed', 'checked_in', 'checked_out']);
+            })
+            ->whereBetween('payments.created_at', [$startDate, $endDate])
+            ->select('payments.method', DB::raw('SUM(payments.amount) as total_amount'))
+            ->groupBy('payments.method')
             ->get();
 
         // 12. Recent Bookings

@@ -437,7 +437,33 @@ class BookingController extends Controller
 
         try {
             DB::transaction(function () use ($booking, $validated) {
-                $this->bookingService->transitionStatus($booking, $validated['status'], auth()->id(), $validated['notes'] ?? null);
+                $newStatus = $validated['status'];
+                $this->bookingService->transitionStatus($booking, $newStatus, auth()->id(), $validated['notes'] ?? null);
+
+                // Synchronize payment records and paid amounts with booking lifecycle:
+                if (in_array($newStatus, ['cancelled', 'no_show'])) {
+                    // Mark payments as cancelled so they do not count in completed billing methods/revenue
+                    $booking->payments()->where('status', 'completed')->update(['status' => 'cancelled']);
+                    $booking->update([
+                        'amount_paid' => 0.00,
+                        'balance' => (float) $booking->total,
+                    ]);
+                } elseif ($newStatus === 'pending') {
+                    // Mark payments as pending so they don't count towards completed revenue until confirmed
+                    $booking->payments()->where('status', 'completed')->update(['status' => 'pending']);
+                    $booking->update([
+                        'amount_paid' => 0.00,
+                        'balance' => (float) $booking->total,
+                    ]);
+                } elseif (in_array($newStatus, ['confirmed', 'checked_in', 'checked_out'])) {
+                    // Restore previously recorded payments to completed
+                    $booking->payments()->whereIn('status', ['cancelled', 'pending'])->update(['status' => 'completed']);
+                    $activePaymentsSum = (float) $booking->payments()->where('status', 'completed')->sum('amount');
+                    $booking->update([
+                        'amount_paid' => $activePaymentsSum,
+                        'balance' => max(0.00, (float) $booking->total - $activePaymentsSum),
+                    ]);
+                }
 
                 // If payment recording is requested with status update
                 if (!empty($validated['record_payment'])) {
@@ -453,8 +479,8 @@ class BookingController extends Controller
                             'paid_at' => Carbon::now(),
                         ]);
 
-                        $newPaid = (float)$booking->amount_paid + $amount;
-                        $newBalance = max(0.00, (float)$booking->total - $newPaid);
+                        $newPaid = (float) $booking->payments()->where('status', 'completed')->sum('amount');
+                        $newBalance = max(0.00, (float) $booking->total - $newPaid);
 
                         $booking->update([
                             'amount_paid' => $newPaid,

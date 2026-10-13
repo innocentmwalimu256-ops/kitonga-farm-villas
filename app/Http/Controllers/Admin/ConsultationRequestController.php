@@ -165,8 +165,10 @@ class ConsultationRequestController extends Controller
                     'paid_at' => Carbon::now(),
                     'recorded_by' => auth()->id(),
                 ]);
+            } elseif ($existingPayment && $existingPayment->status !== 'completed') {
+                $existingPayment->update(['status' => 'completed']);
             }
-        } elseif ($validated['status'] === 'cancelled') {
+        } elseif (in_array($validated['status'], ['cancelled', 'request_created', 'whatsapp_initiated', 'awaiting_staff_response', 'awaiting_payment'])) {
             Payment::where('reference', 'like', "%{$consultation->reference}%")
                 ->where('status', 'completed')
                 ->update(['status' => 'cancelled']);
