@@ -79,12 +79,31 @@ class POSController extends Controller
      */
     public function receipt($id)
     {
-        abort_if(!auth()->user()->hasAnyPermission(['view_bookings', 'create_sales']), 403, 'Unauthorized to view sale receipts.');
+        abort_if(!auth()->user()->hasAnyRole(['owner', 'manager', 'cashier']) && !auth()->user()->hasAnyPermission(['view_bookings', 'create_sales', 'view_revenue']), 403, 'Unauthorized to view sale receipts.');
 
-        $sale = Sale::with(['items.product', 'customer', 'creator', 'payments'])->findOrFail($id);
+        $sale = is_numeric($id)
+            ? Sale::with(['items.product', 'customer', 'creator', 'payments'])->findOrFail($id)
+            : Sale::where('reference', $id)->with(['items.product', 'customer', 'creator', 'payments'])->firstOrFail();
 
         return Inertia::render('Admin/POS/Receipt', [
             'sale' => $sale,
+            'isPublic' => false,
+        ]);
+    }
+
+    /**
+     * Show public digital receipt for customer (e.g. via WhatsApp link).
+     */
+    public function publicReceipt($reference)
+    {
+        $sale = Sale::where('reference', $reference)
+            ->orWhere('id', is_numeric($reference) ? (int)$reference : 0)
+            ->with(['items.product', 'customer', 'creator', 'payments'])
+            ->firstOrFail();
+
+        return Inertia::render('Admin/POS/Receipt', [
+            'sale' => $sale,
+            'isPublic' => true,
         ]);
     }
 
@@ -93,7 +112,7 @@ class POSController extends Controller
      */
     public function index(Request $request)
     {
-        abort_if(!auth()->user()->hasAnyPermission(['view_bookings', 'create_sales']), 403, 'Unauthorized to view past sales.');
+        abort_if(!auth()->user()->hasAnyRole(['owner', 'manager', 'cashier']) && !auth()->user()->hasAnyPermission(['view_bookings', 'create_sales', 'view_revenue']), 403, 'Unauthorized to view past sales.');
 
         $query = Sale::with(['customer', 'creator']);
 
@@ -102,7 +121,12 @@ class POSController extends Controller
         }
 
         if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
+            $status = $request->input('status');
+            if ($status === 'paid' || $status === 'completed') {
+                $query->whereIn('status', ['paid', 'completed']);
+            } else {
+                $query->where('status', $status);
+            }
         }
 
         $sales = $query->orderBy('created_at', 'desc')->paginate(15);

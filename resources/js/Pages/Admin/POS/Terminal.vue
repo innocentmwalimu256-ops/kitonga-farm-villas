@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps({
     products: Array,
@@ -88,8 +88,21 @@ const cartTotal = computed(() => {
 });
 
 const formatCurrency = (val) => {
-    return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(val);
+    return new Intl.NumberFormat('en-TZ', { style: 'currency', currency: 'TZS', maximumFractionDigits: 0 }).format(Number(val) || 0);
 };
+
+const isSubmitting = ref(false);
+
+onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const preselectId = urlParams.get('product_id');
+    if (preselectId && props.products) {
+        const prod = props.products.find(p => p.id === parseInt(preselectId));
+        if (prod) {
+            addToCart(prod);
+        }
+    }
+});
 
 const submitSale = () => {
     if (cart.value.length === 0) {
@@ -97,30 +110,38 @@ const submitSale = () => {
         return;
     }
 
-    const form = useForm({
-        customer_id: customerMode.value === 'existing' ? selectedCustomerId.value : null,
+    if (isSubmitting.value) return;
+    isSubmitting.value = true;
+
+    const payload = {
+        customer_id: customerMode.value === 'existing' && selectedCustomerId.value ? selectedCustomerId.value : null,
         customer_name: customerMode.value === 'new' ? newCustomerName.value : (customerMode.value === 'walkin' ? 'Walk-in Guest' : ''),
         customer_phone: customerMode.value === 'new' ? newCustomerPhone.value : null,
         customer_email: customerMode.value === 'new' ? newCustomerEmail.value : null,
         category: selectedPosCategory.value,
-        discount: discount.value,
+        discount: Number(discount.value) || 0,
         amount_paid: cartTotal.value,
         payment_method: paymentMethod.value,
-        payment_reference: paymentReference.value,
+        payment_reference: paymentReference.value || null,
         items: cart.value.map(item => ({
             product_id: item.product_id,
             quantity: item.quantity,
         })),
-    });
+    };
 
-    form.post(route('admin.pos.store'), {
+    router.post(route('admin.pos.store'), payload, {
         onSuccess: () => {
             cart.value = [];
             discount.value = 0;
             paymentReference.value = '';
+            isSubmitting.value = false;
         },
         onError: (err) => {
+            isSubmitting.value = false;
             alert(Object.values(err).join('\n'));
+        },
+        onFinish: () => {
+            isSubmitting.value = false;
         }
     });
 };
@@ -142,6 +163,10 @@ const submitSale = () => {
                     <span class="text-xs font-mono px-2.5 py-1 bg-emerald-50 text-emerald-800 font-bold rounded-md border border-emerald-200">
                         {{ cart.length }} items in register
                     </span>
+                    <Link :href="route('admin.pos.index')" class="text-xs font-bold text-gray-700 hover:text-emerald-800 px-3 py-1 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md transition flex items-center gap-1">
+                        <span>📋</span>
+                        <span>Orodha ya Mauzo (Sales Log)</span>
+                    </Link>
                 </div>
             </div>
         </template>
@@ -376,10 +401,11 @@ const submitSale = () => {
                         <button 
                             type="button"
                             @click="submitSale" 
-                            :disabled="cart.length === 0"
-                            class="w-full py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition cursor-pointer disabled:opacity-50"
+                            :disabled="cart.length === 0 || isSubmitting"
+                            class="w-full py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
                         >
-                            Complete Sale & Print Receipt →
+                            <span v-if="isSubmitting" class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                            <span>{{ isSubmitting ? 'Inarekodi Mauzo...' : 'Kamilisha Mauzo & Ona Risiti (Complete & View Receipt) →' }}</span>
                         </button>
                     </div>
 

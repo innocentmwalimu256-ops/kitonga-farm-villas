@@ -168,15 +168,31 @@ const clearFilters = () => {
                     </h2>
                     <p class="text-xs text-gray-500 mt-0.5">Manage farm produce, catalog prices, stock levels, and item configurations</p>
                 </div>
-                <button 
-                    @click="openCreateModal" 
-                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-xs font-bold rounded-lg shadow-sm hover:shadow transition-all duration-200"
-                >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Add New Product
-                </button>
+                <div class="flex flex-wrap items-center gap-2">
+                    <Link 
+                        :href="route('admin.pos.terminal')" 
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg shadow-sm transition"
+                    >
+                        <span>🛒</span>
+                        <span>Uza Bidhaa (POS)</span>
+                    </Link>
+                    <Link 
+                        :href="route('admin.pos.index')" 
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg border border-gray-200 transition"
+                    >
+                        <span>🧾</span>
+                        <span>Risiti za Mauzo (Log)</span>
+                    </Link>
+                    <button 
+                        @click="openCreateModal" 
+                        class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm transition-all duration-200"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add New Product
+                    </button>
+                </div>
             </div>
         </template>
 
@@ -319,6 +335,16 @@ const clearFilters = () => {
 
                                     <!-- Actions -->
                                     <td class="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+                                        <!-- Quick Sell via POS -->
+                                        <Link 
+                                            :href="route('admin.pos.terminal', { product_id: prod.id })" 
+                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-2xs transition"
+                                            title="Uza Bidhaa Hii (Open POS Register & Issue Receipt)"
+                                        >
+                                            <span>🛒</span>
+                                            <span>Uza</span>
+                                        </Link>
+
                                         <!-- Edit Button -->
                                         <button 
                                             @click="openEditModal(prod)" 

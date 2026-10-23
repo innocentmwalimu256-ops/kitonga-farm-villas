@@ -98,7 +98,7 @@ const showingNavigationDropdown = ref(false);
                                                 <DropdownLink :href="route('admin.experiences.index')">Experiences</DropdownLink>
                                                 <DropdownLink :href="route('admin.housekeeping.index')">Housekeeping</DropdownLink>
                                                 <DropdownLink :href="route('admin.products.index')">Products & Stock</DropdownLink>
-                                                <DropdownLink :href="route('admin.pos.index')">POS Sales Log</DropdownLink>
+                                                <DropdownLink :href="route('admin.pos.index')" class="font-bold text-emerald-800">🧾 POS Sales Log (Risiti za Mauzo)</DropdownLink>
                                                 <DropdownLink :href="route('admin.expenses.index')">Hotel & Farm Expenses</DropdownLink>
                                                 <DropdownLink :href="route('admin.payments.index')">Payments Registry</DropdownLink>
                                                 <DropdownLink :href="route('admin.financials.report')">Financial Statement</DropdownLink>
@@ -255,7 +255,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="grid grid-cols-2 gap-1.5 mt-2">
                             <Link :href="route('admin.products.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Products & Stock</Link>
                             <Link :href="route('admin.expenses.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Farm Expenses</Link>
-                            <Link :href="route('admin.pos.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">POS Sales Log</Link>
+                            <Link :href="route('admin.pos.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 font-bold border border-emerald-100 flex items-center gap-1.5"><span>🧾</span><span>Risiti za Mauzo</span></Link>
                             <Link :href="route('admin.payments.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Payments Log</Link>
                             <Link :href="route('admin.accommodation.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Villas & Rooms</Link>
                             <Link :href="route('admin.experiences.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700">Experiences</Link>

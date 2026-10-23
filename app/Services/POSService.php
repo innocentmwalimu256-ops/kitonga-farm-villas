@@ -30,14 +30,19 @@ class POSService
         return DB::transaction(function () use ($data) {
             // 1. Resolve or create customer if provided
             $customerId = null;
-            if (isset($data['customer_id'])) {
-                $customerId = $data['customer_id'];
+            if (!empty($data['customer_id'])) {
+                $customerId = (int) $data['customer_id'];
             } elseif (!empty($data['customer_name'])) {
-                $customer = Customer::create([
-                    'name' => $data['customer_name'],
-                    'phone' => $data['customer_phone'] ?? null,
-                    'email' => $data['customer_email'] ?? null,
-                ]);
+                $name = trim($data['customer_name']);
+                if (strtolower($name) === 'walk-in guest' || strtolower($name) === 'walk-in' || strtolower($name) === 'walkin') {
+                    $customer = Customer::firstOrCreate(['name' => 'Walk-in Guest']);
+                } else {
+                    $customer = Customer::create([
+                        'name' => $name,
+                        'phone' => $data['customer_phone'] ?? null,
+                        'email' => $data['customer_email'] ?? null,
+                    ]);
+                }
                 $customerId = $customer->id;
             }
 

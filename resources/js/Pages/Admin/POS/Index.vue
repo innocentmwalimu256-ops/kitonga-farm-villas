@@ -83,9 +83,9 @@ const clearFilters = () => {
                         <div>
                             <label class="text-[10px] font-bold text-gray-400 uppercase">Status</label>
                             <select v-model="filterForm.status" class="w-full text-xs rounded border-gray-300 mt-1">
-                                <option value="">All Statuses</option>
-                                <option value="paid">Paid & Completed</option>
-                                <option value="cancelled">Refunded / Cancelled</option>
+                                <option value="">All Statuses (Zote)</option>
+                                <option value="completed">Paid & Completed (Zilizolipwa)</option>
+                                <option value="cancelled">Refunded / Cancelled (Zilizofutwa)</option>
                             </select>
                         </div>
                         <div class="flex items-end space-x-2">
@@ -130,19 +130,20 @@ const clearFilters = () => {
                                     <td class="p-4 font-mono font-bold text-gray-900 text-xs">TZS {{ Number(sale.total).toLocaleString() }}</td>
                                     <td class="p-4 text-xs font-mono">{{ new Date(sale.created_at).toLocaleString() }}</td>
                                     <td class="p-4 text-xs">
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase"
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
                                             :class="{
-                                                'bg-green-100 text-green-800': sale.status === 'paid',
-                                                'bg-red-100 text-red-800': sale.status === 'cancelled',
+                                                'bg-green-100 text-green-800 border border-green-200': ['paid', 'completed'].includes(sale.status),
+                                                'bg-red-100 text-red-800 border border-red-200': sale.status === 'cancelled',
                                             }">
-                                            {{ sale.status }}
+                                            {{ sale.status === 'completed' ? 'Paid & Completed' : sale.status }}
                                         </span>
                                     </td>
-                                    <td class="p-4 text-right space-x-1">
-                                        <Link :href="route('admin.pos.receipt', { id: sale.id })" class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-bold rounded shadow-xs transition inline-block">
-                                            View Receipt
+                                    <td class="p-4 text-right space-x-1 whitespace-nowrap">
+                                        <Link :href="route('admin.pos.receipt', sale.id)" class="px-2.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold rounded-lg shadow-2xs transition inline-flex items-center gap-1">
+                                            <span>🧾</span>
+                                            <span>Ona Risiti (Receipt)</span>
                                         </Link>
-                                        <button v-if="sale.status === 'paid'" @click="openRefundModal(sale)" class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold rounded shadow-xs transition">
+                                        <button v-if="['paid', 'completed'].includes(sale.status)" @click="openRefundModal(sale)" class="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-[11px] font-bold rounded-lg transition">
                                             Refund / Cancel
                                         </button>
                                     </td>
