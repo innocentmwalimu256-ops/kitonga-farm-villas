@@ -422,7 +422,17 @@ const filteredRooms = computed(() => {
                                                     'bg-gray-400': room.occupancy_status === 'maintenance',
                                                 }"
                                             ></span>
-                                            <h4 class="font-serif font-bold text-base text-gray-900">{{ room.name }}</h4>
+                                            <h4 class="font-serif font-bold text-base text-gray-900">
+                                                <Link 
+                                                    v-if="room.occupancy_status === 'vacant'" 
+                                                    :href="route('admin.bookings.create', { unit_id: room.id, type_id: room.villa_type_id })" 
+                                                    class="hover:text-emerald-700 hover:underline transition"
+                                                    :title="`Sajili mgeni kwa ${room.name}`"
+                                                >
+                                                    {{ room.name }}
+                                                </Link>
+                                                <span v-else>{{ room.name }}</span>
+                                            </h4>
                                         </div>
                                         <p class="text-xs text-gray-500 mt-0.5">{{ room.villa_type }}</p>
                                     </div>
@@ -554,8 +564,9 @@ const filteredRooms = computed(() => {
 
                                 <div v-else-if="room.occupancy_status === 'vacant'">
                                     <Link 
-                                        :href="route('admin.bookings.create')" 
-                                        class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-[11px] transition inline-flex items-center gap-1 shadow-2xs"
+                                        :href="route('admin.bookings.create', { unit_id: room.id, type_id: room.villa_type_id })" 
+                                        class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white rounded-lg font-bold text-[11px] transition inline-flex items-center gap-1 shadow-2xs"
+                                        :title="`Sajili mgeni kwa ${room.name}`"
                                     >
                                         <span>Sajili Mgeni</span>
                                         <span>+</span>

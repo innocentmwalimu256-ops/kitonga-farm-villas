@@ -172,12 +172,36 @@ class BookingController extends Controller
     /**
      * Show booking creation page.
      */
-    public function create()
+    public function create(Request $request)
     {
         abort_if(!auth()->user()->hasPermissionTo('create_bookings'), 403, 'Unauthorized access to create a booking.');
 
+        $preselectedUnitId = $request->query('unit_id');
+        $preselectedTypeId = $request->query('type_id');
+
+        $preselectedUnit = null;
+        if ($preselectedUnitId) {
+            $preselectedUnit = AccommodationUnit::with('type')->find($preselectedUnitId);
+            if ($preselectedUnit && !$preselectedTypeId) {
+                $preselectedTypeId = $preselectedUnit->accommodation_type_id;
+            }
+        }
+
+        $villas = AccommodationType::with(['units' => function ($q) {
+            $q->where('status', 'active')->orderBy('name');
+        }])->where('active', true)->get();
+
+        $units = AccommodationUnit::with('type')
+            ->where('status', 'active')
+            ->orderBy('name')
+            ->get();
+
         return Inertia::render('Admin/Bookings/Create', [
-            'villas' => AccommodationType::where('active', true)->get(),
+            'villas' => $villas,
+            'units' => $units,
+            'preselected_unit_id' => $preselectedUnitId ? (int) $preselectedUnitId : null,
+            'preselected_unit' => $preselectedUnit,
+            'preselected_type_id' => $preselectedTypeId ? (int) $preselectedTypeId : null,
             'experiences' => \App\Models\FarmTour::where('status', 'published')->orWhere('status', 'preview')->orderBy('sort_order')->get(),
             'customers' => Customer::all(),
         ]);
@@ -393,6 +417,7 @@ class BookingController extends Controller
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'accommodation_type_id' => 'required|exists:accommodation_types,id',
+            'accommodation_unit_id' => 'nullable|exists:accommodation_units,id',
             'guests_count' => 'required|integer|min:1',
             'status' => 'required|string',
             'source' => 'required|string',

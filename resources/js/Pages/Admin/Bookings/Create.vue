@@ -1,12 +1,28 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 const props = defineProps({
     villas: {
         type: Array,
         default: () => [],
+    },
+    units: {
+        type: Array,
+        default: () => [],
+    },
+    preselected_unit_id: {
+        type: [Number, String],
+        default: null,
+    },
+    preselected_unit: {
+        type: Object,
+        default: null,
+    },
+    preselected_type_id: {
+        type: [Number, String],
+        default: null,
     },
     experiences: {
         type: Array,
@@ -23,6 +39,9 @@ const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
 
 const bookingType = ref('villa'); // 'villa', 'tour', or 'consultation'
 
+const initialTypeId = props.preselected_type_id || props.preselected_unit?.accommodation_type_id || props.villas[0]?.id || '';
+const initialUnitId = props.preselected_unit_id || props.preselected_unit?.id || '';
+
 const form = useForm({
     booking_type: 'villa',
     customer_mode: 'new', // 'new' or 'existing'
@@ -35,7 +54,8 @@ const form = useForm({
     id_document: null,
     
     // Villa fields
-    accommodation_type_id: props.villas[0]?.id || '',
+    accommodation_type_id: initialTypeId,
+    accommodation_unit_id: initialUnitId,
     check_in: today,
     check_out: tomorrow,
     
@@ -112,6 +132,36 @@ watch(bookingType, (newType) => {
 // ─── VILLA LOGIC ─────────────────────────────────────────────────────────────
 const selectedVilla = computed(() => {
     return props.villas.find(v => v.id == form.accommodation_type_id) || null;
+});
+
+const availableUnits = computed(() => {
+    const typeId = form.accommodation_type_id;
+    if (!typeId) return [];
+    return (props.units || []).filter(u => u.accommodation_type_id == typeId);
+});
+
+const selectedUnit = computed(() => {
+    if (form.accommodation_unit_id) {
+        return (props.units || []).find(u => u.id == form.accommodation_unit_id) || props.preselected_unit || null;
+    }
+    return null;
+});
+
+const clearSelectedUnit = () => {
+    form.accommodation_unit_id = '';
+};
+
+onMounted(() => {
+    if (props.preselected_unit_id || props.preselected_type_id) {
+        bookingType.value = 'villa';
+        form.booking_type = 'villa';
+        if (props.preselected_type_id) {
+            form.accommodation_type_id = props.preselected_type_id;
+        }
+        if (props.preselected_unit_id) {
+            form.accommodation_unit_id = props.preselected_unit_id;
+        }
+    }
 });
 
 // ─── TOUR LOGIC ──────────────────────────────────────────────────────────────
@@ -201,6 +251,13 @@ const onVillaChange = () => {
         }
         guestError.value = '';
         form.rate_override = '';
+
+        // If currently chosen unit does not belong to this villa type, auto-select first unit of this type or clear
+        const unitsForType = availableUnits.value;
+        const currentBelongs = unitsForType.some(u => u.id == form.accommodation_unit_id);
+        if (!currentBelongs) {
+            form.accommodation_unit_id = unitsForType.length > 0 ? unitsForType[0].id : '';
+        }
     }
 };
 
@@ -362,6 +419,35 @@ const submitBooking = () => {
                             </span>
                         </div>
 
+                        <!-- Direct Selected Room Banner -->
+                        <div v-if="selectedUnit" class="p-4 bg-emerald-50/90 border border-emerald-300 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-xs">
+                                    🏡
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-sm font-black text-emerald-950 font-serif">{{ selectedUnit.name }}</h4>
+                                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-emerald-200/90 text-emerald-900 border border-emerald-300">
+                                            Chumba Kimechaguliwa
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-emerald-800 mt-0.5">
+                                        Aina: <strong>{{ selectedVilla?.name || selectedUnit.type?.name }}</strong> · 
+                                        Bei: <strong>{{ formatCurrency(baseRate) }}/usiku</strong> · 
+                                        Mgeni atasajiliwa rasmi kwenye chumba hiki moja kwa moja!
+                                    </p>
+                                </div>
+                            </div>
+                            <button 
+                                type="button" 
+                                @click="clearSelectedUnit" 
+                                class="text-xs text-emerald-800 hover:text-emerald-950 underline font-semibold cursor-pointer shrink-0"
+                            >
+                                Badilisha Chumba
+                            </button>
+                        </div>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                             <!-- Villa Selection -->
                             <div class="sm:col-span-2">
@@ -371,6 +457,37 @@ const submitBooking = () => {
                                         {{ villa.name }} — {{ formatCurrency(villa.base_price) }}/night (Max {{ villa.capacity }} guests)
                                     </option>
                                 </select>
+                            </div>
+
+                            <!-- Specific Room / Unit Selection -->
+                            <div class="sm:col-span-2">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                                    Chumba Maalum (Room / Unit Number)
+                                </label>
+                                <select v-model="form.accommodation_unit_id" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5 font-bold text-gray-900">
+                                    <option value="">-- Panga Chumba Chochote Kinachopatikana (Auto-Assign) --</option>
+                                    <option v-for="unit in availableUnits" :key="unit.id" :value="unit.id">
+                                        {{ unit.name }} ({{ unit.housekeeping_status === 'clean' ? 'Safi / Clean' : unit.housekeeping_status }})
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Quick Unit Pills -->
+                            <div v-if="availableUnits.length > 0" class="sm:col-span-4 flex flex-wrap items-center gap-1.5 p-2.5 bg-gray-50/80 rounded-xl border border-gray-200">
+                                <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mr-1">Chagua Chumba Haraka:</span>
+                                <button
+                                    v-for="u in availableUnits"
+                                    :key="u.id"
+                                    type="button"
+                                    @click="form.accommodation_unit_id = u.id"
+                                    class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                                    :class="form.accommodation_unit_id == u.id 
+                                        ? 'bg-emerald-800 text-white shadow-2xs' 
+                                        : 'bg-white hover:bg-gray-100 text-gray-700 border border-gray-200'"
+                                >
+                                    <span>🏡 {{ u.name }}</span>
+                                    <span v-if="form.accommodation_unit_id == u.id" class="text-[10px] text-emerald-200 font-normal">✓ Kimechaguliwa</span>
+                                </button>
                             </div>
 
                             <!-- Number of Guests -->

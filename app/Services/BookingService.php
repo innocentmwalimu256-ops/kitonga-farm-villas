@@ -113,34 +113,67 @@ class BookingService
             // 2. Resolve accommodation type and find available unit
             $accommodationType = AccommodationType::findOrFail($data['accommodation_type_id']);
             
-            // Lock accommodation units table to prevent race conditions during concurrent requests
-            // In SQLite, this locks the whole DB file; in MySQL, it locks rows or tables
-            $availableUnits = AccommodationUnit::where('accommodation_type_id', $accommodationType->id)
-                ->where('status', 'active')
-                ->lockForUpdate() // Lock table/rows during transaction
-                ->get();
-
             $selectedUnit = null;
-            foreach ($availableUnits as $unit) {
-                // Perform overlapping check inside transaction
-                $overlap = Booking::where('accommodation_unit_id', $unit->id)
-                    ->whereIn('status', ['pending', 'confirmed', 'checked_in'])
-                    ->where(function ($query) use ($checkIn, $checkOut) {
-                        $query->where('check_in', '<', $checkOut->format('Y-m-d'))
-                              ->where('check_out', '>', $checkIn->format('Y-m-d'));
-                    })
-                    ->exists();
 
-                $blocked = AvailabilityBlock::where('accommodation_unit_id', $unit->id)
-                    ->where(function ($query) use ($checkIn, $checkOut) {
-                        $query->where('start_date', '<', $checkOut->format('Y-m-d'))
-                              ->where('end_date', '>', $checkIn->format('Y-m-d'));
-                    })
-                    ->exists();
+            // If a specific unit was explicitly chosen (e.g., F1, F2, S1, S2, V1, V2), verify and lock that exact unit
+            if (!empty($data['accommodation_unit_id'])) {
+                $requestedUnit = AccommodationUnit::where('id', $data['accommodation_unit_id'])
+                    ->where('status', 'active')
+                    ->lockForUpdate()
+                    ->first();
 
-                if (!$overlap && !$blocked) {
-                    $selectedUnit = $unit;
-                    break;
+                if ($requestedUnit) {
+                    $overlap = Booking::where('accommodation_unit_id', $requestedUnit->id)
+                        ->whereIn('status', ['pending', 'confirmed', 'checked_in'])
+                        ->where(function ($query) use ($checkIn, $checkOut) {
+                            $query->where('check_in', '<', $checkOut->format('Y-m-d'))
+                                  ->where('check_out', '>', $checkIn->format('Y-m-d'));
+                        })
+                        ->exists();
+
+                    $blocked = AvailabilityBlock::where('accommodation_unit_id', $requestedUnit->id)
+                        ->where(function ($query) use ($checkIn, $checkOut) {
+                            $query->where('start_date', '<', $checkOut->format('Y-m-d'))
+                                  ->where('end_date', '>', $checkIn->format('Y-m-d'));
+                        })
+                        ->exists();
+
+                    if (!$overlap && !$blocked) {
+                        $selectedUnit = $requestedUnit;
+                    } else {
+                        throw new Exception("Chumba '{$requestedUnit->name}' tayari kimechukuliwa au kimezuiwa kwenye tarehe ulizochagua ({$checkIn->format('d M Y')} - {$checkOut->format('d M Y')}). Tafadhali chagua chumba kingine au badilisha tarehe.");
+                    }
+                }
+            }
+
+            // Fallback: Auto-assign any available unit of that type if none was specifically chosen
+            if (!$selectedUnit) {
+                $availableUnits = AccommodationUnit::where('accommodation_type_id', $accommodationType->id)
+                    ->where('status', 'active')
+                    ->lockForUpdate() // Lock table/rows during transaction
+                    ->get();
+
+                foreach ($availableUnits as $unit) {
+                    // Perform overlapping check inside transaction
+                    $overlap = Booking::where('accommodation_unit_id', $unit->id)
+                        ->whereIn('status', ['pending', 'confirmed', 'checked_in'])
+                        ->where(function ($query) use ($checkIn, $checkOut) {
+                            $query->where('check_in', '<', $checkOut->format('Y-m-d'))
+                                  ->where('check_out', '>', $checkIn->format('Y-m-d'));
+                        })
+                        ->exists();
+
+                    $blocked = AvailabilityBlock::where('accommodation_unit_id', $unit->id)
+                        ->where(function ($query) use ($checkIn, $checkOut) {
+                            $query->where('start_date', '<', $checkOut->format('Y-m-d'))
+                                  ->where('end_date', '>', $checkIn->format('Y-m-d'));
+                        })
+                        ->exists();
+
+                    if (!$overlap && !$blocked) {
+                        $selectedUnit = $unit;
+                        break;
+                    }
                 }
             }
 
