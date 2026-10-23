@@ -392,8 +392,22 @@ class BookingController extends Controller
                     ]);
                 }
 
-                // Record immediate payment if amount_paid > 0
-                if ($booking->amount_paid > 0) {
+                // Record payment: If confirmed and no amount entered, automatically mark full total paid
+                if ($booking->status === 'confirmed' && $booking->amount_paid <= 0 && $booking->total > 0) {
+                    $booking->update([
+                        'amount_paid' => $booking->total,
+                        'balance' => 0.00,
+                    ]);
+                    Payment::create([
+                        'booking_id' => $booking->id,
+                        'method' => $validated['payment_method'] ?? 'cash',
+                        'reference' => $request->input('payment_reference') ?? 'Tour Confirmation Auto-Payment',
+                        'amount' => $booking->total,
+                        'status' => 'completed',
+                        'paid_at' => Carbon::now(),
+                        'recorded_by' => auth()->id(),
+                    ]);
+                } elseif ($booking->amount_paid > 0) {
                     Payment::create([
                         'booking_id' => $booking->id,
                         'method' => $validated['payment_method'] ?? 'cash',
@@ -457,11 +471,25 @@ class BookingController extends Controller
 
             $booking = $this->bookingService->createBooking($validated);
 
-            // Record immediate payment if cashier entered amount_paid
-            if ($booking->amount_paid > 0) {
+            // Record payment: If confirmed and no amount entered, automatically mark full total paid
+            if ($booking->status === 'confirmed' && $booking->amount_paid <= 0 && $booking->total > 0) {
+                $booking->update([
+                    'amount_paid' => $booking->total,
+                    'balance' => 0.00,
+                ]);
                 Payment::create([
                     'booking_id' => $booking->id,
-                    'method' => $validated['payment_method'],
+                    'method' => $validated['payment_method'] ?? 'cash',
+                    'reference' => $request->input('payment_reference') ?? 'Villa Confirmation Auto-Payment',
+                    'amount' => $booking->total,
+                    'status' => 'completed',
+                    'paid_at' => Carbon::now(),
+                    'recorded_by' => auth()->id(),
+                ]);
+            } elseif ($booking->amount_paid > 0) {
+                Payment::create([
+                    'booking_id' => $booking->id,
+                    'method' => $validated['payment_method'] ?? 'cash',
                     'reference' => $request->input('payment_reference'),
                     'amount' => $booking->amount_paid,
                     'status' => 'completed',
@@ -529,9 +557,12 @@ class BookingController extends Controller
                         $activePaymentsSum = (float) $booking->amount_paid;
                     }
 
-                    // If payment recording is requested with status update, only add what is remaining
-                    if (!empty($validated['record_payment'])) {
-                        $remaining = max(0.00, (float) $booking->total - $activePaymentsSum);
+                    $bookingTotal = (float) $booking->total;
+                    $remaining = max(0.00, $bookingTotal - $activePaymentsSum);
+
+                    // User requested: "nikiweka status ya confirm nataka automatically kiasi kiwe kimejiweka"
+                    // When status is confirmed or record_payment requested, automatically record remaining balance as paid!
+                    if ($remaining > 0 && ($newStatus === 'confirmed' || !empty($validated['record_payment']))) {
                         $amountToAdd = !empty($validated['payment_amount']) ? min($remaining, (float) $validated['payment_amount']) : $remaining;
                         if ($amountToAdd > 0) {
                             \App\Models\Payment::create([
@@ -549,7 +580,7 @@ class BookingController extends Controller
 
                     $booking->update([
                         'amount_paid' => $activePaymentsSum,
-                        'balance' => max(0.00, (float) $booking->total - $activePaymentsSum),
+                        'balance' => max(0.00, $bookingTotal - $activePaymentsSum),
                     ]);
                 }
             });

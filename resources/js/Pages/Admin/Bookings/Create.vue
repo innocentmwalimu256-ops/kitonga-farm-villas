@@ -330,6 +330,10 @@ const formatCurrency = (val) => {
 };
 
 const submitBooking = () => {
+    // If status is confirmed and cashier left amount_paid empty or 0, automatically set to grandTotal
+    if (form.status === 'confirmed' && (!form.amount_paid || Number(form.amount_paid) <= 0)) {
+        form.amount_paid = grandTotal.value;
+    }
     form.post(route('admin.bookings.store'), {
         onError: (errors) => {
             alert(Object.values(errors).join('\n'));
@@ -883,8 +887,20 @@ const submitBooking = () => {
                         <!-- Instant Payment fields -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-gray-100">
                             <div>
-                                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Amount Paid Now (TZS)</label>
-                                <input type="number" v-model="form.amount_paid" placeholder="0" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Amount Paid Now (TZS)</label>
+                                    <button 
+                                        type="button" 
+                                        @click="form.amount_paid = grandTotal" 
+                                        class="text-[10px] text-emerald-700 hover:text-emerald-900 font-bold underline cursor-pointer"
+                                    >
+                                        Lipa Yote ({{ formatCurrency(grandTotal) }})
+                                    </button>
+                                </div>
+                                <input type="number" v-model="form.amount_paid" :placeholder="form.status === 'confirmed' ? String(grandTotal) + ' (Auto Full)' : '0'" class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-600 focus:ring-emerald-600 py-2.5">
+                                <p v-if="form.status === 'confirmed' && (!form.amount_paid || Number(form.amount_paid) === 0)" class="text-[10px] text-emerald-700 mt-1 font-semibold">
+                                    💡 Ikiwa imethibitishwa (Confirmed), kiasi cha {{ formatCurrency(grandTotal) }} kitawekwa kiotomatiki kuwa kimelipwa.
+                                </p>
                             </div>
                             <div v-if="Number(form.amount_paid) > 0">
                                 <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Payment Method *</label>

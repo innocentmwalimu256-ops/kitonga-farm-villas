@@ -47,10 +47,10 @@ const financialsForm = useForm({
 
 const openStatusModal = (booking) => {
     selectedBooking.value = booking;
-    statusForm.status = booking.status;
+    statusForm.status = booking.status === 'pending' ? 'confirmed' : booking.status;
     statusForm.notes = '';
-    statusForm.record_payment = false;
-    statusForm.payment_amount = Math.max(0, Number(booking.balance) || 0);
+    statusForm.record_payment = true;
+    statusForm.payment_amount = Math.max(0, Number(booking.balance) || Number(booking.total) || 0);
     statusForm.payment_method = 'mobile_money';
     statusForm.payment_reference = '';
     isStatusModalOpen.value = true;
@@ -847,6 +847,29 @@ const calculateNights = (booking) => {
                                     ✅ Ukichagua <strong>Confirmed</strong>, booking hii itasoma rasmi kwenye mapato halisi ya Dashboard.
                                 </span>
                             </p>
+                        </div>
+
+                        <!-- Auto Payment Preview on Confirmation -->
+                        <div v-if="['confirmed', 'checked_in'].includes(statusForm.status)" class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2 text-xs">
+                            <div class="flex items-start gap-1.5 text-emerald-900 font-bold leading-snug">
+                                <span>✅</span>
+                                <span>Kiasi cha <strong>{{ formatCurrency(Number(selectedBooking?.balance) > 0 ? selectedBooking?.balance : selectedBooking?.total) }}</strong> kitajiweka kiotomatiki kuwa kimelipwa kikamilifu (Paid) na kusoma mara moja kwenye Dashboard.</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-emerald-200/60">
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-600 uppercase block">Njia ya Malipo</label>
+                                    <select v-model="statusForm.payment_method" class="w-full text-xs rounded-lg border-gray-300 mt-0.5">
+                                        <option value="mobile_money">Mobile Money (M-Pesa / Tigo / Airtel)</option>
+                                        <option value="cash">Pesa Taslimu (Cash)</option>
+                                        <option value="bank_transfer">Benki (Bank Transfer)</option>
+                                        <option value="card">Kadi (Card)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-600 uppercase block">Ref ya Malipo (Hiari)</label>
+                                    <input type="text" v-model="statusForm.payment_reference" placeholder="Mfano: MPESA / Cash" class="w-full text-xs rounded-lg border-gray-300 mt-0.5">
+                                </div>
+                            </div>
                         </div>
 
                         <div>

@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps({
     booking: {
@@ -21,10 +21,17 @@ const props = defineProps({
 const statusForm = useForm({
     status: props.booking?.status || 'pending',
     notes: '',
-    record_payment: false,
-    payment_amount: Number(props.booking?.balance) || 0,
+    record_payment: true,
+    payment_amount: Number(props.booking?.balance) || Number(props.booking?.total) || 0,
     payment_method: 'mobile_money',
     payment_reference: '',
+});
+
+watch(() => statusForm.status, (newStatus) => {
+    if (['confirmed', 'checked_in', 'checked_out'].includes(newStatus)) {
+        statusForm.record_payment = true;
+        statusForm.payment_amount = Number(props.booking?.balance) || Number(props.booking?.total) || 0;
+    }
 });
 
 const paymentForm = useForm({
@@ -540,23 +547,23 @@ const submitPayment = () => {
                                     <textarea v-model="statusForm.notes" rows="2" placeholder="Reason for change..." class="w-full text-xs rounded-lg border-gray-300 mt-1"></textarea>
                                 </div>
 
-                                <!-- Optional Payment Recording on Status Change -->
-                                <div v-if="['confirmed', 'checked_in'].includes(statusForm.status) && Number(booking?.balance) > 0" class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2.5">
-                                    <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="checkbox" v-model="statusForm.record_payment" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-                                        <span class="text-xs font-bold text-emerald-900">Mark Full Balance Paid ({{ formatCurrency(booking?.balance) }})</span>
-                                    </label>
+                                <!-- Payment Recording on Confirmation -->
+                                <div v-if="['confirmed', 'checked_in'].includes(statusForm.status)" class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
+                                    <div class="flex items-start gap-1.5 text-xs font-bold text-emerald-900 leading-snug">
+                                        <span>✅</span>
+                                        <span>Kiasi cha <strong>{{ formatCurrency(Number(booking?.balance) > 0 ? booking?.balance : booking?.total) }}</strong> kitarekodiwa moja kwa moja kuwa kimelipwa kikamilifu (Paid) na kusoma kwenye mapato ya Dashboard.</span>
+                                    </div>
                                     
-                                    <div v-if="statusForm.record_payment" class="space-y-2 pt-1">
+                                    <div class="space-y-2 pt-1 border-t border-emerald-200/60">
                                         <div>
-                                            <label class="text-[9px] font-bold text-gray-500 uppercase">Payment Method</label>
+                                            <label class="text-[9px] font-bold text-gray-500 uppercase">Njia ya Malipo (Payment Method)</label>
                                             <select v-model="statusForm.payment_method" class="w-full text-xs rounded-lg border-gray-300 mt-0.5">
                                                 <option v-for="m in payment_methods" :key="m" :value="m" class="capitalize">{{ m }}</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label class="text-[9px] font-bold text-gray-500 uppercase">Ref / Code (Optional)</label>
-                                            <input type="text" v-model="statusForm.payment_reference" placeholder="e.g. MPESA TXN / Cash" class="w-full text-xs rounded-lg border-gray-300 mt-0.5">
+                                            <label class="text-[9px] font-bold text-gray-500 uppercase">Namba ya Muamala / Ref (Hiari)</label>
+                                            <input type="text" v-model="statusForm.payment_reference" placeholder="Mfano: MPESA TXN / Cash" class="w-full text-xs rounded-lg border-gray-300 mt-0.5">
                                         </div>
                                     </div>
                                 </div>
