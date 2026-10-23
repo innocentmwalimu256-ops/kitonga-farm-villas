@@ -208,10 +208,6 @@ const whatsappShareUrl = computed(() => {
                             <span>Discount:</span>
                             <span>-{{ formatCurrency(booking.discount) }}</span>
                         </div>
-                        <div v-if="booking.tax > 0" class="flex justify-between text-[#5F6B63]">
-                            <span>VAT (18%):</span>
-                            <span>{{ formatCurrency(booking.tax) }}</span>
-                        </div>
                         <div class="flex justify-between font-bold text-base text-[#14301F] border-t pt-2" style="border-color: #E8E2D6;">
                             <span>Grand Total:</span>
                             <span>{{ formatCurrency(booking.total) }}</span>

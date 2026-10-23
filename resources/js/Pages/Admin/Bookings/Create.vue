@@ -310,16 +310,10 @@ const discountAmount = computed(() => {
     return !isNaN(d) && d > 0 ? d : 0;
 });
 
-const taxAmount = computed(() => {
-    if (bookingType.value === 'villa') {
-        const taxable = Math.max(0, subtotal.value - discountAmount.value);
-        return taxable * 0.18; // 18% VAT for accommodation
-    }
-    return 0; // Day tours & Consultations are direct/VAT inclusive
-});
+const taxAmount = computed(() => 0);
 
 const grandTotal = computed(() => {
-    return Math.max(0, subtotal.value - discountAmount.value) + taxAmount.value;
+    return Math.max(0, subtotal.value - discountAmount.value);
 });
 
 const paidAmount = computed(() => {
@@ -929,10 +923,6 @@ const submitBooking = () => {
                             <div v-if="discountAmount > 0" class="flex justify-between text-red-600">
                                 <span>Discount Applied:</span>
                                 <span>-{{ formatCurrency(discountAmount) }}</span>
-                            </div>
-                            <div v-if="bookingType === 'villa'" class="flex justify-between text-gray-600">
-                                <span>VAT (18%):</span>
-                                <span>{{ formatCurrency(taxAmount) }}</span>
                             </div>
                             <div class="flex justify-between font-bold text-sm text-gray-900 border-t border-gray-200 pt-1.5">
                                 <span>Grand Total:</span>

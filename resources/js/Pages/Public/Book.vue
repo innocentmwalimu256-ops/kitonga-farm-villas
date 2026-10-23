@@ -91,13 +91,10 @@ const subtotal = () => {
     return selectedVilla.value.base_price * calculateNights();
 };
 
-const tax = () => {
-    const rate = parseFloat(props.settings?.tax_rate || 18);
-    return subtotal() * (rate / 100);
-};
+const tax = () => 0;
 
 const total = () => {
-    return subtotal() + tax();
+    return subtotal();
 };
 
 const deposit = () => {
@@ -507,10 +504,6 @@ const submitBooking = () => {
                     <div class="flex justify-between text-gray-600">
                         <span>Stay Subtotal ({{ calculateNights() }} Nights):</span>
                         <span>{{ formatCurrency(subtotal()) }}</span>
-                    </div>
-                    <div class="flex justify-between text-gray-600">
-                        <span>VAT ({{ settings?.tax_rate || 18 }}%):</span>
-                        <span>{{ formatCurrency(tax()) }}</span>
                     </div>
                     <div class="flex justify-between font-bold text-sm text-gray-900 border-t border-gray-200 pt-2">
                         <span>Grand Total:</span>

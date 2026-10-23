@@ -589,6 +589,7 @@ class BookingController extends Controller
 
                 $booking->update([
                     'total' => $newTotal,
+                    'tax' => 0.00,
                     'amount_paid' => $newPaid,
                     'balance' => $newBalance,
                     'notes' => !empty($validated['notes']) 

@@ -53,7 +53,7 @@ class BookController extends Controller
                 'villa_id' => $villaId ? (int) $villaId : null,
             ],
             'settings' => [
-                'tax_rate' => Setting::get('tax_rate', '18.00'),
+                'tax_rate' => Setting::get('tax_rate', '0.00'),
                 'deposit_percentage' => Setting::get('deposit_percentage', '50.00'),
                 'cancellation_policy' => Setting::get('cancellation_policy'),
                 'check_in_time' => Setting::get('check_in_time', '1:00 PM'),

@@ -487,10 +487,6 @@ const submitPayment = () => {
                                         <span>Discount:</span>
                                         <span>-{{ formatCurrency(booking?.discount) }}</span>
                                     </div>
-                                    <div class="flex justify-between">
-                                        <span>VAT (18%):</span>
-                                        <span>{{ formatCurrency(booking?.tax) }}</span>
-                                    </div>
                                     <div class="flex justify-between font-bold text-sm text-gray-900 border-t pt-2">
                                         <span>Grand Total:</span>
                                         <span>{{ formatCurrency(booking?.total) }}</span>

@@ -186,13 +186,12 @@ class BookingService
             $subtotal = $ratePerNight * $nights;
             $discount = $data['discount'] ?? 0.00;
             
-            // Calculate dynamic tax (VAT)
-            $taxRate = (float) \App\Models\Setting::get('tax_rate', 18.00);
-            $tax = ($subtotal - $discount) * ($taxRate / 100);
-            $total = ($subtotal - $discount) + $tax;
+            // Tax / VAT is removed system-wide (rates are net and all-inclusive)
+            $tax = 0.00;
+            $total = max(0, $subtotal - $discount);
 
             $amountPaid = $data['amount_paid'] ?? 0.00;
-            $balance = $total - $amountPaid;
+            $balance = max(0, $total - $amountPaid);
 
             // Generate unique booking reference
             $reference = 'KFV-' . strtoupper(Str::random(3)) . '-' . mt_rand(1000, 9999);
@@ -266,10 +265,10 @@ class BookingService
                     }
                 }
                 
-                // Recalculate tax & total with the extras included
-                $tax = ($subtotal - $discount) * ($taxRate / 100);
-                $total = ($subtotal - $discount) + $tax;
-                $balance = $total - $amountPaid;
+                // Recalculate total with the extras included (VAT removed)
+                $tax = 0.00;
+                $total = max(0, $subtotal - $discount);
+                $balance = max(0, $total - $amountPaid);
                 
                 $booking->update([
                     'subtotal' => $subtotal,
