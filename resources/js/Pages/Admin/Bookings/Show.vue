@@ -16,6 +16,10 @@ const props = defineProps({
         type: Array,
         default: () => ['cash', 'mobile_money', 'bank_transfer', 'card', 'other'],
     },
+    available_units: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 const statusForm = useForm({
@@ -43,6 +47,32 @@ const paymentForm = useForm({
 const isPaymentModalOpen = ref(false);
 const isIdModalOpen = ref(false);
 const isFinancialsModalOpen = ref(false);
+const isUnitModalOpen = ref(false);
+
+const unitForm = useForm({
+    accommodation_unit_id: props.booking?.accommodation_unit_id || '',
+    recalculate_rates: true,
+    notes: '',
+});
+
+const openUnitModal = () => {
+    unitForm.accommodation_unit_id = props.booking?.accommodation_unit_id || '';
+    unitForm.recalculate_rates = true;
+    unitForm.notes = '';
+    isUnitModalOpen.value = true;
+};
+
+const closeUnitModal = () => {
+    isUnitModalOpen.value = false;
+};
+
+const submitUnitChange = () => {
+    unitForm.post(route('admin.bookings.change_unit', props.booking.id), {
+        onSuccess: () => {
+            closeUnitModal();
+        },
+    });
+};
 
 const financialsForm = useForm({
     total: Number(props.booking?.total) || 0,
@@ -313,9 +343,20 @@ const submitPayment = () => {
                                     <span v-if="isTour">Farm Day Tour &amp; Agro-Experience Schedule</span>
                                     <span v-else>Villa Accommodation &amp; Stay Schedule</span>
                                 </h3>
-                                <span class="capitalize bg-emerald-50 text-emerald-800 border border-emerald-200/70 px-2.5 py-0.5 rounded-full text-xs font-bold">
-                                    {{ isTour ? (booking?.items?.[0]?.description_snapshot || 'Farm Tour Experience') : (booking?.unit?.name || booking?.unit?.type?.name || 'Villa Unit') }}
-                                </span>
+                                <div class="flex items-center gap-2">
+                                    <span class="capitalize bg-emerald-50 text-emerald-800 border border-emerald-200/70 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                                        {{ isTour ? (booking?.items?.[0]?.description_snapshot || 'Farm Tour Experience') : (booking?.unit?.name || booking?.unit?.type?.name || 'Villa Unit') }}
+                                    </span>
+                                    <button 
+                                        v-if="!isTour" 
+                                        type="button" 
+                                        @click="openUnitModal" 
+                                        class="px-2.5 py-1 text-xs bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition inline-flex items-center gap-1 cursor-pointer shadow-2xs"
+                                        title="Badilisha chumba au unit ya villa"
+                                    >
+                                        <span>🔄 Badilisha Chumba</span>
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
@@ -792,6 +833,79 @@ const submitPayment = () => {
                                 >
                                     <span v-if="financialsForm.processing">Inahifadhi...</span>
                                     <span v-else>Hifadhi Taarifa za Malipo</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- CHANGE ROOM / VILLA UNIT MODAL -->
+                <div v-if="isUnitModalOpen" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+                        <div class="flex items-center justify-between border-b pb-3">
+                            <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                                <span>🏡</span>
+                                <span>Badilisha Chumba cha Mgeni</span>
+                            </h3>
+                            <button @click="closeUnitModal" type="button" class="text-gray-400 hover:text-gray-600 text-lg cursor-pointer">&times;</button>
+                        </div>
+
+                        <form @submit.prevent="submitUnitChange" class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-700 block mb-1">Chagua Chumba / Villa Mpya</label>
+                                <select 
+                                    v-model="unitForm.accommodation_unit_id" 
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                    required
+                                >
+                                    <option value="" disabled>-- Chagua Chumba --</option>
+                                    <option v-for="u in available_units" :key="u.id" :value="u.id">
+                                        {{ u.name }} ({{ u.type?.name }} - {{ formatCurrency(u.type?.base_price) }}/usiku)
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="p-3 bg-emerald-50/80 rounded-xl border border-emerald-200">
+                                <label class="flex items-start gap-2.5 cursor-pointer">
+                                    <input 
+                                        type="checkbox" 
+                                        v-model="unitForm.recalculate_rates" 
+                                        class="rounded text-emerald-600 focus:ring-emerald-500 mt-0.5" 
+                                    />
+                                    <div class="text-xs">
+                                        <span class="font-bold text-emerald-900 block">Sasisha bei ya chumba (Recalculate stay total)</span>
+                                        <span class="text-emerald-700 text-[11px] block mt-0.5">
+                                            Mfano: Ukibadili kwenda Semi Luxury, bei itakuwa TSh 200,000/usiku badala ya TSh 250,000.
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-bold text-gray-700 block mb-1">Sababu ya Kubadilisha (Hiari)</label>
+                                <textarea 
+                                    v-model="unitForm.notes" 
+                                    rows="2" 
+                                    placeholder="Mfano: Mteja ameomba kubadilishiwa chumba / Usajili wa awali ulikosewa..." 
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                ></textarea>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-2 pt-2 border-t">
+                                <button 
+                                    @click="closeUnitModal" 
+                                    type="button" 
+                                    class="px-4 py-2 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                                >
+                                    Ghairi
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    :disabled="unitForm.processing"
+                                    class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer disabled:opacity-50"
+                                >
+                                    <span v-if="unitForm.processing">Inabadilisha...</span>
+                                    <span v-else>Thibitisha Chumba Kipya</span>
                                 </button>
                             </div>
                         </form>
