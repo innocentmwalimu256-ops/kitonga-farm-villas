@@ -61,7 +61,7 @@ class HorseRidingController extends Controller
     /**
      * Stream the horse riding hero video with high-performance byte-range support.
      */
-    public function streamVideo()
+    public function streamVideo(Request $request)
     {
         $path = public_path('videos/horse-riding-main.mp4');
 
@@ -76,10 +76,12 @@ class HorseRidingController extends Controller
             }
         }
 
-        return response()->file($path, [
-            'Content-Type' => 'video/mp4',
-            'Cache-Control' => 'public, max-age=31536000, immutable',
-            'Accept-Ranges' => 'bytes',
-        ]);
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($path);
+        $response->headers->set('Content-Type', 'video/mp4');
+        $response->headers->set('Cache-Control', 'public, max-age=31536000, immutable');
+        $response->headers->set('Accept-Ranges', 'bytes');
+        $response->prepare($request);
+
+        return $response;
     }
 }

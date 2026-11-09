@@ -301,7 +301,7 @@ const schemaData = computed(() => ({
              desktop, dark overlay on the left for text readability.
         ========================================================================= -->
         <section class="relative w-full h-[280px] sm:h-[300px] md:h-[320px] bg-[#071F13] overflow-hidden">
-            <!-- Background Video -->
+            <!-- Background Video: Exact segment from client original video (01:02 to 01:23) -->
             <video 
                 ref="heroVideoRef"
                 class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
@@ -309,11 +309,13 @@ const schemaData = computed(() => ({
                 muted 
                 loop 
                 playsinline
-                poster="/images/horse-riding/horse-01.jpg"
+                webkit-playsinline
+                x5-playsinline
+                preload="metadata"
+                poster="/images/horse-riding/horse-riding-hero-poster.jpg"
             >
-                <source src="/stream/horse-riding-video" type="video/mp4" />
                 <source src="/videos/horse-riding-main.mp4" type="video/mp4" />
-                <source src="/videos/hero_cinematic.mp4" type="video/mp4" />
+                <source src="/stream/horse-riding-video" type="video/mp4" />
             </video>
 
             <!-- Dark Side Gradient Overlay for Text Readability -->

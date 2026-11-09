@@ -799,7 +799,7 @@
     ]
   },
   "resources/js/Pages/Public/HorseRiding.vue": {
-    "file": "assets/HorseRiding-DSFs3O-L.js",
+    "file": "assets/HorseRiding-CiWOszBl.js",
     "name": "HorseRiding",
     "src": "resources/js/Pages/Public/HorseRiding.vue",
     "isDynamicEntry": true,
@@ -810,7 +810,7 @@
       "_vendor-core-BPe24NqQ.js"
     ],
     "css": [
-      "assets/HorseRiding-DKdWMZXF.css"
+      "assets/HorseRiding-8cyggqWH.css"
     ]
   },
   "resources/js/Pages/Public/Location.vue": {
@@ -900,7 +900,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-C1H2PEwB.js",
+    "file": "assets/app-BDGfiBVC.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
