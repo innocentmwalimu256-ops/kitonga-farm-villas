@@ -51,6 +51,19 @@ const closeMobileMenu = () => {
 
 // Video playback handling
 const heroVideoRef = ref(null);
+const isMuted = ref(true);
+
+const toggleSound = () => {
+    if (!heroVideoRef.value) return;
+    const targetState = !heroVideoRef.value.muted;
+    heroVideoRef.value.muted = targetState;
+    isMuted.value = targetState;
+    if (!targetState) {
+        heroVideoRef.value.volume = 1.0;
+        heroVideoRef.value.play().catch(() => {});
+    }
+};
+
 onMounted(() => {
     if (heroVideoRef.value) {
         heroVideoRef.value.play().catch(() => {
@@ -225,26 +238,58 @@ const schemaData = computed(() => ({
         <PublicNavbar current-page="horse-riding" :settings="settings" />
 
         <!-- =========================================================================
-             2. HERO SECTION – CINEMATIC VIDEO (LARGE, FULL & PURE VIDEO)
-             Large, full-width cinematic hero video, pure video with NO text overlay
+             2. HERO SECTION – CINEMATIC VIDEO (LARGE, FULL & PURE VIDEO WITH AUDIO CONTROL)
+             Large, full-width cinematic hero video, pure video with audio toggle
         ========================================================================= -->
-        <section class="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] max-h-[850px] min-h-[420px] bg-[#071F13] overflow-hidden">
+        <section class="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] max-h-[850px] min-h-[420px] bg-[#071F13] overflow-hidden group">
             <!-- Background Video: Exact segment from client original video (01:02 to 01:23) -->
             <video 
                 ref="heroVideoRef"
-                class="w-full h-full object-cover object-center"
+                class="w-full h-full object-cover object-center cursor-pointer"
                 autoplay 
                 muted 
                 loop 
                 playsinline
                 webkit-playsinline
                 x5-playsinline
-                preload="metadata"
+                preload="auto"
                 poster="/images/horse-riding/horse-riding-hero-poster.jpg"
+                @click="toggleSound"
+                title="Bofya kuwasha au kuzima sauti ya video"
             >
                 <source src="/videos/horse-riding-main.mp4" type="video/mp4" />
                 <source src="/stream/horse-riding-video" type="video/mp4" />
             </video>
+
+            <!-- Floating Audio Control Badge (Bottom Right) -->
+            <div class="absolute bottom-5 right-5 sm:bottom-7 sm:right-8 z-30 pointer-events-auto">
+                <button
+                    type="button"
+                    @click.stop="toggleSound"
+                    class="px-4 py-2.5 rounded-full backdrop-blur-md transition-all duration-300 flex items-center gap-2.5 text-xs font-bold tracking-wider cursor-pointer shadow-2xl border"
+                    :class="isMuted 
+                        ? 'bg-[#092B18]/85 hover:bg-[#092B18] text-[#F5F0E6] border-[#C99A43]/60 hover:border-[#C99A43] hover:scale-105' 
+                        : 'bg-[#C99A43] text-[#071F13] border-white/40 shadow-[#C99A43]/40 scale-102'"
+                    :title="isMuted ? 'Washa sauti ya video (Audio ON)' : 'Zima sauti ya video (Mute)'"
+                    aria-label="Toggle Video Audio"
+                >
+                    <template v-if="isMuted">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>
+                        <svg class="w-4 h-4 text-[#C99A43]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                        </svg>
+                        <span class="tracking-widest uppercase text-[11px] font-sans font-extrabold text-[#F5F0E6]">Washa Sauti</span>
+                    </template>
+                    <template v-else>
+                        <span class="w-2 h-2 rounded-full bg-[#071F13]"></span>
+                        <svg class="w-4 h-4 text-[#071F13] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
+                        <span class="tracking-widest uppercase text-[11px] font-sans font-extrabold text-[#071F13]">Sauti Inacheza</span>
+                    </template>
+                </button>
+            </div>
         </section>
 
         <!-- =========================================================================

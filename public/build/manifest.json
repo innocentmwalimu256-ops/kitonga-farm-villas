@@ -504,7 +504,7 @@
     ]
   },
   "resources/js/Pages/Public/Book.vue": {
-    "file": "assets/Book-DFXe0WMy.js",
+    "file": "assets/Book-BagPpF8b.js",
     "name": "Book",
     "src": "resources/js/Pages/Public/Book.vue",
     "isDynamicEntry": true,
@@ -799,7 +799,7 @@
     ]
   },
   "resources/js/Pages/Public/HorseRiding.vue": {
-    "file": "assets/HorseRiding-COpSjaB1.js",
+    "file": "assets/HorseRiding-BugEYO1B.js",
     "name": "HorseRiding",
     "src": "resources/js/Pages/Public/HorseRiding.vue",
     "isDynamicEntry": true,
@@ -811,7 +811,7 @@
       "_vendor-core-BPe24NqQ.js"
     ],
     "css": [
-      "assets/HorseRiding-BWO_6iEs.css"
+      "assets/HorseRiding-CwMhuhXP.css"
     ]
   },
   "resources/js/Pages/Public/Location.vue": {
@@ -867,7 +867,7 @@
     ]
   },
   "resources/js/Pages/Public/VillaDetail.vue": {
-    "file": "assets/VillaDetail-CXeI-Tn2.js",
+    "file": "assets/VillaDetail-Co1AK3kB.js",
     "name": "VillaDetail",
     "src": "resources/js/Pages/Public/VillaDetail.vue",
     "isDynamicEntry": true,
@@ -901,7 +901,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DKmaL8GL.js",
+    "file": "assets/app-BWmMYCal.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -986,7 +986,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-Dia5PKEc.css"
+      "assets/app-CD-aQZZt.css"
     ]
   }
 }

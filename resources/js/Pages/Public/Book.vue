@@ -104,7 +104,9 @@ const deposit = () => {
 
 const guestError = ref('');
 const maxBookingCapacity = computed(() => {
-    return selectedVilla.value ? Number(selectedVilla.value.capacity) || 2 : 10;
+    if (!selectedVilla.value) return 10;
+    if (selectedVilla.value.slug === 'family-villa') return 4;
+    return Number(selectedVilla.value.capacity) || 2;
 });
 
 const validateBookingGuests = () => {
@@ -249,7 +251,7 @@ const submitBooking = () => {
                             </div>
                             <p class="text-xs text-gray-600 max-w-md leading-relaxed">{{ villa.description }}</p>
                             <div class="flex flex-wrap gap-3 text-[11px] text-gray-500 font-semibold pt-1">
-                                <span>👥 Max {{ villa.capacity }} Guests</span>
+                                <span>👥 Max {{ villa.slug === 'family-villa' ? 4 : villa.capacity }} Guests</span>
                                 <span>•</span>
                                 <span>🛏️ {{ villa.bedrooms }} BR / {{ villa.beds }} Beds</span>
                             </div>
@@ -285,7 +287,7 @@ const submitBooking = () => {
                     </div>
                     <div v-if="selectedVilla" class="px-3 py-1.5 bg-[#FAF8F5] rounded-xl border border-gray-200 text-xs font-semibold text-gray-800 flex items-center gap-2">
                         <span>🏡 {{ selectedVilla.name }}</span>
-                        <span class="text-gray-400 text-[10px]">(Max {{ selectedVilla.capacity }} Guests)</span>
+                        <span class="text-gray-400 text-[10px]">(Max {{ selectedVilla.slug === 'family-villa' ? 4 : selectedVilla.capacity }} Guests)</span>
                     </div>
                 </div>
 

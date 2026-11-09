@@ -25,14 +25,14 @@ const villaSchema = computed(() => ({
     'image': props.villa?.featured_image ? (props.villa.featured_image.startsWith('http') ? props.villa.featured_image : `https://kitongafarm.com${props.villa.featured_image.startsWith('/') ? '' : '/'}${props.villa.featured_image}`) : 'https://kitongafarm.com/images/luxury_villa_img.webp',
     'occupancy': {
         '@type': 'QuantitativeValue',
-        'maxValue': props.villa?.capacity || 2,
+        'maxValue': props.villa?.slug === 'family-villa' ? 4 : (props.villa?.capacity || 2),
         'unitText': 'person'
     },
     'numberOfBedrooms': props.villa?.bedrooms || 1,
     'numberOfBathroomsTotal': props.villa?.bathrooms || 1,
     'offers': {
         '@type': 'Offer',
-        'price': props.villa?.price_per_night || 295000,
+        'price': props.villa?.base_price || props.villa?.price_per_night || 295000,
         'priceCurrency': 'TZS',
         'availability': 'https://schema.org/InStock',
         'url': `https://kitongafarm.com/villas/${props.villa?.slug || ''}`
