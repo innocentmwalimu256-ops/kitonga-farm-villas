@@ -61,6 +61,10 @@ const showingNavigationDropdown = ref(false);
                                                     <span>🌿</span>
                                                     <span>Farm Tour Bookings</span>
                                                 </DropdownLink>
+                                                <DropdownLink :href="route('admin.bookings.create', { type: 'horse_riding' })" class="flex items-center gap-2 text-amber-950 font-bold bg-amber-50/70">
+                                                    <span>🐎</span>
+                                                    <span>Book Horse Riding</span>
+                                                </DropdownLink>
                                                 <DropdownLink :href="route('admin.consultations.index')" class="text-emerald-900 font-bold bg-emerald-50/70 flex items-center gap-2">
                                                     <span>👔</span>
                                                     <span>Meet Mr. Kitonga</span>
@@ -242,6 +246,7 @@ const showingNavigationDropdown = ref(false);
                             <Link :href="route('admin.bookings.index')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700 text-xs flex items-center gap-1">📋 All Bookings</Link>
                             <Link :href="route('admin.bookings.calendar')" @click="showingNavigationDropdown = false" class="px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 font-semibold text-gray-700 text-xs flex items-center gap-1">📅 Calendar</Link>
                             <Link :href="route('admin.consultations.index')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2.5 rounded-lg bg-[#14231C] text-[#E6C387] font-bold text-center text-xs">👔 Meet Mr. Kitonga Requests</Link>
+                            <Link :href="route('admin.bookings.create', { type: 'horse_riding' })" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-amber-50 text-amber-950 border border-amber-200 font-bold text-center text-xs flex items-center justify-center gap-1.5">🐎 Book Horse Riding</Link>
                             <Link :href="route('admin.bookings.create')" @click="showingNavigationDropdown = false" class="col-span-2 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-center text-xs">➕ New Reservation</Link>
                         </div>
                     </div>

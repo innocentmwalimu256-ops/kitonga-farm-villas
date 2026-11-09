@@ -11,7 +11,7 @@ const props = defineProps({
             contact_phone: '+255 758 774 695',
             contact_email: 'info@kitongafarmvillas.com',
             whatsapp_number: '255758774695',
-            location: 'Kitonga Farm, Komkonga Village, Handeni, Tanga, Tanzania',
+            location: 'Kitonga Farm, Komkonga Village, Tanga Region, Tanzania',
         }),
     },
     experience: {
@@ -197,7 +197,7 @@ const schemaData = computed(() => ({
         'name': 'Kitonga Farm Villas',
         'address': {
             '@type': 'PostalAddress',
-            'streetAddress': 'Komkonga Village, Handeni',
+            'streetAddress': 'Komkonga Village, Tanga Region',
             'addressLocality': 'Tanga',
             'addressRegion': 'Tanga',
             'addressCountry': 'TZ'
@@ -697,7 +697,7 @@ const schemaData = computed(() => ({
                             </span>
                         </Link>
                         <p class="text-xs text-[#F5F0E6]/70 leading-relaxed font-light">
-                            A luxury countryside retreat and integrated agritourism estate nestled in the scenic highlands of Handeni, Tanga.
+                            A luxury countryside retreat and integrated agritourism estate nestled in the scenic highlands of Tanga.
                         </p>
                         <!-- Social Media Icons -->
                         <div class="flex items-center gap-3 pt-1 text-[#C99A43]">

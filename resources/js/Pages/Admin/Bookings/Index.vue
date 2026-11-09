@@ -256,6 +256,19 @@ const calculateNights = (booking) => {
                     </span>
                 </button>
 
+                <button
+                    type="button"
+                    @click="switchType('horse_riding')"
+                    class="px-3.5 py-2 rounded-full text-xs font-bold shrink-0 transition flex items-center gap-1.5 border shadow-2xs cursor-pointer"
+                    :class="currentType === 'horse_riding' ? 'bg-[#092B18] text-[#F5F0E6] border-[#C99A43]' : 'bg-white text-gray-700 border-gray-200'"
+                >
+                    <span>🐎 Horse Riding</span>
+                    <span class="px-1.5 py-0.2 rounded-full text-[10px] font-extrabold"
+                        :class="currentType === 'horse_riding' ? 'bg-[#C99A43] text-[#071F13]' : 'bg-amber-100 text-amber-900'">
+                        {{ counts?.horse_riding || 0 }}
+                    </span>
+                </button>
+
                 <Link
                     :href="route('admin.consultations.index')"
                     class="px-3.5 py-2 rounded-full text-xs font-bold shrink-0 transition flex items-center gap-1.5 bg-[#14231C] text-[#E6C387] border border-[#14231C] shadow-2xs"
@@ -268,7 +281,7 @@ const calculateNights = (booking) => {
             </div>
 
             <!-- Desktop Full Grid (hidden lg:grid) -->
-            <div class="hidden lg:grid lg:grid-cols-4 gap-3">
+            <div class="hidden lg:grid lg:grid-cols-5 gap-3">
                 <!-- Tab: All Bookings -->
                 <button
                     type="button"
@@ -344,6 +357,32 @@ const calculateNights = (booking) => {
                     </div>
                     <div class="text-[11px] text-gray-400 mt-0.5">
                         Wageni waliobook utalii wa shamba
+                    </div>
+                </button>
+
+                <!-- Tab: Horse Riding Bookings -->
+                <button
+                    type="button"
+                    @click="switchType('horse_riding')"
+                    class="p-4 rounded-2xl border text-left transition relative cursor-pointer"
+                    :class="currentType === 'horse_riding' 
+                        ? 'bg-white border-amber-600 ring-2 ring-amber-600/20 shadow-sm' 
+                        : 'bg-white border-gray-200/90 hover:border-gray-300 text-gray-600 hover:bg-gray-50/50'"
+                >
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wider" :class="currentType === 'horse_riding' ? 'text-amber-950 font-extrabold' : 'text-gray-500'">
+                            🐎 Horse Riding
+                        </span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-extrabold"
+                            :class="currentType === 'horse_riding' ? 'bg-[#092B18] text-[#F5F0E6]' : 'bg-amber-100 text-amber-900'">
+                            {{ counts?.horse_riding || 0 }}
+                        </span>
+                    </div>
+                    <div class="text-lg font-bold mt-2" :class="currentType === 'horse_riding' ? 'text-gray-900' : 'text-gray-700'">
+                        Horse Riding
+                    </div>
+                    <div class="text-[11px] text-gray-400 mt-0.5">
+                        Wageni waliobook farasi &amp; trails
                     </div>
                 </button>
 

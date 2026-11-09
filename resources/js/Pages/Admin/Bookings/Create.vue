@@ -24,6 +24,10 @@ const props = defineProps({
         type: [Number, String],
         default: null,
     },
+    preselected_booking_type: {
+        type: String,
+        default: null,
+    },
     experiences: {
         type: Array,
         default: () => [],
@@ -59,10 +63,11 @@ const form = useForm({
     check_in: today,
     check_out: tomorrow,
     
-    // Tour fields
+    // Tour & Horse Riding fields
     farm_tour_id: props.experiences[0]?.id || '',
     tour_date: today,
-    time_slot: '09:00 AM - 11:00 AM',
+    time_slot: '09:00 AM - 10:00 AM',
+    riding_duration_hours: 1,
 
     // Consultation fields
     consultation_format: 'physical', // 'physical' or 'online'
@@ -152,7 +157,19 @@ const clearSelectedUnit = () => {
 };
 
 onMounted(() => {
-    if (props.preselected_unit_id || props.preselected_type_id) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryType = urlParams.get('type') || props.preselected_booking_type;
+    
+    if (queryType === 'horse_riding') {
+        bookingType.value = 'horse_riding';
+        form.booking_type = 'horse_riding';
+    } else if (queryType === 'tour') {
+        bookingType.value = 'tour';
+        form.booking_type = 'tour';
+    } else if (queryType === 'consultation') {
+        bookingType.value = 'consultation';
+        form.booking_type = 'consultation';
+    } else if (props.preselected_unit_id || props.preselected_type_id) {
         bookingType.value = 'villa';
         form.booking_type = 'villa';
         if (props.preselected_type_id) {
@@ -202,6 +219,8 @@ const maxCapacity = computed(() => {
         return selectedVilla.value ? Number(selectedVilla.value.capacity) || 2 : 10;
     } else if (bookingType.value === 'tour') {
         return selectedTour.value ? Number(selectedTour.value.capacity_per_slot) || 20 : 30;
+    } else if (bookingType.value === 'horse_riding') {
+        return 20;
     } else {
         return 10;
     }
@@ -282,6 +301,19 @@ const numberOfNights = computed(() => {
     return nights > 0 ? nights : 1;
 });
 
+const horseRidingRate = computed(() => {
+    if (form.rate_override !== '' && !isNaN(form.rate_override) && Number(form.rate_override) >= 0) {
+        return Number(form.rate_override);
+    }
+    return 50000;
+});
+
+const horseRidingSubtotal = computed(() => {
+    const riders = Number(form.guests_count) || 1;
+    const hours = Number(form.riding_duration_hours) || 1;
+    return horseRidingRate.value * riders * hours;
+});
+
 const baseRate = computed(() => {
     if (form.rate_override !== '' && !isNaN(form.rate_override) && Number(form.rate_override) >= 0) {
         return Number(form.rate_override);
@@ -290,6 +322,8 @@ const baseRate = computed(() => {
         return selectedVilla.value ? Number(selectedVilla.value.base_price) : 0;
     } else if (bookingType.value === 'tour') {
         return selectedTour.value ? Number(selectedTour.value.price) : 0;
+    } else if (bookingType.value === 'horse_riding') {
+        return horseRidingRate.value;
     } else {
         return 100000; // Standard Mr. Kitonga Consultation Fee: TZS 100,000
     }
@@ -300,6 +334,8 @@ const subtotal = computed(() => {
         return baseRate.value * numberOfNights.value;
     } else if (bookingType.value === 'tour') {
         return baseRate.value * (Number(form.guests_count) || 1);
+    } else if (bookingType.value === 'horse_riding') {
+        return horseRidingSubtotal.value;
     } else {
         return baseRate.value; // Consultation fee
     }
@@ -364,11 +400,11 @@ const submitBooking = () => {
             <div class="mx-auto max-w-5xl sm:px-6 lg:px-8 space-y-6">
 
                 <!-- ── TYPE TOGGLE TABS ────────────────────────────────────── -->
-                <div class="bg-white p-2 rounded-2xl shadow-xs border border-gray-200 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div class="bg-white p-2 rounded-2xl shadow-xs border border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                     <button
                         type="button"
                         @click="bookingType = 'villa'"
-                        class="py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        class="py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                         :class="bookingType === 'villa' 
                             ? 'bg-[#14301F] text-white shadow-sm' 
                             : 'bg-gray-50 hover:bg-gray-100 text-gray-700'"
@@ -380,7 +416,7 @@ const submitBooking = () => {
                     <button
                         type="button"
                         @click="bookingType = 'tour'"
-                        class="py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        class="py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                         :class="bookingType === 'tour' 
                             ? 'bg-[#14301F] text-white shadow-sm' 
                             : 'bg-gray-50 hover:bg-gray-100 text-gray-700'"
@@ -391,14 +427,25 @@ const submitBooking = () => {
 
                     <button
                         type="button"
+                        @click="bookingType = 'horse_riding'"
+                        class="py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        :class="bookingType === 'horse_riding' 
+                            ? 'bg-[#092B18] text-[#F5F0E6] shadow-sm ring-2 ring-[#C99A43]' 
+                            : 'bg-amber-50/40 hover:bg-amber-100/60 text-amber-950 border border-amber-200/60'"
+                    >
+                        <span class="text-base">🐎</span>
+                        <span>Horse Riding</span>
+                    </button>
+
+                    <button
+                        type="button"
                         @click="bookingType = 'consultation'"
-                        class="py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        class="py-3 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
                         :class="bookingType === 'consultation' 
                             ? 'bg-[#14301F] text-white shadow-sm ring-2 ring-amber-400/50' 
                             : 'bg-amber-50/60 hover:bg-amber-100/70 text-amber-950 border border-amber-200/60'"
                     >
                         <span class="text-amber-400">✦</span>
-                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         <span>Meet Mr. Kitonga</span>
                     </button>
                 </div>
@@ -639,7 +686,152 @@ const submitBooking = () => {
                         </div>
                     </div>
 
-                    <!-- ── OPTION C: MEET MR. KITONGA CONSULTATION DETAILS ────── -->
+                    <!-- ── OPTION C: HORSE RIDING DETAILS ──────────────────────── -->
+                    <div v-else-if="bookingType === 'horse_riding'" class="bg-white p-6 rounded-2xl shadow-xs border border-amber-200/80 bg-linear-to-b from-amber-50/20 to-white space-y-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-amber-100 pb-3 gap-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-[#092B18] text-amber-400 flex items-center justify-center font-bold text-base shadow-xs">
+                                    🐎
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900 text-sm">
+                                        Horse Riding Experience Details
+                                    </h3>
+                                    <p class="text-[11px] text-gray-500">Kitonga Countryside Horse Trail &amp; Nature Ride.</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-lg border border-amber-300 self-start sm:self-auto">
+                                Standard Rate: TSh 50,000 / Person / Hour
+                            </span>
+                        </div>
+
+                        <!-- Highlights Banner -->
+                        <div class="p-3.5 bg-gradient-to-r from-amber-50/80 to-emerald-50/50 rounded-xl border border-amber-200/70 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-lg flex-shrink-0">
+                                🏇
+                            </div>
+                            <div class="text-xs text-gray-700 leading-snug">
+                                <span class="font-bold text-gray-900 block">Countryside Horse Riding Tour</span>
+                                Guided riding adventure through scenic orchards, farm pathways, and open highland countryside.
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            <!-- Riding Date -->
+                            <div class="sm:col-span-2">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-wider block mb-1">
+                                    Ride Date *
+                                </label>
+                                <input
+                                    type="date"
+                                    v-model="form.tour_date"
+                                    :min="today"
+                                    required
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-amber-600 focus:ring-amber-600 py-2.5 font-semibold text-gray-900"
+                                />
+                            </div>
+
+                            <!-- Duration (Hours) -->
+                            <div class="sm:col-span-2">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-wider block mb-1">
+                                    Riding Duration (Hours) *
+                                </label>
+                                <select
+                                    v-model.number="form.riding_duration_hours"
+                                    required
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-amber-600 focus:ring-amber-600 py-2.5 font-bold text-gray-900"
+                                >
+                                    <option :value="1">1 Hour (Standard Experience)</option>
+                                    <option :value="2">2 Hours (Extended Trail)</option>
+                                    <option :value="3">3 Hours (Deep Countryside Trail)</option>
+                                    <option :value="4">4 Hours (Half Day Farm Ride)</option>
+                                </select>
+                            </div>
+
+                            <!-- Time Slot -->
+                            <div class="sm:col-span-2">
+                                <label class="text-[10px] font-bold text-gray-700 uppercase tracking-wider block mb-1">
+                                    Session / Time Slot *
+                                </label>
+                                <select
+                                    v-model="form.time_slot"
+                                    required
+                                    class="w-full text-xs rounded-xl border-gray-300 focus:border-amber-600 focus:ring-amber-600 py-2.5 font-semibold text-gray-900"
+                                >
+                                    <option value="08:00 AM - 09:00 AM">08:00 AM – 09:00 AM (Early Morning)</option>
+                                    <option value="09:00 AM - 10:00 AM">09:00 AM – 10:00 AM (Morning Breeze)</option>
+                                    <option value="10:00 AM - 11:00 AM">10:00 AM – 11:00 AM (Mid Morning)</option>
+                                    <option value="11:00 AM - 12:00 PM">11:00 AM – 12:00 PM (Noon Ride)</option>
+                                    <option value="02:00 PM - 03:00 PM">02:00 PM – 03:00 PM (Early Afternoon)</option>
+                                    <option value="03:00 PM - 04:00 PM">03:00 PM – 04:00 PM (Afternoon Trail)</option>
+                                    <option value="04:00 PM - 05:00 PM">04:00 PM – 05:00 PM (Golden Hour)</option>
+                                    <option value="05:00 PM - 06:00 PM">05:00 PM – 06:00 PM (Sunset Ride)</option>
+                                </select>
+                            </div>
+
+                            <!-- Number of Riders (Guests) -->
+                            <div class="sm:col-span-2 space-y-1">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-[10px] font-bold text-gray-700 uppercase tracking-wider block">
+                                        Number of Riders (1 to {{ maxCapacity }}) *
+                                    </label>
+                                    <span v-if="guestError" class="text-[10px] text-red-600 font-bold">
+                                        {{ guestError }}
+                                    </span>
+                                </div>
+                                
+                                <div class="flex items-center rounded-xl border border-gray-300 overflow-hidden bg-white shadow-xs focus-within:border-amber-600 focus-within:ring-1 focus-within:ring-amber-600">
+                                    <button 
+                                        type="button" 
+                                        @click="decrementGuests" 
+                                        :disabled="parseInt(form.guests_count || 1) <= 1"
+                                        class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-r border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                    >
+                                        −
+                                    </button>
+                                    
+                                    <input 
+                                        type="number" 
+                                        v-model.number="form.guests_count" 
+                                        @input="validateGuests"
+                                        @blur="validateGuests"
+                                        min="1" 
+                                        :max="maxCapacity" 
+                                        placeholder="1" 
+                                        class="w-full text-xs text-center font-bold text-gray-900 border-0 focus:ring-0 py-2.5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        required
+                                    />
+                                    
+                                    <button 
+                                        type="button" 
+                                        @click="incrementGuests" 
+                                        :disabled="parseInt(form.guests_count || 1) >= maxCapacity"
+                                        class="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm border-l border-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                
+                                <p class="text-[10px] text-gray-400">
+                                    {{ form.guests_count }} {{ form.guests_count == 1 ? 'Rider' : 'Riders' }} @ {{ formatCurrency(horseRidingRate) }}/hr
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Live Calculation Breakdown Badge -->
+                        <div class="p-3.5 bg-amber-50/70 rounded-xl border border-amber-200/70 flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <span class="text-amber-950 font-medium">
+                                <strong>{{ form.guests_count }} {{ Number(form.guests_count) === 1 ? 'Rider' : 'Riders' }}</strong> × 
+                                <strong>{{ form.riding_duration_hours || 1 }} {{ Number(form.riding_duration_hours) === 1 ? 'Hour' : 'Hours' }}</strong> 
+                                @ {{ formatCurrency(horseRidingRate) }} / rider / hr
+                            </span>
+                            <span class="text-sm font-bold text-[#092B18] bg-white px-3 py-1 rounded-lg border border-amber-200 shadow-2xs">
+                                Subtotal: {{ formatCurrency(horseRidingSubtotal) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ── OPTION D: MEET MR. KITONGA CONSULTATION DETAILS ────── -->
                     <div v-else-if="bookingType === 'consultation'" class="bg-white p-6 rounded-2xl shadow-xs border border-amber-200/80 bg-linear-to-b from-amber-50/20 to-white space-y-5">
                         <div class="flex items-center justify-between border-b border-amber-100 pb-3">
                             <div class="flex items-center gap-2.5">

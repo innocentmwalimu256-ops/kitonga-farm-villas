@@ -193,9 +193,16 @@ const quickApprove = () => {
     }
 };
 
+const isHorseRiding = computed(() => {
+    return (props.booking?.reference && props.booking.reference.startsWith('KTG-HRS')) ||
+           props.booking?.items?.some(i => i.item_type === 'horse_riding') ||
+           (props.booking?.notes && props.booking.notes.includes('Horse Riding'));
+});
+
 const isTour = computed(() => {
-    return !props.booking?.accommodation_unit_id || 
-           (props.booking?.reference && props.booking.reference.startsWith('KTG-EXP')) || 
+    return isHorseRiding.value ||
+           !props.booking?.accommodation_unit_id || 
+           (props.booking?.reference && (props.booking.reference.startsWith('KTG-EXP') || props.booking.reference.startsWith('KTG-HRS'))) || 
            props.booking?.source === 'online_experience';
 });
 
@@ -248,7 +255,7 @@ const submitPayment = () => {
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div class="flex items-center gap-3">
                     <Link 
-                        :href="isTour ? route('admin.bookings.index', { type: 'tour' }) : route('admin.bookings.index', { type: 'villa' })" 
+                        :href="isHorseRiding ? route('admin.bookings.index', { type: 'horse_riding' }) : (isTour ? route('admin.bookings.index', { type: 'tour' }) : route('admin.bookings.index', { type: 'villa' }))" 
                         class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
                         title="Back to bookings"
                     >
@@ -336,11 +343,13 @@ const submitPayment = () => {
                         <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200/80 space-y-4">
                             <div class="flex items-center justify-between border-b pb-3">
                                 <h3 class="font-bold text-gray-900 flex items-center gap-2 text-sm">
-                                    <span v-if="isTour">🌿</span>
+                                    <span v-if="isHorseRiding">🐎</span>
+                                    <span v-else-if="isTour">🌿</span>
                                     <svg v-else class="w-4 h-4 text-emerald-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
-                                    <span v-if="isTour">Farm Day Tour &amp; Agro-Experience Schedule</span>
+                                    <span v-if="isHorseRiding">Horse Riding Experience &amp; Trail Schedule</span>
+                                    <span v-else-if="isTour">Farm Day Tour &amp; Agro-Experience Schedule</span>
                                     <span v-else>Villa Accommodation &amp; Stay Schedule</span>
                                 </h3>
                                 <div class="flex items-center gap-2">
@@ -361,7 +370,7 @@ const submitPayment = () => {
 
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
                                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
-                                    <span class="text-[10px] text-gray-400 block uppercase font-bold">{{ isTour ? 'Tour Date' : 'Check-In Date' }}</span>
+                                    <span class="text-[10px] text-gray-400 block uppercase font-bold">{{ isHorseRiding ? 'Ride Date' : (isTour ? 'Tour Date' : 'Check-In Date') }}</span>
                                     <span class="font-bold text-sm text-gray-900 mt-0.5 block">{{ formatDate(booking?.check_in) }}</span>
                                 </div>
                                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">

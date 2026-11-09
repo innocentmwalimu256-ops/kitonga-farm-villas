@@ -42,16 +42,31 @@ class BookingController extends Controller
 
         $query = Booking::with(['customer', 'unit.type', 'items']);
 
-        // Filter by booking type (villa vs tour)
+        // Filter by booking type (villa vs tour vs horse_riding)
         if ($type === 'villa') {
             $query->whereNotNull('accommodation_unit_id')
-                  ->where('reference', 'not like', 'KTG-EXP%');
+                  ->where('reference', 'not like', 'KTG-EXP%')
+                  ->where('reference', 'not like', 'KTG-HRS%');
+        } elseif ($type === 'horse_riding') {
+            $query->where(function ($q) {
+                $q->where('reference', 'like', 'KTG-HRS%')
+                  ->orWhereHas('items', function ($iq) {
+                      $iq->where('item_type', 'horse_riding')
+                         ->orWhere('description_snapshot', 'like', '%Horse%');
+                  })
+                  ->orWhere('notes', 'like', '%Horse Riding%');
+            });
         } elseif ($type === 'tour') {
             $query->where(function ($q) {
                 $q->whereNull('accommodation_unit_id')
                   ->orWhere('source', 'online_experience')
                   ->orWhere('reference', 'like', 'KTG-EXP%');
-            });
+            })->where('reference', 'not like', 'KTG-HRS%')
+              ->whereDoesntHave('items', function ($iq) {
+                  $iq->where('item_type', 'horse_riding')
+                     ->orWhere('description_snapshot', 'like', '%Horse%');
+              })
+              ->where('notes', 'not like', '%Horse Riding%');
         }
 
         // Filter by search term
@@ -83,13 +98,29 @@ class BookingController extends Controller
 
         $villaCount = Booking::whereNotNull('accommodation_unit_id')
             ->where('reference', 'not like', 'KTG-EXP%')
+            ->where('reference', 'not like', 'KTG-HRS%')
             ->count();
+
+        $horseRidingCount = Booking::where(function ($q) {
+            $q->where('reference', 'like', 'KTG-HRS%')
+              ->orWhereHas('items', function ($iq) {
+                  $iq->where('item_type', 'horse_riding')
+                     ->orWhere('description_snapshot', 'like', '%Horse%');
+              })
+              ->orWhere('notes', 'like', '%Horse Riding%');
+        })->count();
 
         $tourCount = Booking::where(function ($q) {
             $q->whereNull('accommodation_unit_id')
               ->orWhere('source', 'online_experience')
               ->orWhere('reference', 'like', 'KTG-EXP%');
-        })->count();
+        })->where('reference', 'not like', 'KTG-HRS%')
+          ->whereDoesntHave('items', function ($iq) {
+              $iq->where('item_type', 'horse_riding')
+                 ->orWhere('description_snapshot', 'like', '%Horse%');
+          })
+          ->where('notes', 'not like', '%Horse Riding%')
+          ->count();
 
         $consultationCount = Schema::hasTable('consultation_requests')
             ? ConsultationRequest::count()
@@ -102,6 +133,7 @@ class BookingController extends Controller
                 'all' => Booking::count(),
                 'villa' => $villaCount,
                 'tour' => $tourCount,
+                'horse_riding' => $horseRidingCount,
                 'consultation' => $consultationCount,
             ],
             'activeType' => $type,
@@ -183,6 +215,7 @@ class BookingController extends Controller
 
         $preselectedUnitId = $request->query('unit_id');
         $preselectedTypeId = $request->query('type_id');
+        $preselectedBookingType = $request->query('type');
 
         $preselectedUnit = null;
         if ($preselectedUnitId) {
@@ -207,6 +240,7 @@ class BookingController extends Controller
             'preselected_unit_id' => $preselectedUnitId ? (int) $preselectedUnitId : null,
             'preselected_unit' => $preselectedUnit,
             'preselected_type_id' => $preselectedTypeId ? (int) $preselectedTypeId : null,
+            'preselected_booking_type' => $preselectedBookingType,
             'experiences' => \App\Models\FarmTour::where('status', 'published')->orWhere('status', 'preview')->orderBy('sort_order')->get(),
             'customers' => Customer::all(),
         ]);
@@ -426,6 +460,171 @@ class BookingController extends Controller
 
                 return redirect()->route('admin.bookings.show', $booking->id)
                     ->with('success', 'Farm Tour booking created successfully.');
+            } catch (Exception $e) {
+                return back()->withErrors(['booking' => $e->getMessage()])->withInput();
+            }
+        }
+
+        // Horse Riding Experience Flow
+        if ($bookingType === 'horse_riding') {
+            $rules = [
+                'tour_date' => 'required|date',
+                'time_slot' => 'required|string',
+                'riding_duration_hours' => 'nullable|integer|min:1|max:12',
+                'guests_count' => 'required|integer|min:1|max:50',
+                'status' => 'required|string',
+                'source' => 'required|string',
+                'notes' => 'nullable|string',
+                'id_type' => 'nullable|string|max:50',
+                'id_number' => 'nullable|string|max:100',
+                'id_document' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:10240',
+                'rate_override' => 'nullable|numeric|min:0',
+                'discount' => 'nullable|numeric|min:0',
+                'amount_paid' => 'nullable|numeric|min:0',
+                'payment_method' => 'nullable|string|required_if:amount_paid,>0',
+                'payment_reference' => 'nullable|string|max:255',
+                'customer_mode' => 'required|in:new,existing',
+            ];
+
+            if ($request->input('customer_mode') === 'new') {
+                $rules['customer_name'] = 'required|string|max:255';
+                $rules['customer_phone'] = 'nullable|string';
+                $rules['customer_email'] = 'nullable|email';
+            } else {
+                $rules['customer_id'] = 'required|exists:customers,id';
+            }
+
+            $validated = $request->validate($rules);
+            $validated['user_id'] = auth()->id();
+
+            try {
+                if ($request->hasFile('id_document')) {
+                    $file = $request->file('id_document');
+                    $destinationPath = public_path('uploads/id_documents');
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0755, true);
+                    }
+                    $filename = 'id_adm_horse_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                    $file->move($destinationPath, $filename);
+                    $validated['id_document_path'] = 'uploads/id_documents/' . $filename;
+                }
+
+                if ($request->input('customer_mode') === 'existing') {
+                    $customer = Customer::findOrFail($validated['customer_id']);
+                } else {
+                    $customer = null;
+                    if (!empty($validated['customer_phone'])) {
+                        $customer = Customer::where('phone', $validated['customer_phone'])->first();
+                    }
+                    if (!$customer && !empty($validated['customer_email'])) {
+                        $customer = Customer::where('email', $validated['customer_email'])->first();
+                    }
+                    if ($customer) {
+                        $customer->update([
+                            'name' => $validated['customer_name'],
+                            'phone' => $validated['customer_phone'] ?? $customer->phone,
+                            'email' => $validated['customer_email'] ?? $customer->email,
+                            'id_type' => $validated['id_type'] ?? $customer->id_type,
+                            'id_number' => $validated['id_number'] ?? $customer->id_number,
+                            'id_document_path' => $validated['id_document_path'] ?? $customer->id_document_path,
+                        ]);
+                    } else {
+                        $customer = Customer::create([
+                            'name' => $validated['customer_name'],
+                            'phone' => $validated['customer_phone'] ?? null,
+                            'email' => $validated['customer_email'] ?? null,
+                            'id_type' => $validated['id_type'] ?? null,
+                            'id_number' => $validated['id_number'] ?? null,
+                            'id_document_path' => $validated['id_document_path'] ?? null,
+                        ]);
+                    }
+                }
+
+                $hourlyRate = (float) ($validated['rate_override'] ?? 50000.00);
+                $durationHours = (int) ($validated['riding_duration_hours'] ?? 1);
+                $ridersCount = (int) $validated['guests_count'];
+                $subtotal = $hourlyRate * $durationHours * $ridersCount;
+                $discount = (float) ($validated['discount'] ?? 0);
+                $total = max(0, $subtotal - $discount);
+                $amountPaid = (float) ($validated['amount_paid'] ?? 0);
+                
+                if ($validated['status'] === 'confirmed' && $amountPaid <= 0 && $total > 0) {
+                    $amountPaid = $total;
+                }
+                $balance = max(0, $total - $amountPaid);
+
+                $date = Carbon::parse($validated['tour_date'])->format('Y-m-d');
+                $reference = 'KTG-HRS-' . date('ymd') . '-' . strtoupper(Str::random(4));
+
+                $horseTour = \App\Models\FarmTour::where('slug', 'horse-riding')->first();
+
+                $booking = Booking::create([
+                    'reference' => $reference,
+                    'customer_id' => $customer->id,
+                    'accommodation_unit_id' => null,
+                    'check_in' => $date,
+                    'check_out' => $date,
+                    'guests_count' => $ridersCount,
+                    'id_type' => $validated['id_type'] ?? ($customer->id_type ?? null),
+                    'id_number' => $validated['id_number'] ?? ($customer->id_number ?? null),
+                    'id_document_path' => $validated['id_document_path'] ?? ($customer->id_document_path ?? null),
+                    'status' => $validated['status'],
+                    'source' => $validated['source'] ?? 'admin_walk_in',
+                    'subtotal' => $subtotal,
+                    'discount' => $discount,
+                    'tax' => 0.00,
+                    'total' => $total,
+                    'amount_paid' => $amountPaid,
+                    'balance' => $balance,
+                    'notes' => "Experience: Horse Riding | Riders: {$ridersCount} | Duration: {$durationHours} Hr(s) | Slot: {$validated['time_slot']}" . (!empty($validated['notes']) ? " | Notes: {$validated['notes']}" : ""),
+                    'created_by' => auth()->id(),
+                ]);
+
+                BookingItem::create([
+                    'booking_id' => $booking->id,
+                    'item_type' => 'horse_riding',
+                    'item_id' => $horseTour?->id,
+                    'description_snapshot' => "Horse Riding Experience ({$ridersCount} " . ($ridersCount === 1 ? 'Rider' : 'Riders') . " × {$durationHours} " . ($durationHours === 1 ? 'Hour' : 'Hours') . " @ {$validated['time_slot']})",
+                    'quantity' => $ridersCount * $durationHours,
+                    'unit_price_snapshot' => $hourlyRate,
+                    'total' => $subtotal,
+                ]);
+
+                BookingStatusHistory::create([
+                    'booking_id' => $booking->id,
+                    'from_status' => 'initial',
+                    'to_status' => $booking->status,
+                    'notes' => "Horse Riding booking recorded by staff for {$ridersCount} riders ({$durationHours} hrs). Status: {$booking->status}.",
+                    'created_at' => Carbon::now(),
+                ]);
+
+                if ($amountPaid > 0) {
+                    Payment::create([
+                        'booking_id' => $booking->id,
+                        'method' => $validated['payment_method'] ?? 'cash',
+                        'reference' => $request->input('payment_reference') ?? 'Horse Riding Payment',
+                        'amount' => $amountPaid,
+                        'status' => 'completed',
+                        'paid_at' => Carbon::now(),
+                        'recorded_by' => auth()->id(),
+                    ]);
+                }
+
+                ActivityLog::create([
+                    'user_id' => auth()->id(),
+                    'action' => 'horse_riding_booking_created',
+                    'entity_type' => 'Booking',
+                    'entity_id' => $booking->id,
+                    'details' => [
+                        'reference' => $booking->reference,
+                        'riders' => $ridersCount,
+                        'hours' => $durationHours,
+                        'total' => $total,
+                    ],
+                ]);
+
+                return redirect()->route('admin.bookings.show', $booking->id)
+                    ->with('success', "Horse Riding reservation ({$booking->reference}) created successfully.");
             } catch (Exception $e) {
                 return back()->withErrors(['booking' => $e->getMessage()])->withInput();
             }

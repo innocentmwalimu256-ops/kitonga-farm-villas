@@ -102,6 +102,13 @@ const filteredRooms = computed(() => {
                             </svg>
                             New Booking
                         </Link>
+                        <Link 
+                            :href="route('admin.bookings.create', { type: 'horse_riding' })" 
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#092B18] hover:bg-[#C99A43] border border-[#C99A43]/40 text-[#F5F0E6] rounded-lg text-xs font-bold shadow-2xs transition"
+                        >
+                            <span class="text-sm">🐎</span>
+                            <span>Book Horse Riding</span>
+                        </Link>
                     </div>
                 </div>
                 
@@ -850,7 +857,14 @@ const filteredRooms = computed(() => {
                 <!-- QUICK ACTION SHORTCUTS -->
                 <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-xs border border-gray-200/80 space-y-4">
                     <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">Quick Action Shortcuts</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                        <Link :href="route('admin.bookings.create', { type: 'horse_riding' })" class="p-3.5 border border-amber-200/80 rounded-xl hover:border-amber-500 active:bg-amber-50/50 hover:bg-amber-50/30 transition flex items-center gap-3 bg-amber-50/20 shadow-2xs">
+                            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-base flex-shrink-0">🐎</div>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-bold text-gray-900 truncate">Horse Riding</h4>
+                                <p class="text-[10px] text-gray-500 truncate">Book riding tour</p>
+                            </div>
+                        </Link>
                         <Link :href="route('admin.pos.terminal')" class="p-3.5 border border-gray-200/80 rounded-xl hover:border-emerald-500 active:bg-emerald-50/50 hover:bg-emerald-50/30 transition flex items-center gap-3 bg-white shadow-2xs">
                             <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs flex-shrink-0">POS</div>
                             <div class="min-w-0">
