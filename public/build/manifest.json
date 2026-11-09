@@ -798,6 +798,21 @@
       "_vendor-core-BPe24NqQ.js"
     ]
   },
+  "resources/js/Pages/Public/HorseRiding.vue": {
+    "file": "assets/HorseRiding-DSFs3O-L.js",
+    "name": "HorseRiding",
+    "src": "resources/js/Pages/Public/HorseRiding.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-vue-inertia-DXnbmWlW.js",
+      "_SEOHead-Db5oQ_Xw.js",
+      "__plugin-vue_export-helper-DlAUqK2U.js",
+      "_vendor-core-BPe24NqQ.js"
+    ],
+    "css": [
+      "assets/HorseRiding-DKdWMZXF.css"
+    ]
+  },
   "resources/js/Pages/Public/Location.vue": {
     "file": "assets/Location-BQT56-iy.js",
     "name": "Location",
@@ -885,7 +900,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-qYPPxtGD.js",
+    "file": "assets/app-C1H2PEwB.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -960,6 +975,7 @@
       "resources/js/Pages/Public/Farm.vue",
       "resources/js/Pages/Public/Gallery.vue",
       "resources/js/Pages/Public/Home.vue",
+      "resources/js/Pages/Public/HorseRiding.vue",
       "resources/js/Pages/Public/Location.vue",
       "resources/js/Pages/Public/MeetMrKitonga.vue",
       "resources/js/Pages/Public/Policies.vue",
@@ -969,7 +985,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-phIs2V_M.css"
+      "assets/app-DRmfvQdf.css"
     ]
   }
 }

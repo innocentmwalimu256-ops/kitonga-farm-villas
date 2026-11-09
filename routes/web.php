@@ -91,6 +91,12 @@ Route::get('/', [PublicController::class, 'home'])->name('home');
 Route::get('/villas', [PublicController::class, 'villas'])->name('villas');
 Route::get('/villas/{slug}', [PublicController::class, 'showVilla'])->name('villas.show');
 Route::get('/experiences', [PublicController::class, 'experiences'])->name('experiences');
+// Dedicated Horse Riding Experience
+Route::get('/experiences/horse-riding', [\App\Http\Controllers\HorseRidingController::class, 'index'])->name('experiences.horse-riding');
+Route::get('/horse-riding', function () {
+    return redirect()->route('experiences.horse-riding');
+})->name('horse-riding.short');
+Route::get('/stream/horse-riding-video', [\App\Http\Controllers\HorseRidingController::class, 'streamVideo'])->name('stream.horse.riding.video');
 Route::get('/experiences/{slug}', [PublicController::class, 'showExperience'])->name('experiences.show');
 Route::get('/farm', [PublicController::class, 'farm'])->name('farm');
 Route::get('/products', [PublicController::class, 'products'])->name('products');
