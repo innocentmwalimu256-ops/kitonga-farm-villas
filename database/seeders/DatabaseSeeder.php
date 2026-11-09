@@ -198,7 +198,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Spacious 2-bedroom house with an interior kitchen and private parking. Ideal for families and small groups wanting home-cooked farm food.',
                 'short_description' => '2 Bedrooms + Interior Kitchen.',
                 'base_price' => 400000.00,
-                'capacity' => 6,
+                'capacity' => 4,
                 'bedrooms' => 2,
                 'beds' => 3,
                 'bathrooms' => 2,
