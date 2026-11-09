@@ -40,4 +40,12 @@ class AccommodationType extends Model
     {
         return $this->belongsToMany(Amenity::class, 'accommodation_amenity');
     }
+
+    public function getCapacityAttribute($value)
+    {
+        if ($this->slug === 'family-villa') {
+            return 4;
+        }
+        return (int) ($value ?: 2);
+    }
 }

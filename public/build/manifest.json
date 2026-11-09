@@ -21,8 +21,8 @@
       "_vendor-vue-inertia-DXnbmWlW.js"
     ]
   },
-  "_PublicNavbar-CQ3pXRxX.js": {
-    "file": "assets/PublicNavbar-CQ3pXRxX.js",
+  "_PublicNavbar-CoMSSnr_.js": {
+    "file": "assets/PublicNavbar-CoMSSnr_.js",
     "name": "PublicNavbar",
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js"
@@ -492,26 +492,26 @@
     ]
   },
   "resources/js/Pages/Public/About.vue": {
-    "file": "assets/About-CrJbZO4N.js",
+    "file": "assets/About-CKh6E8b6.js",
     "name": "About",
     "src": "resources/js/Pages/Public/About.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/Book.vue": {
-    "file": "assets/Book-CAzLZ8jw.js",
+    "file": "assets/Book-DFXe0WMy.js",
     "name": "Book",
     "src": "resources/js/Pages/Public/Book.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
@@ -540,33 +540,33 @@
     ]
   },
   "resources/js/Pages/Public/Contact.vue": {
-    "file": "assets/Contact-BKooNzbT.js",
+    "file": "assets/Contact-nWzyRljT.js",
     "name": "Contact",
     "src": "resources/js/Pages/Public/Contact.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/ExperienceDetail.vue": {
-    "file": "assets/ExperienceDetail-B0RDwLYb.js",
+    "file": "assets/ExperienceDetail-DxEu37Dc.js",
     "name": "ExperienceDetail",
     "src": "resources/js/Pages/Public/ExperienceDetail.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "resources/js/Pages/Public/Experiences/Components/ExperienceBookingPanel.vue",
       "resources/js/Pages/Public/Experiences/Components/VillaCrossSell.vue",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/Experiences.vue": {
-    "file": "assets/Experiences-Cs9l0lMA.js",
+    "file": "assets/Experiences-BNWxlpVV.js",
     "name": "Experiences",
     "src": "resources/js/Pages/Public/Experiences.vue",
     "isDynamicEntry": true,
@@ -577,7 +577,7 @@
       "resources/js/Pages/Public/Experiences/Components/ExperiencesIntro.vue",
       "resources/js/Pages/Public/Experiences/Components/FeaturedExperiences.vue",
       "_vendor-core-BPe24NqQ.js",
-      "_PublicNavbar-CQ3pXRxX.js"
+      "_PublicNavbar-CoMSSnr_.js"
     ]
   },
   "resources/js/Pages/Public/Experiences/Components/CinematicVideo.vue": {
@@ -642,12 +642,12 @@
     ]
   },
   "resources/js/Pages/Public/Experiences/Components/ExperienceHero.vue": {
-    "file": "assets/ExperienceHero-Cv2onhtq.js",
+    "file": "assets/ExperienceHero-DmNTeUGu.js",
     "name": "ExperienceHero",
     "src": "resources/js/Pages/Public/Experiences/Components/ExperienceHero.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_vendor-core-BPe24NqQ.js"
     ]
@@ -763,101 +763,102 @@
     ]
   },
   "resources/js/Pages/Public/Farm.vue": {
-    "file": "assets/Farm-ByUdlgn0.js",
+    "file": "assets/Farm-C5UrYWPY.js",
     "name": "Farm",
     "src": "resources/js/Pages/Public/Farm.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/Gallery.vue": {
-    "file": "assets/Gallery-DsnyyOS7.js",
+    "file": "assets/Gallery-eNvpMgiw.js",
     "name": "Gallery",
     "src": "resources/js/Pages/Public/Gallery.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/Home.vue": {
-    "file": "assets/Home-CapwwbfG.js",
+    "file": "assets/Home-DSvhSycI.js",
     "name": "Home",
     "src": "resources/js/Pages/Public/Home.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_SEOHead-Db5oQ_Xw.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/HorseRiding.vue": {
-    "file": "assets/HorseRiding-CiWOszBl.js",
+    "file": "assets/HorseRiding-CKgdtes0.js",
     "name": "HorseRiding",
     "src": "resources/js/Pages/Public/HorseRiding.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_vendor-core-BPe24NqQ.js"
     ],
     "css": [
-      "assets/HorseRiding-8cyggqWH.css"
+      "assets/HorseRiding-D5KQId-E.css"
     ]
   },
   "resources/js/Pages/Public/Location.vue": {
-    "file": "assets/Location-BQT56-iy.js",
+    "file": "assets/Location-W5tXFxCo.js",
     "name": "Location",
     "src": "resources/js/Pages/Public/Location.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/MeetMrKitonga.vue": {
-    "file": "assets/MeetMrKitonga-DE2OM3hd.js",
+    "file": "assets/MeetMrKitonga-QaIRrnvS.js",
     "name": "MeetMrKitonga",
     "src": "resources/js/Pages/Public/MeetMrKitonga.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/Policies.vue": {
-    "file": "assets/Policies-B4tTR8ar.js",
+    "file": "assets/Policies-Bm6021ci.js",
     "name": "Policies",
     "src": "resources/js/Pages/Public/Policies.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/Products.vue": {
-    "file": "assets/Products-BRGs2zjP.js",
+    "file": "assets/Products-CBYeXF7Z.js",
     "name": "Products",
     "src": "resources/js/Pages/Public/Products.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "__plugin-vue_export-helper-DlAUqK2U.js",
       "_vendor-core-BPe24NqQ.js"
     ],
@@ -866,25 +867,25 @@
     ]
   },
   "resources/js/Pages/Public/VillaDetail.vue": {
-    "file": "assets/VillaDetail-BD4OY05p.js",
+    "file": "assets/VillaDetail-CXeI-Tn2.js",
     "name": "VillaDetail",
     "src": "resources/js/Pages/Public/VillaDetail.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
       "_SEOHead-Db5oQ_Xw.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_vendor-core-BPe24NqQ.js"
     ]
   },
   "resources/js/Pages/Public/Villas.vue": {
-    "file": "assets/Villas-L9kwst4b.js",
+    "file": "assets/Villas-DO6qAIdD.js",
     "name": "Villas",
     "src": "resources/js/Pages/Public/Villas.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-vue-inertia-DXnbmWlW.js",
-      "_PublicNavbar-CQ3pXRxX.js",
+      "_PublicNavbar-CoMSSnr_.js",
       "_SEOHead-Db5oQ_Xw.js",
       "_vendor-core-BPe24NqQ.js"
     ]
@@ -900,7 +901,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-BDGfiBVC.js",
+    "file": "assets/app-Bzskyzrx.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -985,7 +986,7 @@
       "resources/js/Pages/Welcome.vue"
     ],
     "css": [
-      "assets/app-DRmfvQdf.css"
+      "assets/app-DwO8CfHM.css"
     ]
   }
 }

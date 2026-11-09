@@ -219,7 +219,7 @@ const scrollToResidences = () => {
 
                     <!-- Inline Specifications with Middle Dots (·) -->
                     <div class="text-xs font-medium text-[#2D312E] tracking-wide py-2 border-y border-[#E5E0D8]/60 leading-relaxed">
-                        <span>{{ villa.capacity }} Guests</span>
+                        <span>{{ villa.slug === 'family-villa' ? 4 : villa.capacity }} Guests</span>
                         <span class="mx-2 text-[#C98A3E]">·</span>
                         <span>{{ villa.bedrooms }} {{ villa.bedrooms === 1 ? 'Bedroom' : 'Bedrooms' }}</span>
                         <span class="mx-2 text-[#C98A3E]">·</span>

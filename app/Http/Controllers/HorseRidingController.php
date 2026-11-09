@@ -15,7 +15,7 @@ class HorseRidingController extends Controller
     public function index()
     {
         $contactPhone = '+255 758 774 695';
-        $contactEmail = 'info@kitongafarmvillas.com';
+        $contactEmail = 'kitongafarmvillas@gmail.com';
 
         try {
             $contactPhone = Setting::get('contact_phone', $contactPhone);
@@ -42,7 +42,7 @@ class HorseRidingController extends Controller
                 'contact_phone' => $contactPhone,
                 'contact_email' => $contactEmail,
                 'whatsapp_number' => $cleanPhone ?: '255758774695',
-                'location' => 'Kitonga Farm, Komkonga Village, Handeni, Tanga, Tanzania',
+                'location' => 'Komkonga Village, Tanga Region, Tanzania',
             ],
             'experience' => [
                 'title' => 'Horse Riding Experience at Kitonga Farm',

@@ -40,6 +40,7 @@ const navLinks = [
     { name: 'villas', label: 'Villas', route: 'villas' },
     { name: 'experiences', label: 'Experiences', route: 'experiences' },
     { name: 'meet-mr-kitonga', label: 'Meet Mr. Kitonga', route: 'meet.mr.kitonga' },
+    { name: 'horse-riding', label: 'Horse Riding', route: 'experiences.horse-riding' },
     { name: 'farm', label: 'Our Farm', route: 'farm' },
     { name: 'products', label: 'Produce', route: 'products' },
     { name: 'gallery', label: 'Gallery', route: 'gallery' },

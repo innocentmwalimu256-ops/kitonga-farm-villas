@@ -122,7 +122,10 @@ const tomorrowDate = new Date(Date.now() + 86400000).toISOString().split('T')[0]
 
 const checkIn = ref(today);
 const checkOut = ref(tomorrowDate);
-const maxCapacity = computed(() => Number(props.villa?.capacity) || 2);
+const maxCapacity = computed(() => {
+    if (props.villa?.slug === 'family-villa') return 4;
+    return Number(props.villa?.capacity) || 2;
+});
 const guestsCount = ref(1);
 const guestError = ref('');
 
@@ -227,7 +230,7 @@ const getImageUrl = (path, slug) => {
                     {{ villa.name }}
                 </h1>
                 <div class="text-xs sm:text-sm text-gray-300 font-medium tracking-wide">
-                    <span>{{ villa.capacity }} Guests</span>
+                    <span>{{ villa.slug === 'family-villa' ? 4 : villa.capacity }} Guests</span>
                     <span class="mx-2 text-[#C98A3E]">·</span>
                     <span>{{ villa.bedrooms }} {{ villa.bedrooms === 1 ? 'Bedroom' : 'Bedrooms' }}</span>
                     <span class="mx-2 text-[#C98A3E]">·</span>
@@ -263,7 +266,7 @@ const getImageUrl = (path, slug) => {
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-sans text-xs">
                         <div class="bg-white p-4 rounded-xl border border-[#E5E0D8] space-y-1">
                             <span class="text-[10px] uppercase font-bold text-gray-400 block">Capacity</span>
-                            <span class="text-sm font-bold text-[#1B2E22]">{{ villa.capacity }} Guests</span>
+                            <span class="text-sm font-bold text-[#1B2E22]">{{ villa.slug === 'family-villa' ? 4 : villa.capacity }} Guests</span>
                         </div>
                         <div class="bg-white p-4 rounded-xl border border-[#E5E0D8] space-y-1">
                             <span class="text-[10px] uppercase font-bold text-gray-400 block">Bedrooms</span>

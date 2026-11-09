@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import SEOHead from '@/Components/SEOHead.vue';
+import PublicNavbar from '@/Components/PublicNavbar.vue';
 
 const props = defineProps({
     settings: {
@@ -218,93 +219,20 @@ const schemaData = computed(() => ({
     <div class="min-h-screen bg-[#F5F0E6] text-[#252525] font-sans antialiased selection:bg-[#C99A43] selection:text-white">
         
         <!-- =========================================================================
-             1. HEADER / NAVIGATION BAR
-             Matches reference: Dark forest green (#092B18), Kitonga Farm logo on left,
-             navigation on right, Gold CTA button on far right.
+             1. GLOBAL LUXURY NAVIGATION (UNIFIED SITE NAVBAR)
+             Horse Riding sits right after Meet Mr. Kitonga in the menu hierarchy
         ========================================================================= -->
-        <header class="sticky top-0 z-50 w-full bg-[#092B18] text-white border-b border-white/10 shadow-md">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-                
-                <!-- Brand / Logo (Left) -->
-                <Link :href="route('home')" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-full border border-[#C99A43]/60 bg-[#071F13] flex items-center justify-center p-1.5 shadow-sm group-hover:border-[#C99A43] transition">
-                        <img src="/favicon.svg" alt="Kitonga Farm Logo" class="w-full h-full object-contain" />
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-serif text-base sm:text-lg font-bold tracking-[0.2em] text-[#F5F0E6] uppercase leading-none group-hover:text-[#C99A43] transition duration-300">
-                            KITONGA FARM
-                        </span>
-                        <span class="text-[9px] font-sans tracking-[0.25em] text-[#C99A43] uppercase mt-1">
-                            VILLAS &amp; SANCTUARY
-                        </span>
-                    </div>
-                </Link>
-
-                <!-- Desktop Navigation Links (Center-Right) -->
-                <nav class="hidden md:flex items-center gap-8 text-xs uppercase tracking-[0.15em] font-semibold text-[#F5F0E6]/90">
-                    <Link :href="route('home')" class="hover:text-[#C99A43] transition">Home</Link>
-                    <Link :href="route('about')" class="hover:text-[#C99A43] transition">About</Link>
-                    <Link :href="route('experiences')" class="text-[#C99A43] font-bold border-b border-[#C99A43] pb-0.5">Experiences</Link>
-                    <Link :href="route('contact')" class="hover:text-[#C99A43] transition">Contact</Link>
-                </nav>
-
-                <!-- Primary Gold CTA Button (Far Right) -->
-                <div class="hidden sm:flex items-center gap-4">
-                    <button 
-                        type="button" 
-                        @click="scrollToSection('booking-form-card')"
-                        class="px-5 py-2.5 bg-[#C99A43] hover:bg-[#d8a952] active:bg-[#b88935] text-[#071F13] font-bold text-xs uppercase tracking-[0.12em] rounded-md shadow transition duration-300 cursor-pointer"
-                    >
-                        BOOK YOUR EXPERIENCE
-                    </button>
-                </div>
-
-                <!-- Mobile Hamburger Button -->
-                <button 
-                    type="button" 
-                    @click="toggleMobileMenu" 
-                    class="md:hidden p-2 rounded-lg text-white hover:text-[#C99A43] hover:bg-white/5 transition"
-                    aria-label="Toggle Menu"
-                >
-                    <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Mobile Drawer -->
-            <div v-if="isMobileMenuOpen" class="md:hidden bg-[#071F13] border-t border-white/10 px-6 py-6 space-y-4">
-                <div class="flex flex-col space-y-3 text-xs uppercase tracking-wider font-semibold text-white/90">
-                    <Link :href="route('home')" @click="closeMobileMenu" class="hover:text-[#C99A43] py-1">Home</Link>
-                    <Link :href="route('about')" @click="closeMobileMenu" class="hover:text-[#C99A43] py-1">About</Link>
-                    <Link :href="route('experiences')" @click="closeMobileMenu" class="text-[#C99A43] py-1 font-bold">Experiences</Link>
-                    <Link :href="route('contact')" @click="closeMobileMenu" class="hover:text-[#C99A43] py-1">Contact</Link>
-                </div>
-                <div class="pt-3 border-t border-white/10">
-                    <button 
-                        type="button" 
-                        @click="() => { closeMobileMenu(); scrollToSection('booking-form-card'); }"
-                        class="w-full py-3 bg-[#C99A43] text-[#071F13] font-bold text-xs uppercase tracking-wider rounded-md text-center shadow"
-                    >
-                        BOOK YOUR EXPERIENCE
-                    </button>
-                </div>
-            </div>
-        </header>
+        <PublicNavbar current-page="horse-riding" :settings="settings" />
 
         <!-- =========================================================================
-             2. HERO SECTION – CINEMATIC VIDEO
-             Matches reference: Full width, large background video, ~260-300px high on
-             desktop, dark overlay on the left for text readability.
+             2. HERO SECTION – CINEMATIC VIDEO (LARGE, FULL & PURE VIDEO)
+             Large, full-width cinematic hero video, pure video with NO text overlay
         ========================================================================= -->
-        <section class="relative w-full h-[280px] sm:h-[300px] md:h-[320px] bg-[#071F13] overflow-hidden">
+        <section class="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] max-h-[850px] min-h-[420px] bg-[#071F13] overflow-hidden">
             <!-- Background Video: Exact segment from client original video (01:02 to 01:23) -->
             <video 
                 ref="heroVideoRef"
-                class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+                class="w-full h-full object-cover object-center"
                 autoplay 
                 muted 
                 loop 
@@ -317,48 +245,6 @@ const schemaData = computed(() => ({
                 <source src="/videos/horse-riding-main.mp4" type="video/mp4" />
                 <source src="/stream/horse-riding-video" type="video/mp4" />
             </video>
-
-            <!-- Dark Side Gradient Overlay for Text Readability -->
-            <div class="absolute inset-0 bg-gradient-to-r from-[#071F13]/95 via-[#071F13]/80 md:via-[#071F13]/60 to-transparent"></div>
-            
-            <!-- Subtle Bottom Border Accent -->
-            <div class="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-[#C99A43] via-[#C99A43]/50 to-transparent"></div>
-
-            <!-- Hero Content Container -->
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center">
-                <div class="max-w-xl text-white space-y-3">
-                    
-                    <!-- Main Serif Heading -->
-                    <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-white uppercase tracking-tight leading-[1.05]">
-                        ENJOY<br />
-                        <span class="text-[#F5F0E6]">HORSE RIDING</span>
-                    </h1>
-
-                    <!-- Supporting Text -->
-                    <p class="text-xs sm:text-sm text-[#F5F0E6]/90 font-light max-w-md leading-relaxed">
-                        Experience the beauty of nature on horseback at Kitonga Farm.
-                    </p>
-
-                    <!-- Hero CTA Buttons -->
-                    <div class="flex flex-wrap items-center gap-3 pt-2">
-                        <button 
-                            type="button"
-                            @click="scrollToSection('booking-form-card')"
-                            class="px-5 py-2.5 bg-[#C99A43] hover:bg-[#d8a952] active:bg-[#b88935] text-[#071F13] font-bold text-xs uppercase tracking-wider rounded-md shadow-sm transition duration-300 cursor-pointer"
-                        >
-                            BOOK YOUR EXPERIENCE
-                        </button>
-                        <button 
-                            type="button"
-                            @click="scrollToSection('experience-overview')"
-                            class="px-5 py-2.5 bg-[#071F13]/60 hover:bg-[#071F13] text-white border border-white/40 hover:border-[#C99A43] font-semibold text-xs uppercase tracking-wider rounded-md transition duration-300 cursor-pointer backdrop-blur-xs"
-                        >
-                            EXPLORE EXPERIENCE
-                        </button>
-                    </div>
-
-                </div>
-            </div>
         </section>
 
         <!-- =========================================================================
@@ -785,82 +671,7 @@ const schemaData = computed(() => ({
         </main>
 
         <!-- =========================================================================
-             4. BOTTOM INFORMATION STRIP
-             Matches reference: Horizontal information strip above footer on cream
-             background with subtle borders and 4 information blocks with gold icons:
-             1. LOCATION, 2. OPENING HOURS, 3. WHAT TO BRING, 4. GOOD TO KNOW
-        ========================================================================= -->
-        <section class="bg-[#ECE5D8] border-t border-b border-[#D9D1C1] py-10 sm:py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-                    
-                    <!-- Item 1: Location -->
-                    <div class="flex items-start gap-3.5">
-                        <div class="w-10 h-10 rounded-xl bg-[#092B18] text-[#C99A43] flex items-center justify-center shrink-0 shadow-xs">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </div>
-                        <div class="space-y-1">
-                            <h4 class="text-xs font-bold uppercase tracking-[0.18em] text-[#092B18]">LOCATION</h4>
-                            <p class="text-xs text-[#252525]/80 leading-relaxed font-light">
-                                Kitonga Farm, Komkonga Village, Handeni, Tanga Region, Tanzania.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Item 2: Opening Hours -->
-                    <div class="flex items-start gap-3.5">
-                        <div class="w-10 h-10 rounded-xl bg-[#092B18] text-[#C99A43] flex items-center justify-center shrink-0 shadow-xs">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div class="space-y-1">
-                            <h4 class="text-xs font-bold uppercase tracking-[0.18em] text-[#092B18]">OPENING HOURS</h4>
-                            <p class="text-xs text-[#252525]/80 leading-relaxed font-light">
-                                Daily 08:00 AM – 06:00 PM (Monday to Sunday by booking).
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Item 3: What to Bring -->
-                    <div class="flex items-start gap-3.5">
-                        <div class="w-10 h-10 rounded-xl bg-[#092B18] text-[#C99A43] flex items-center justify-center shrink-0 shadow-xs">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                        </div>
-                        <div class="space-y-1">
-                            <h4 class="text-xs font-bold uppercase tracking-[0.18em] text-[#092B18]">WHAT TO BRING</h4>
-                            <p class="text-xs text-[#252525]/80 leading-relaxed font-light">
-                                Comfortable riding trousers, closed shoes or boots, and sun protection.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Item 4: Good to Know -->
-                    <div class="flex items-start gap-3.5">
-                        <div class="w-10 h-10 rounded-xl bg-[#092B18] text-[#C99A43] flex items-center justify-center shrink-0 shadow-xs">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div class="space-y-1">
-                            <h4 class="text-xs font-bold uppercase tracking-[0.18em] text-[#092B18]">GOOD TO KNOW</h4>
-                            <p class="text-xs text-[#252525]/80 leading-relaxed font-light">
-                                Advance booking recommended. Safety orientation provided before every ride.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- =========================================================================
-             5. FOOTER
+             4. FOOTER
              Matches reference: Dark-green background (#071F13), 5-column layout:
              Column 1: Brand (Crest, description, social icons)
              Column 2: Navigation
@@ -941,39 +752,29 @@ const schemaData = computed(() => ({
                         </ul>
                     </div>
 
-                    <!-- COLUMN 4: CONTACT US -->
+                    <!-- COLUMN 4: CONTACT US (NO EMOJIS, CLEAN LUXURY TYPOGRAPHY) -->
                     <div class="space-y-3">
                         <h4 class="text-[11px] font-bold uppercase tracking-[0.2em] text-[#C99A43]">
                             CONTACT US
                         </h4>
                         <ul class="space-y-2 text-[#F5F0E6]/75">
-                            <li class="flex items-start gap-2">
-                                <span class="text-[#C99A43]">📞</span>
-                                <div>
-                                    <a :href="`tel:${settings.contact_phone || '+255758774695'}`" class="hover:text-white transition block">
-                                        {{ settings.contact_phone || '+255 758 774 695' }}
-                                    </a>
-                                </div>
+                            <li>
+                                <a :href="`tel:${settings.contact_phone || '+255758774695'}`" class="hover:text-white transition block">
+                                    {{ settings.contact_phone || '+255 758 774 695' }}
+                                </a>
                             </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-[#C99A43]">💬</span>
-                                <div>
-                                    <a :href="`https://wa.me/${settings.whatsapp_number || '255758774695'}`" target="_blank" class="hover:text-white transition block">
-                                        WhatsApp Concierge
-                                    </a>
-                                </div>
+                            <li>
+                                <a :href="`https://wa.me/${settings.whatsapp_number || '255758774695'}`" target="_blank" class="hover:text-white transition block">
+                                    WhatsApp Concierge
+                                </a>
                             </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-[#C99A43]">✉️</span>
-                                <div>
-                                    <a :href="`mailto:${settings.contact_email || 'info@kitongafarmvillas.com'}`" class="hover:text-white transition block break-all">
-                                        {{ settings.contact_email || 'info@kitongafarmvillas.com' }}
-                                    </a>
-                                </div>
+                            <li>
+                                <a :href="`mailto:${settings.contact_email || 'kitongafarmvillas@gmail.com'}`" class="hover:text-white transition block break-all">
+                                    {{ settings.contact_email || 'kitongafarmvillas@gmail.com' }}
+                                </a>
                             </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-[#C99A43]">📍</span>
-                                <span>Komkonga, Handeni, Tanga</span>
+                            <li>
+                                <span>Komkonga Village, Tanga Region, Tanzania</span>
                             </li>
                         </ul>
                     </div>
